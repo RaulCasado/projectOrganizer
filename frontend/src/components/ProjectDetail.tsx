@@ -5,6 +5,8 @@ import TaskForm from './TaskForm';
 import { useState } from 'react';
 import TaskFilters from './TaskFilters';
 import MVPSection from './MVPSection';
+import type { BlogEntry } from '../types/Project';
+import ProjectBlog from './ProjectBlog';
 
 interface ProjectDetailProps {
   project: Project;
@@ -38,6 +40,14 @@ function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
         });
     };
 
+
+  const handleUpdateBlogEntries = (blogEntries: BlogEntry[]) => {
+    onUpdateProject({
+      ...project,
+      blogEntries,
+      lastActivityDate: new Date().toISOString().split('T')[0]
+    });
+  };
   const filteredTasks = getFilteredTasks();
 
   const handleUpdateMVP = (mvp: string) => {
@@ -144,6 +154,11 @@ function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
       <MVPSection 
         mvp={project.mvp}
         onUpdateMVP={handleUpdateMVP}
+      />
+
+      <ProjectBlog 
+        blogEntries={project.blogEntries}
+        onUpdateBlogEntries={handleUpdateBlogEntries}
       />
 
       <TaskForm 

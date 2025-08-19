@@ -23,3 +23,38 @@ terminado el crud de proyectos.
 
 Revisar el ProjectMainView pq creo que tambien esta bastante cargado de responsabilidades.
 Tambien App ya que no se si es correcto poner ahi tanta logica o si deberia de crear un componente separado para manejar la logica de enrutamiento y estado.
+
+Resumen de Symbol en JavaScript
+
+Symbol() crea un valor único e inmutable.
+
+Aunque dos símbolos tengan la misma descripción, nunca son iguales:
+```javascript
+const sym1 = Symbol("description");
+const sym2 = Symbol("description");
+
+console.log(sym1 === sym2); // false
+```
+
+🔑 Usos principales
+
+Identificadores únicos
+Evitan colisiones en objetos cuando varias propiedades podrían llamarse igual.
+
+Propiedades “privadas” u ocultas
+No aparecen en un for...in ni en Object.keys, lo que ayuda a guardar info interna sin riesgo de ser pisada.
+
+Protocolos especiales
+Existen Symbol predefinidos en JS (Symbol.iterator, Symbol.asyncIterator, etc.) para hacer objetos iterables o personalizar comportamientos.
+
+🧩 En React
+
+Normalmente no los usas directamente, React ya los usa internamente.
+
+Te pueden servir para:
+
+Generar IDs únicos para listas o estados.
+
+Guardar datos internos en un Context sin riesgo de colisiones.
+
+Implementar estructuras iterables si construyes librerías o hooks avanzados.

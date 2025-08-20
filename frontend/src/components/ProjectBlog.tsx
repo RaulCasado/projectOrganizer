@@ -9,9 +9,10 @@ import Modal from './Modal'
 interface ProjectBlogProps {
     blogEntries?: BlogEntry[];
     onUpdateBlogEntries: (entries : BlogEntry[]) => void;
+    project?: { name: string }; // Add project prop for the export
 }
 
-function ProjectBlog({ blogEntries = [], onUpdateBlogEntries }: ProjectBlogProps) {
+function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: ProjectBlogProps) {
     const [isWriting, setIsWriting] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState<BlogEntry | null>(null);
     const [editingEntry, setEditingEntry] = useState<BlogEntry | null>(null);
@@ -36,6 +37,101 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries }: ProjectBlogProps
         }
         setIsWriting(false);
         setEditingEntry(null);
+    };
+
+    const handleExportWeek = () => {
+        const getLastWeekEntries = () => {
+            const today = new Date();
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            return blogEntries.filter(entry => {
+                const entryDate = new Date(entry.date);
+                return entryDate >= sevenDaysAgo && entryDate <= today;
+            }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        };
+
+        const generateMarkdown = () => {
+            const weekEntries = getLastWeekEntries();
+            const today = new Date();
+            const sevenDaysAgo = new Date(today);
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            if (weekEntries.length === 0) {
+                Swal.fire('Sin entradas', 'No hay entradas en los últimos 7 días', 'info');
+                return;
+            }
+
+            const totalTime = weekEntries.reduce((sum, entry) => sum + (entry.timeSpent || 0), 0);
+            const allTags = weekEntries.flatMap(entry => entry.tags || []);
+            const uniqueTags = [...new Set(allTags)];
+            
+            let markdown = `# Progreso Semanal - ${project?.name || 'Proyecto'}\n`;
+            markdown += `**Semana del ${sevenDaysAgo.toLocaleDateString()} al ${today.toLocaleDateString()}**\n\n`;
+            
+            markdown += `## 📊 Resumen\n`;
+            markdown += `- Total de entradas: ${weekEntries.length}\n`;
+            markdown += `- Tiempo invertido: ${totalTime} minutos (${Math.round(totalTime / 60 * 10) / 10} horas)\n`;
+            if (uniqueTags.length > 0) {
+                markdown += `- Tags utilizados: ${uniqueTags.join(', ')}\n`;
+            }
+            markdown += `\n`;
+            
+            markdown += `## 📝 Entradas diarias\n\n`;
+            
+            weekEntries.forEach(entry => {
+                const entryDate = new Date(entry.date);
+                const dayName = entryDate.toLocaleDateString('es-ES', { weekday: 'long' });
+                const dateFormatted = entryDate.toLocaleDateString('es-ES');
+                
+                markdown += `### ${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dateFormatted}\n`;
+                markdown += `**${entry.title}**\n\n`;
+                markdown += `${entry.content}\n\n`;
+                
+                if (entry.timeSpent && entry.timeSpent > 0) {
+                    markdown += `- ⏱️ Tiempo invertido: ${entry.timeSpent} minutos\n`;
+                }
+                
+                if (entry.tags && entry.tags.length > 0) {
+                    markdown += `- 🏷️ Tags: ${entry.tags.join(', ')}\n`;
+                }
+                
+                markdown += `\n---\n\n`;
+            });
+            
+            return markdown;
+        };
+
+        const markdown = generateMarkdown();
+        if (!markdown) return;
+
+        navigator.clipboard.writeText(markdown).then(() => {
+            Swal.fire({
+                title: '📤 ¡Exportado!',
+                text: 'El resumen semanal se ha copiado al portapapeles',
+                icon: 'success',
+                showConfirmButton: true,
+                confirmButtonText: 'Ver preview',
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Preview del Markdown',
+                        html: `<pre style="text-align: left; max-height: 400px; overflow-y: auto;">${markdown}</pre>`,
+                        width: '80%',
+                        confirmButtonText: 'Cerrar'
+                    });
+                }
+            });
+        }).catch(() => {
+            Swal.fire({
+                title: 'Markdown generado',
+                html: `<textarea readonly style="width: 100%; height: 400px;">${markdown}</textarea>`,
+                width: '80%',
+                confirmButtonText: 'Cerrar'
+            });
+        });
     };
 
     const handleViewEntry = (entry: BlogEntry) => {
@@ -77,9 +173,46 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries }: ProjectBlogProps
 
     return (
         <div>
-            {!isWriting && (
-                <button onClick={() => setIsWriting(true)}>Escribir nueva entrada</button>
-            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3>📝 Diario del Proyecto</h3>
+                
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    {blogEntries.length > 0 && (
+                        <button 
+                            onClick={handleExportWeek}
+                            style={{
+                                backgroundColor: '#17a2b8',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            📤 Exportar semana
+                        </button>
+                    )}
+                    
+                    {!isWriting && (
+                        <button 
+                            onClick={() => setIsWriting(true)}
+                            style={{
+                                backgroundColor: '#28a745',
+                                color: 'white',
+                                border: 'none',
+                                padding: '8px 16px',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '0.9rem'
+                            }}
+                        >
+                            ➕ Nueva Entrada
+                        </button>
+                    )}
+                </div>
+            </div>
+            
             {isWriting && (
                 <BlogForm 
                     onSave={handleSaveEntry}

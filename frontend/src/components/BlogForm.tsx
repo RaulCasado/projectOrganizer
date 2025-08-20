@@ -17,6 +17,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
         content: "",
         timeSpent: 0,
         tags: [] as string[],
+        date: todayFormatted,
     });
 
     useEffect(() => {
@@ -26,6 +27,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
                 content: editingEntry.content || "",
                 timeSpent: editingEntry.timeSpent || 0,
                 tags: editingEntry.tags || [],
+                date : editingEntry.date || todayFormatted,
             });
         } else {
             setFormData({
@@ -33,9 +35,10 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
                 content: "",
                 timeSpent: 0,
                 tags: [],
+                date: todayFormatted,
             });
         }
-    }, [editingEntry]);
+    }, [editingEntry, todayFormatted]);
 
     const handleSave = () => {
         if (!formData.title.trim() || !formData.content.trim()) {
@@ -48,7 +51,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
             content: formData.content.trim(),
             timeSpent: formData.timeSpent,
             tags: formData.tags,
-            date: todayFormatted,
+            date: formData.date,
         };
 
         onSave(entryData);
@@ -59,6 +62,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
                 content: "",
                 timeSpent: 0,
                 tags: [],
+                date: todayFormatted,
             });
         }
 
@@ -83,7 +87,13 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 />
             </div>
-            
+            <div>
+                <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                />
+            </div>
             <div>
                 <textarea
                     placeholder="Contenido (soporta Markdown)"

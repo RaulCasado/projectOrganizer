@@ -62,3 +62,8 @@ Implementar estructuras iterables si construyes librerías o hooks avanzados.
 
 Terminamos el dia con la implementacion de los recursos del proyecto.
 Tambien hemos hecho los posts todo lo del blog excepto algunas funcionalidades extras que quiero implementar.
+
+
+Vale hemos hecho lo de los tags clickeables para que en cada proyecto puedas filtrar con el select o con hacer click en cualquiera de los tags para mas comodidad.
+
+Ahora no se si ponerme con css o seguir con la logica de los proyectos.

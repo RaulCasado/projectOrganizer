@@ -58,3 +58,7 @@ Generar IDs únicos para listas o estados.
 Guardar datos internos en un Context sin riesgo de colisiones.
 
 Implementar estructuras iterables si construyes librerías o hooks avanzados.
+
+
+Terminamos el dia con la implementacion de los recursos del proyecto.
+Tambien hemos hecho los posts todo lo del blog excepto algunas funcionalidades extras que quiero implementar.

@@ -7,6 +7,8 @@ import TaskFilters from './TaskFilters';
 import MVPSection from './MVPSection';
 import type { BlogEntry } from '../types/Project';
 import ProjectBlog from './ProjectBlog';
+import ProjectResources from './ProjectResources';
+import type { Resource } from '../types/Project';
 
 interface ProjectDetailProps {
   project: Project;
@@ -40,6 +42,14 @@ function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
         });
     };
 
+  const handleUpdateResources = (resources: Resource[]) => {
+    const updatedProject = {
+      ...project,
+      resources,
+      lastActivityDate: new Date().toISOString().split('T')[0]
+    };
+    onUpdateProject(updatedProject);
+  };
 
   const handleUpdateBlogEntries = (blogEntries: BlogEntry[]) => {
     onUpdateProject({
@@ -150,10 +160,15 @@ function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
           </ul>
         </div>
       )}
-
+      
       <MVPSection 
         mvp={project.mvp}
         onUpdateMVP={handleUpdateMVP}
+      />
+
+      <ProjectResources
+        resources={project.resources}
+        onUpdateResources={handleUpdateResources}
       />
 
       <ProjectBlog 

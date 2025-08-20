@@ -162,21 +162,110 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
           <p>No projects found.</p>
         ) : (
           filteredProjects.map(project => (
-            <div key={project.id}>
-              <Link to={`/project/${project.id}`}>
-                <h2>{project.name}</h2>
-              </Link>
-              <div>
-                <button onClick={() => setEditingProject(project)}>Edit</button>
-                <button onClick={() => handleDeleteProject(project)}>Delete</button>
-              </div>
-              <div>
-                <h3>Tags:</h3>
-                <ul>
-                  {project.tags?.map((tag, index) => (
-                    <li key={index}>{tag}</li>
-                  ))}
-                </ul>
+            <div key={project.id} style={{
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '20px',
+              backgroundColor: 'white',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              marginBottom: '16px'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                <div style={{ flex: 1 }}>
+                  <Link 
+                    to={`/project/${project.id}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <h2 style={{ margin: '0 0 10px 0', color: '#007bff' }}>
+                      📂 {project.name}
+                    </h2>
+                  </Link>
+                  
+                  {project.tags && project.tags.length > 0 && (
+                    <div style={{ marginBottom: '10px' }}>
+                      {project.tags.map((tag, index) => (
+                        <button
+                          key={index}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setSelectedTag(selectedTag === tag ? null : tag);
+                          }}
+                          style={{
+                            backgroundColor: selectedTag === tag ? '#28a745' : '#e1f5fe',
+                            color: selectedTag === tag ? 'white' : '#01579b',
+                            border: selectedTag === tag ? '2px solid #1e7e34' : '1px solid #b3e5fc',
+                            padding: '4px 8px',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            marginRight: '6px',
+                            marginBottom: '4px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            fontWeight: selectedTag === tag ? 'bold' : 'normal'
+                          }}
+                          title={selectedTag === tag ? `Quitar filtro de ${tag}` : `Filtrar por ${tag}`}
+                          onMouseEnter={(e) => {
+                            if (selectedTag !== tag) {
+                              e.currentTarget.style.backgroundColor = '#81c784';
+                              e.currentTarget.style.color = 'white';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedTag !== tag) {
+                              e.currentTarget.style.backgroundColor = '#e1f5fe';
+                              e.currentTarget.style.color = '#01579b';
+                            }
+                          }}
+                        >
+                          🏷️ {tag}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {project.stack && project.stack.length > 0 && (
+                    <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '8px' }}>
+                      🛠️ Stack: {project.stack.join(', ')}
+                    </div>
+                  )}
+
+                  {project.lastActivityDate && (
+                    <div style={{ fontSize: '0.8rem', color: '#999' }}>
+                      📅 Última actividad: {new Date(project.lastActivityDate).toLocaleDateString()}
+                    </div>
+                  )}
+                </div>
+                
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    onClick={() => setEditingProject(project)}
+                    style={{
+                      backgroundColor: '#17a2b8',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem'
+                    }}
+                  >
+                    ✏️ Editar
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteProject(project)}
+                    style={{
+                      backgroundColor: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      padding: '6px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '0.8rem'
+                    }}
+                  >
+                    🗑️ Eliminar
+                  </button>
+                </div>
               </div>
             </div>
           ))

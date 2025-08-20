@@ -174,6 +174,7 @@ function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
       <ProjectBlog 
         blogEntries={project.blogEntries}
         onUpdateBlogEntries={handleUpdateBlogEntries}
+        project={project}
       />
 
       <TaskForm 

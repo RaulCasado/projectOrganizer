@@ -9,7 +9,7 @@ import Modal from './Modal'
 interface ProjectBlogProps {
     blogEntries?: BlogEntry[];
     onUpdateBlogEntries: (entries : BlogEntry[]) => void;
-    project?: { name: string }; // Add project prop for the export
+    project?: { name: string };
 }
 
 function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: ProjectBlogProps) {

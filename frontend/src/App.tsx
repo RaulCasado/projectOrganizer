@@ -7,6 +7,7 @@ import ProjectDetail from './components/ProjectDetail';
 import { useParams } from 'react-router-dom';
 import TaskDetail from './components/TaskDetail';
 import type { Task } from './types/Task';
+import Dashboard from './components/Dashboard';
 
 function ProjectDetailWrapper({ projects, onUpdateProject }: { 
     projects: Project[]; 
@@ -91,6 +92,10 @@ function App() {
         <Route
           path="/tasks/:taskId"
           element={<TaskDetailWrapper projects={projects} />}
+        />
+        <Route
+          path="/dashboard"
+          element={<Dashboard projects={projects} />}
         />
       </Routes>
     </div>

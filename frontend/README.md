@@ -300,4 +300,10 @@ docs(readme): add installation and setup instructions
 
 **¿Instalamos todo esto?** Es una configuración profesional que mejorará muchísimo la calidad del código y la colaboración. 🎯
 
-Código similar encontrado con 1 tipo de licencia
+Hacer un servicio de local storage para globalizar esas funciones, tambien deberiamos de repasar el tema de las fechas y parseos para hacer que el componente no tenga la responsabilidad de hacer esas operaciones si no que vengan de un dateUtils o algo asi.
+
+Tambien vamos a hacer un servicio para las notificaciones de momento tendra todas las funciones un poco mezcladas antes de que hagamos el refactor.
+
+Cuando hagamos el refactor de las fechas o incluso ya podriamos instalar algun npm que nos ayude con el tema de las fechas ya que esta siendo un poco complicado manejar todos los casos.
+
+Por ejemplo he visto que date-fns es una buena libreria para manejar fechas en javascript.

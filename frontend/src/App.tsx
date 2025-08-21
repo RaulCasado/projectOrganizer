@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import TaskDetail from './components/TaskDetail';
 import type { Task } from './types/Task';
 import Dashboard from './components/Dashboard';
+import { useNotifications } from './hooks/useNotifications';
 
 function ProjectDetailWrapper({ projects, onUpdateProject }: { 
     projects: Project[]; 
@@ -48,6 +49,8 @@ function App() {
     const savedProjects = localStorage.getItem('projects');
     return savedProjects ? JSON.parse(savedProjects) : [];
   });
+
+  useNotifications(projects);
 
   useEffect(() => {
     localStorage.setItem('projects', JSON.stringify(projects));

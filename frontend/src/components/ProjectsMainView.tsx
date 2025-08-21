@@ -112,6 +112,9 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
 
   return (
     <div>
+      <Link to="/dashboard">
+        <h3>Link a dashboard</h3>
+      </Link>
       <div>
         <h3>{isEditing ? 'Edit Project' : 'Add Project'}</h3>
         <input

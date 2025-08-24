@@ -110,11 +110,28 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
     }
   };
 
-  return (
+    return (
     <div>
-      <Link to="/dashboard">
-        <h3>Link a dashboard</h3>
-      </Link>
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+        <Link to="/dashboard" style={{
+          padding: '10px 20px',
+          backgroundColor: '#17a2b8',
+          color: 'white',
+          textDecoration: 'none',
+          borderRadius: '4px'
+        }}>
+          📊 Dashboard
+        </Link>
+        <Link to="/ideas" style={{
+          padding: '10px 20px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          textDecoration: 'none',
+          borderRadius: '4px'
+        }}>
+          💡 Ideas
+        </Link>
+      </div>
       <div>
         <h3>{isEditing ? 'Edit Project' : 'Add Project'}</h3>
         <input

@@ -3,17 +3,30 @@ import './App.css';
 import ProjectsMainView from './components/ProjectsMainView';
 import { Routes, Route } from 'react-router-dom';
 import type { Project } from './types/Project';
+import type { Idea } from './types/Idea';
 import ProjectDetail from './components/ProjectDetail';
 import { useParams } from 'react-router-dom';
 import TaskDetail from './components/TaskDetail';
 import type { Task } from './types/Task';
 import Dashboard from './components/Dashboard';
 import { useNotifications } from './hooks/useNotifications';
+import IdeasMainView from './components/IdeasMainView';
 
-function ProjectDetailWrapper({ projects, onUpdateProject }: { 
-    projects: Project[]; 
-    onUpdateProject: (project: Project) => void; 
-  }) {
+function ProjectDetailWrapper({ 
+  projects, 
+  ideas,
+  onUpdateProject,
+  onAddIdea,
+  onUpdateIdea,
+  onDeleteIdea
+}: { 
+  projects: Project[]; 
+  ideas: Idea[];
+  onUpdateProject: (project: Project) => void; 
+  onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
+  onUpdateIdea: (idea: Idea) => void;
+  onDeleteIdea: (ideaId: string) => void;
+}) {
   const { id } = useParams<{ id: string }>();
   const project = projects.find(p => p.id === id);
   
@@ -21,7 +34,16 @@ function ProjectDetailWrapper({ projects, onUpdateProject }: {
     return <div>Proyecto no encontrado</div>;
   }
   
-  return <ProjectDetail project={project} onUpdateProject={onUpdateProject} />;
+  return (
+    <ProjectDetail 
+      project={project} 
+      ideas={ideas}
+      onUpdateProject={onUpdateProject}
+      onAddIdea={onAddIdea}
+      onUpdateIdea={onUpdateIdea}
+      onDeleteIdea={onDeleteIdea}
+    />
+  );
 }
 
 function TaskDetailWrapper({ projects }: { projects: Project[] }) {
@@ -50,18 +72,27 @@ function App() {
     return savedProjects ? JSON.parse(savedProjects) : [];
   });
 
+  const [ideas, setIdeas] = useState<Idea[]>(() => {
+    const savedIdeas = localStorage.getItem('ideas');
+    return savedIdeas ? JSON.parse(savedIdeas) : [];
+  });
+
   useNotifications(projects);
 
   useEffect(() => {
     localStorage.setItem('projects', JSON.stringify(projects));
   }, [projects]);
 
+  useEffect(() => {
+    localStorage.setItem('ideas', JSON.stringify(ideas));
+  }, [ideas]);
+
   const handleAddProject = (projectData: Omit<Project, 'id'>) => {
     const newProject: Project = {
       id: crypto.randomUUID(),
       ...projectData
     };
-    setProjects([...projects, newProject]);
+    setProjects(prevProjects => [...prevProjects, newProject]);
   };
 
   const handleUpdateProject = (updatedProject: Project) => {
@@ -77,6 +108,51 @@ function App() {
       prevProjects.filter(project => project.id !== projectId)
     );
   };
+
+  // ✅ Funciones para manejar ideas
+  const handleAddIdea = (ideaData: Omit<Idea, 'id' | 'createdAt'>) => {
+    const newIdea: Idea = {
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      ...ideaData
+    };
+    setIdeas(prevIdeas => [...prevIdeas, newIdea]);
+  };
+
+  const handleUpdateIdea = (updatedIdea: Idea) => {
+    setIdeas(prevIdeas => 
+      prevIdeas.map(idea => 
+        idea.id === updatedIdea.id ? updatedIdea : idea
+      )
+    );
+  };
+
+  const handleDeleteIdea = (ideaId: string) => {
+    setIdeas(prevIdeas => 
+      prevIdeas.filter(idea => idea.id !== ideaId)
+    );
+  };
+
+  const handlePromoteToProject = (idea: Idea) => {
+    const newProject: Project = {
+      id: crypto.randomUUID(),
+      name: idea.title,
+      tags: idea.tags,
+      lastActivityDate: new Date().toISOString(),
+      tasks: [],
+      blogEntries: [],
+      resources: [],
+      mvp: idea.description.length > 50 ? idea.description : undefined,
+    };
+    
+    setProjects(prevProjects => [...prevProjects, newProject]);
+    
+    setIdeas(prevIdeas => prevIdeas.map(i => 
+      i.id === idea.id 
+        ? { ...i, status: 'promoted' as const, promotedToProjectId: newProject.id }
+        : i
+    ));
+  };
   
 
   return (
@@ -89,8 +165,25 @@ function App() {
           onUpdateProject={handleUpdateProject} />}
         />
         <Route
+          path="/ideas"
+          element={<IdeasMainView 
+            ideas={ideas}
+            onAddIdea={handleAddIdea}
+            onUpdateIdea={handleUpdateIdea}
+            onDeleteIdea={handleDeleteIdea}
+            onPromoteToProject={handlePromoteToProject}
+          />}
+        />
+        <Route
           path="/project/:id"
-          element={<ProjectDetailWrapper projects={projects} onUpdateProject={handleUpdateProject} />}
+          element={<ProjectDetailWrapper 
+            projects={projects} 
+            ideas={ideas}
+            onUpdateProject={handleUpdateProject}
+            onAddIdea={handleAddIdea}
+            onUpdateIdea={handleUpdateIdea}
+            onDeleteIdea={handleDeleteIdea}
+          />}
         />
         <Route
           path="/tasks/:taskId"

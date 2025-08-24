@@ -1,4 +1,5 @@
 import type { Project } from '../types/Project';
+import type { Idea } from '../types/Idea';
 import type { Task } from '../types/Task';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
@@ -9,13 +10,25 @@ import type { BlogEntry } from '../types/Project';
 import ProjectBlog from './ProjectBlog';
 import ProjectResources from './ProjectResources';
 import type { Resource } from '../types/Project';
+import IdeaPanel from './IdeaPanel';
 
 interface ProjectDetailProps {
   project: Project;
+  ideas: Idea[];
   onUpdateProject: (updatedProject: Project) => void;
+  onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
+  onUpdateIdea: (idea: Idea) => void;
+  onDeleteIdea: (ideaId: string) => void;
 }
 
-function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
+function ProjectDetail({ 
+  project, 
+  ideas,
+  onUpdateProject,
+  onAddIdea,
+  onUpdateIdea,
+  onDeleteIdea
+}: ProjectDetailProps) {
 
   const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
   const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'pending'>('all');
@@ -196,6 +209,14 @@ function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) {
         onToggleTask={handleToggleTask}
         onDeleteTask={handleDeleteTask}
         onEditTask={setEditingTask}
+      />
+
+      <IdeaPanel 
+        projectId={project.id}
+        ideas={ideas}
+        onAddIdea={onAddIdea}
+        onUpdateIdea={onUpdateIdea}
+        onDeleteIdea={onDeleteIdea}
       />
     </div>
   );

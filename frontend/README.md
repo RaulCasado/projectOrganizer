@@ -307,3 +307,6 @@ Tambien vamos a hacer un servicio para las notificaciones de momento tendra toda
 Cuando hagamos el refactor de las fechas o incluso ya podriamos instalar algun npm que nos ayude con el tema de las fechas ya que esta siendo un poco complicado manejar todos los casos.
 
 Por ejemplo he visto que date-fns es una buena libreria para manejar fechas en javascript.
+
+
+Hecho las ideas tanto de un proyecto como en general ideas generales que pueda tener.

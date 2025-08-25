@@ -110,25 +110,12 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
     };
 
     return (
-        <div style={{ 
-            border: '1px solid #ddd', 
-            borderRadius: '8px', 
-            padding: '20px', 
-            marginTop: '20px' 
-        }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+            <div>
                 <h3>🔗 Recursos del Proyecto</h3>
                 {!isAdding && (
                     <button 
                         onClick={() => setIsAdding(true)}
-                        style={{
-                            backgroundColor: '#17a2b8',
-                            color: 'white',
-                            border: 'none',
-                            padding: '8px 16px',
-                            borderRadius: '4px',
-                            cursor: 'pointer'
-                        }}
                     >
                         ➕ Añadir Recurso
                     </button>
@@ -136,49 +123,40 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
             </div>
 
             {isAdding && (
-                <div style={{ 
-                    backgroundColor: '#f8f9fa', 
-                    padding: '15px', 
-                    borderRadius: '4px', 
-                    margin: '15px 0' 
-                }}>
+                <div>
                     <h4>{isEditing ? 'Editar' : 'Nuevo'} Recurso</h4>
                     
-                    <div style={{ marginBottom: '10px' }}>
+                    <div>
                         <input
                             type="text"
                             placeholder="Título del recurso"
                             value={formData.title}
                             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                         />
                     </div>
                     
-                    <div style={{ marginBottom: '10px' }}>
+                    <div>
                         <input
                             type="url"
                             placeholder="https://ejemplo.com"
                             value={formData.url}
                             onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                         />
                     </div>
                     
-                    <div style={{ marginBottom: '10px' }}>
+                    <div>
                         <input
                             type="text"
                             placeholder="Descripción (opcional)"
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                         />
                     </div>
                     
-                    <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                    <div>
                         <select
                             value={formData.category}
                             onChange={(e) => setFormData({ ...formData, category: e.target.value as Resource['category'] })}
-                            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                         >
                             <option value="documentation">📚 Documentación</option>
                             <option value="tutorial">🎓 Tutorial</option>
@@ -188,16 +166,14 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
                         </select>
                     </div>
                     
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div>
                         <button 
                             onClick={handleSave}
-                            style={{ backgroundColor: '#28a745', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}
                         >
                             💾 {isEditing ? 'Actualizar' : 'Guardar'}
                         </button>
                         <button 
                             onClick={handleCancel}
-                            style={{ backgroundColor: '#6c757d', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}
                         >
                             ❌ Cancelar
                         </button>
@@ -205,57 +181,48 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
                 </div>
             )}
 
-            <div style={{ marginTop: '20px' }}>
+            <div>
                 {resources.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+                    <div>
                         <h4>📎 Sin recursos aún</h4>
                         <p>Añade enlaces útiles, documentación o tutoriales para este proyecto</p>
                     </div>
                 ) : (
                     <div>
                         {resources.map(resource => (
-                            <div key={resource.id} style={{
-                                border: '1px solid #e9ecef',
-                                borderRadius: '4px',
-                                padding: '15px',
-                                margin: '10px 0',
-                                backgroundColor: 'black'
-                            }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                                    <div style={{ flex: 1 }}>
-                                        <h4 style={{ margin: '0 0 8px 0' }}>
+                            <div key={resource.id}>
+                                <div>
+                                    <div>
+                                        <h4>
                                             {getCategoryIcon(resource.category)} {resource.title}
                                         </h4>
-                                        <div style={{ marginBottom: '8px' }}>
+                                        <div>
                                             <a 
                                                 href={resource.url} 
                                                 target="_blank" 
                                                 rel="noopener noreferrer"
-                                                style={{ color: '#007bff', textDecoration: 'none' }}
                                             >
                                                 🔗 {resource.url}
                                             </a>
                                         </div>
                                         {resource.description && (
-                                            <p style={{ color: '#666', margin: '8px 0', fontSize: '0.9rem' }}>
+                                            <p>
                                                 {resource.description}
                                             </p>
                                         )}
-                                        <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                                        <div>
                                             Añadido: {new Date(resource.createdAt).toLocaleDateString()}
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '5px' }}>
+                                    <div>
                                         <button 
                                             onClick={() => handleEditResource(resource)}
-                                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
                                             title="Editar recurso"
                                         >
                                             ✏️
                                         </button>
                                         <button 
                                             onClick={() => handleDelete(resource.id)}
-                                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem' }}
                                             title="Eliminar recurso"
                                         >
                                             🗑️

@@ -112,23 +112,11 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
 
     return (
     <div>
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-        <Link to="/dashboard" style={{
-          padding: '10px 20px',
-          backgroundColor: '#17a2b8',
-          color: 'white',
-          textDecoration: 'none',
-          borderRadius: '4px'
-        }}>
+      <div>
+        <Link to="/dashboard">
           📊 Dashboard
         </Link>
-        <Link to="/ideas" style={{
-          padding: '10px 20px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          textDecoration: 'none',
-          borderRadius: '4px'
-        }}>
+        <Link to="/ideas">
           💡 Ideas
         </Link>
       </div>
@@ -182,27 +170,19 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
           <p>No projects found.</p>
         ) : (
           filteredProjects.map(project => (
-            <div key={project.id} style={{
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              padding: '20px',
-              backgroundColor: 'white',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              marginBottom: '16px'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                <div style={{ flex: 1 }}>
+            <div key={project.id}>
+              <div>
+                <div>
                   <Link 
                     to={`/project/${project.id}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
                   >
-                    <h2 style={{ margin: '0 0 10px 0', color: '#007bff' }}>
+                    <h2>
                       📂 {project.name}
                     </h2>
                   </Link>
                   
                   {project.tags && project.tags.length > 0 && (
-                    <div style={{ marginBottom: '10px' }}>
+                    <div>
                       {project.tags.map((tag, index) => (
                         <button
                           key={index}
@@ -210,30 +190,15 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
                             e.preventDefault();
                             setSelectedTag(selectedTag === tag ? null : tag);
                           }}
-                          style={{
-                            backgroundColor: selectedTag === tag ? '#28a745' : '#e1f5fe',
-                            color: selectedTag === tag ? 'white' : '#01579b',
-                            border: selectedTag === tag ? '2px solid #1e7e34' : '1px solid #b3e5fc',
-                            padding: '4px 8px',
-                            borderRadius: '12px',
-                            fontSize: '0.75rem',
-                            marginRight: '6px',
-                            marginBottom: '4px',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            fontWeight: selectedTag === tag ? 'bold' : 'normal'
-                          }}
                           title={selectedTag === tag ? `Quitar filtro de ${tag}` : `Filtrar por ${tag}`}
                           onMouseEnter={(e) => {
                             if (selectedTag !== tag) {
-                              e.currentTarget.style.backgroundColor = '#81c784';
-                              e.currentTarget.style.color = 'white';
+                              //implement logic here
                             }
                           }}
                           onMouseLeave={(e) => {
                             if (selectedTag !== tag) {
-                              e.currentTarget.style.backgroundColor = '#e1f5fe';
-                              e.currentTarget.style.color = '#01579b';
+                              // implement logic here
                             }
                           }}
                         >
@@ -244,44 +209,26 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
                   )}
 
                   {project.stack && project.stack.length > 0 && (
-                    <div style={{ fontSize: '0.85rem', color: '#666', marginBottom: '8px' }}>
+                    <div>
                       🛠️ Stack: {project.stack.join(', ')}
                     </div>
                   )}
 
                   {project.lastActivityDate && (
-                    <div style={{ fontSize: '0.8rem', color: '#999' }}>
+                    <div>
                       📅 Última actividad: {new Date(project.lastActivityDate).toLocaleDateString()}
                     </div>
                   )}
                 </div>
                 
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div>
                   <button 
                     onClick={() => setEditingProject(project)}
-                    style={{
-                      backgroundColor: '#17a2b8',
-                      color: 'white',
-                      border: 'none',
-                      padding: '6px 12px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem'
-                    }}
                   >
                     ✏️ Editar
                   </button>
                   <button 
                     onClick={() => handleDeleteProject(project)}
-                    style={{
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: 'none',
-                      padding: '6px 12px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem'
-                    }}
                   >
                     🗑️ Eliminar
                   </button>

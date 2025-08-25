@@ -97,105 +97,61 @@ function Dashboard({ projects }: DashboardProps) {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>📊 Dashboard General</h1>
+    <div>
+      <h1>📊 Dashboard General</h1>
       
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '15px',
-        marginBottom: '30px'
-      }}>
-        <div style={{
-          backgroundColor: '#e3f2fd',
-          padding: '20px',
-          borderRadius: '8px',
-          textAlign: 'center',
-          border: '1px solid #90caf9'
-        }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#1565c0' }}>📂 Proyectos</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0d47a1' }}>
+      <div>
+        <div>
+          <h3>📂 Proyectos</h3>
+          <div>
             {stats.totalProjects}
           </div>
         </div>
         
-        <div style={{
-          backgroundColor: '#e8f5e8',
-          padding: '20px',
-          borderRadius: '8px',
-          textAlign: 'center',
-          border: '1px solid #81c784'
-        }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#2e7d32' }}>✅ Tareas</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#1b5e20' }}>
+        <div>
+          <h3>✅ Tareas</h3>
+          <div>
             {stats.completedTasks}/{stats.totalTasks}
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#388e3c' }}>
+          <div>
             {stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0}% completado
           </div>
         </div>
         
-        <div style={{
-          backgroundColor: '#fff3e0',
-          padding: '20px',
-          borderRadius: '8px',
-          textAlign: 'center',
-          border: '1px solid #ffb74d'
-        }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#f57c00' }}>📝 Blog</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#e65100' }}>
+        <div>
+          <h3>📝 Blog</h3>
+          <div>
             {stats.totalBlogEntries}
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#f57c00' }}>entradas</div>
+          <div>entradas</div>
         </div>
         
-        <div style={{
-          backgroundColor: '#f3e5f5',
-          padding: '20px',
-          borderRadius: '8px',
-          textAlign: 'center',
-          border: '1px solid #ba68c8'
-        }}>
-          <h3 style={{ margin: '0 0 10px 0', color: '#7b1fa2' }}>⏱️ Tiempo</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#4a148c' }}>
+        <div>
+          <h3>⏱️ Tiempo</h3>
+          <div>
             {stats.totalHours}h
           </div>
-          <div style={{ fontSize: '0.8rem', color: '#7b1fa2' }}>
+          <div>
             {stats.totalMinutes} minutos
           </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+      <div>
         <div>
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '20px',
-            marginBottom: '20px'
-          }}>
-            <h3 style={{ color: '#ff6f00', marginBottom: '15px' }}>🔥 Proyectos más activos</h3>
+          <div>
+            <h3>🔥 Proyectos más activos</h3>
             {activeProjects.length === 0 ? (
-              <p style={{ color: '#666', fontStyle: 'italic' }}>No hay actividad reciente</p>
+              <p>No hay actividad reciente</p>
             ) : (
               activeProjects.map(project => (
-                <div key={project.id} style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '10px',
-                  marginBottom: '8px',
-                  backgroundColor: '#f8f9fa',
-                  borderRadius: '4px'
-                }}>
+                <div key={project.id}>
                   <Link 
                     to={`/project/${project.id}`}
-                    style={{ textDecoration: 'none', color: '#007bff', fontWeight: 'bold' }}
                   >
                     📂 {project.name}
                   </Link>
-                  <span style={{ fontSize: '0.8rem', color: '#666' }}>
+                  <span>
                     {getDaysAgo(project.lastActivityDate!) === 0 ? 'Hoy' : 
                      getDaysAgo(project.lastActivityDate!) === 1 ? 'Ayer' : 
                      `Hace ${getDaysAgo(project.lastActivityDate!)} días`}
@@ -204,26 +160,14 @@ function Dashboard({ projects }: DashboardProps) {
               ))
             )}
           </div>
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#17a2b8', marginBottom: '15px' }}>🏷️ Tags más usados</h3>
+          <div>
+            <h3>🏷️ Tags más usados</h3>
             {popularTags.length === 0 ? (
-              <p style={{ color: '#666', fontStyle: 'italic' }}>No hay tags definidos</p>
+              <p>No hay tags definidos</p>
             ) : (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              <div>
                 {popularTags.map(([tag, count]) => (
-                  <span key={tag} style={{
-                    backgroundColor: '#e1f5fe',
-                    color: '#01579b',
-                    padding: '4px 8px',
-                    borderRadius: '12px',
-                    fontSize: '0.8rem',
-                    fontWeight: 'bold'
-                  }}>
+                  <span key={tag}>
                     {tag} ({count})
                   </span>
                 ))}
@@ -234,33 +178,17 @@ function Dashboard({ projects }: DashboardProps) {
 
         <div>
           {abandonedProjects.length > 0 && (
-            <div style={{
-              backgroundColor: 'white',
-              border: '1px solid #ffc107',
-              borderRadius: '8px',
-              padding: '20px',
-              marginBottom: '20px'
-            }}>
-              <h3 style={{ color: '#f57c00', marginBottom: '15px' }}>⚠️ Proyectos que necesitan atención</h3>
+            <div>
+              <h3>⚠️ Proyectos que necesitan atención</h3>
               {abandonedProjects.map(project => (
-                <div key={project.id} style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '10px',
-                  marginBottom: '8px',
-                  backgroundColor: '#fff3cd',
-                  borderRadius: '4px',
-                  border: '1px solid #ffeaa7'
-                }}>
+                <div key={project.id}>
                   <div>
                     <Link 
                       to={`/project/${project.id}`}
-                      style={{ textDecoration: 'none', color: '#856404', fontWeight: 'bold' }}
                     >
                       💔 {project.name}
                     </Link>
-                    <div style={{ fontSize: '0.7rem', color: '#856404' }}>
+                    <div>
                       Sin actividad hace {getDaysAgo(project.lastActivityDate!)} días
                     </div>
                   </div>
@@ -269,36 +197,24 @@ function Dashboard({ projects }: DashboardProps) {
             </div>
           )}
 
-          <div style={{
-            backgroundColor: 'white',
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '20px'
-          }}>
-            <h3 style={{ color: '#28a745', marginBottom: '15px' }}>📝 Actividad reciente</h3>
+          <div>
+            <h3>📝 Actividad reciente</h3>
             {recentActivity.length === 0 ? (
-              <p style={{ color: '#666', fontStyle: 'italic' }}>No hay actividad reciente</p>
+              <p>No hay actividad reciente</p>
             ) : (
               recentActivity.map(entry => (
-                <div key={entry.id} style={{
-                  padding: '10px',
-                  marginBottom: '8px',
-                  backgroundColor: '#f8f9fa',
-                  borderRadius: '4px',
-                  borderLeft: '3px solid #28a745'
-                }}>
-                  <div style={{ fontWeight: 'bold', fontSize: '0.9rem' }}>
+                <div key={entry.id}>
+                  <div>
                     <Link 
                       to={`/project/${entry.projectId}`}
-                      style={{ textDecoration: 'none', color: '#007bff' }}
                     >
                       {entry.projectName}
                     </Link>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#333', marginTop: '4px' }}>
+                  <div>
                     "{entry.title}"
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: '#666', marginTop: '4px' }}>
+                  <div>
                     {new Date(entry.date || entry.createdAt).toLocaleDateString()}
                     {entry.timeSpent && entry.timeSpent > 0 && (
                       <span> • {entry.timeSpent} min</span>
@@ -311,48 +227,22 @@ function Dashboard({ projects }: DashboardProps) {
         </div>
       </div>
 
-      <div style={{
-        backgroundColor: 'white',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        padding: '20px',
-        marginTop: '30px'
-      }}>
-        <h3 style={{ marginBottom: '15px' }}>🚀 Acciones rápidas</h3>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+      <div>
+        <h3>🚀 Acciones rápidas</h3>
+        <div>
           <Link 
             to="/"
-            style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              padding: '10px 15px',
-              borderRadius: '4px',
-              textDecoration: 'none',
-              fontSize: '0.9rem'
-            }}
           >
             ➕ Nuevo Proyecto
           </Link>
           
           {projectsWithoutMVP.length > 0 && (
-            <span style={{
-              backgroundColor: '#ffc107',
-              color: '#212529',
-              padding: '10px 15px',
-              borderRadius: '4px',
-              fontSize: '0.9rem'
-            }}>
+            <span>
               🎯 {projectsWithoutMVP.length} proyectos sin MVP
             </span>
           )}
           
-          <span style={{
-            backgroundColor: '#6c757d',
-            color: 'white',
-            padding: '10px 15px',
-            borderRadius: '4px',
-            fontSize: '0.9rem'
-          }}>
+          <span>
             📊 {stats.totalResources} recursos guardados
           </span>
         </div>

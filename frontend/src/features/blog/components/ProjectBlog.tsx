@@ -172,45 +172,29 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
     };
 
     return (
-        <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3>📝 Diario del Proyecto</h3>
+        <div className="project-blog">
+            <div className="project-blog__header">
+            <h3>📝 Diario del Proyecto</h3>
+            
+            <div className="project-blog__actions">
+                {blogEntries.length > 0 && (
+                <button 
+                    onClick={handleExportWeek}
+                    className="project-blog__button project-blog__button--export"
+                >
+                    📤 Exportar semana
+                </button>
+                )}
                 
-                <div style={{ display: 'flex', gap: '10px' }}>
-                    {blogEntries.length > 0 && (
-                        <button 
-                            onClick={handleExportWeek}
-                            style={{
-                                backgroundColor: '#17a2b8',
-                                color: 'white',
-                                border: 'none',
-                                padding: '8px 16px',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '0.9rem'
-                            }}
-                        >
-                            📤 Exportar semana
-                        </button>
-                    )}
-                    
-                    {!isWriting && (
-                        <button 
-                            onClick={() => setIsWriting(true)}
-                            style={{
-                                backgroundColor: '#28a745',
-                                color: 'white',
-                                border: 'none',
-                                padding: '8px 16px',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                fontSize: '0.9rem'
-                            }}
-                        >
-                            ➕ Nueva Entrada
-                        </button>
-                    )}
-                </div>
+                {!isWriting && (
+                <button 
+                    onClick={() => setIsWriting(true)}
+                    className="project-blog__button project-blog__button--new"
+                >
+                    ➕ Nueva Entrada
+                </button>
+                )}
+            </div>
             </div>
             
             {isWriting && (

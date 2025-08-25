@@ -54,169 +54,82 @@ function IdeasMainView({
     };
 
     return (
-        <div style={{
-            maxWidth: '1200px',
-            margin: '0 auto',
-            padding: '20px'
-        }}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '20px'
-            }}>
+        <div>
+            <div>
                 <div>
-                    <h1 style={{
-                        margin: '0 0 8px 0',
-                        fontSize: '28px',
-                        color: '#495057'
-                    }}>
+                    <h1>
                         🧠 Lluvia de Ideas
                     </h1>
-                    <p style={{
-                        margin: 0,
-                        fontSize: '16px',
-                        color: '#6c757d'
-                    }}>
+                    <p>
                         Captura, organiza y convierte tus ideas en proyectos
                     </p>
                 </div>
 
-                <div style={{
-                    display: 'flex',
-                    gap: '12px',
-                    alignItems: 'center'
-                }}>
+                <div>
                     <Link
                         to="/"
-                        style={{
-                            padding: '8px 16px',
-                            backgroundColor: '#6c757d',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '4px',
-                            fontSize: '14px'
-                        }}
                     >
                         ← Volver a Proyectos
                     </Link>
                     <Link
                         to="/dashboard"
-                        style={{
-                            padding: '8px 16px',
-                            backgroundColor: '#17a2b8',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '4px',
-                            fontSize: '14px'
-                        }}
                     >
                         📊 Dashboard
                     </Link>
                 </div>
             </div>
 
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-                gap: '12px',
-                marginBottom: '20px'
-            }}>
-                <div style={{
-                    backgroundColor: '#f8f9fa',
-                    border: '1px solid #dee2e6',
-                    borderRadius: '8px',
-                    padding: '16px',
-                    textAlign: 'center'
-                }}>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#495057' }}>
+            <div>
+                <div>
+                    <div>
                         {stats.total}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                    <div>
                         Total Ideas
                     </div>
                 </div>
-                <div style={{
-                    backgroundColor: '#e3f2fd',
-                    border: '1px solid #90caf9',
-                    borderRadius: '8px',
-                    padding: '16px',
-                    textAlign: 'center'
-                }}>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1976d2' }}>
+                <div>
+                    <div>
                         {stats.inbox}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#1976d2' }}>
+                    <div>
                         📥 Inbox
                     </div>
                 </div>
-                <div style={{
-                    backgroundColor: '#fff3e0',
-                    border: '1px solid #ffcc02',
-                    borderRadius: '8px',
-                    padding: '16px',
-                    textAlign: 'center'
-                }}>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f57c00' }}>
+                <div>
+                    <div>
                         {stats.processing}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#f57c00' }}>
+                    <div>
                         ⚙️ Procesando
                     </div>
                 </div>
-                <div style={{
-                    backgroundColor: '#e8f5e8',
-                    border: '1px solid #81c784',
-                    borderRadius: '8px',
-                    padding: '16px',
-                    textAlign: 'center'
-                }}>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#2e7d32' }}>
+                <div>
+                    <div>
                         {stats.promoted}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#2e7d32' }}>
+                    <div>
                         🚀 Promovidas
                     </div>
                 </div>
-                <div style={{
-                    backgroundColor: '#f3e5f5',
-                    border: '1px solid #ce93d8',
-                    borderRadius: '8px',
-                    padding: '16px',
-                    textAlign: 'center'
-                }}>
-                    <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#7b1fa2' }}>
+                <div>
+                    <div>
                         {stats.archived}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#7b1fa2' }}>
+                    <div>
                         📦 Archivadas
                     </div>
                 </div>
             </div>
 
-            <div style={{
-                display: 'flex',
-                gap: '12px',
-                alignItems: 'center',
-                marginBottom: '20px',
-                padding: '16px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '8px',
-                border: '1px solid #dee2e6'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <label style={{ fontSize: '14px', fontWeight: 'bold', color: '#495057' }}>
+            <div>
+                <div>
+                    <label>
                         Filtrar:
                     </label>
                     <select
                         value={filter}
                         onChange={(e) => setFilter(e.target.value as 'all' | 'inbox' | 'processing' | 'promoted' | 'archived')}
-                        style={{
-                            padding: '6px 10px',
-                            border: '1px solid #ccc',
-                            borderRadius: '4px',
-                            fontSize: '14px'
-                        }}
                     >
                         <option value="all">🔍 Todas ({stats.total})</option>
                         <option value="inbox">📥 Inbox ({stats.inbox})</option>
@@ -226,19 +139,13 @@ function IdeasMainView({
                     </select>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <label style={{ fontSize: '14px', fontWeight: 'bold', color: '#495057' }}>
+                <div>
+                    <label>
                         Ordenar:
                     </label>
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'priority' | 'title')}
-                        style={{
-                            padding: '6px 10px',
-                            border: '1px solid #ccc',
-                            borderRadius: '4px',
-                            fontSize: '14px'
-                        }}
                     >
                         <option value="newest">📅 Más recientes</option>
                         <option value="oldest">🕰️ Más antiguas</option>
@@ -247,7 +154,7 @@ function IdeasMainView({
                     </select>
                 </div>
 
-                <div style={{ marginLeft: 'auto', fontSize: '14px', color: '#6c757d' }}>
+                <div>
                     Mostrando {sortedIdeas.length} de {stats.total} ideas
                 </div>
             </div>

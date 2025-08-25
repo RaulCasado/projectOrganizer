@@ -25,12 +25,11 @@ function ProjectFilters({ selectedTag, onTagFilterChange, availableTags }: Proje
                 </label>
             </div>
                   {selectedTag && (
-        <div style={{ marginTop: '0.5rem' }}>
+        <div>
           <span>Mostrando proyectos con tag: </span>
           <strong>{selectedTag}</strong>
           <button 
             onClick={() => onTagFilterChange(null)}
-            style={{ marginLeft: '0.5rem' }}
           >
             ✕ Limpiar
           </button>

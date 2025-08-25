@@ -191,7 +191,7 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
                             setSelectedTag(selectedTag === tag ? null : tag);
                           }}
                           title={selectedTag === tag ? `Quitar filtro de ${tag}` : `Filtrar por ${tag}`}
-                          onMouseEnter={(e) => {
+/*                           onMouseEnter={(e) => {
                             if (selectedTag !== tag) {
                               //implement logic here
                             }
@@ -200,7 +200,7 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
                             if (selectedTag !== tag) {
                               // implement logic here
                             }
-                          }}
+                          }} */
                         >
                           🏷️ {tag}
                         </button>

@@ -42,14 +42,14 @@ function IdeaList({
         onUpdateIdea({ ...idea, status: newStatus });
     };
 
-    const getPriorityColor = (priority: Idea['priority']) => {
+/*     const getPriorityColor = (priority: Idea['priority']) => {
         switch (priority) {
             case 'high': return '#dc3545';
             case 'medium': return '#ffc107';
             case 'low': return '#28a745';
             default: return '#6c757d';
         }
-    };
+    }; */
 
     const getStatusEmoji = (status: Idea['status']) => {
         switch (status) {
@@ -83,17 +83,10 @@ function IdeaList({
     }
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div>
             {ideas.map((idea) => (
                 <div
                     key={idea.id}
-                    style={{
-                        backgroundColor: 'black',
-                        border: '1px solid #dee2e6',
-                        borderRadius: '8px',
-                        padding: '16px',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                    }}
                 >
                     {editingIdea === idea.id ? (
                         <div>
@@ -101,30 +94,13 @@ function IdeaList({
                                 type="text"
                                 value={editForm.title || ''}
                                 onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    marginBottom: '8px',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold'
-                                }}
                             />
                             <textarea
                                 value={editForm.description || ''}
                                 onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
                                 rows={3}
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    border: '1px solid #ccc',
-                                    borderRadius: '4px',
-                                    marginBottom: '8px',
-                                    resize: 'vertical'
-                                }}
                             />
-                            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
+                            <div>
                                 <select
                                     value={editForm.priority || 'medium'}
                                     onChange={(e) => setEditForm({ ...editForm, priority: e.target.value as Idea['priority'] })}

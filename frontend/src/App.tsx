@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 import ProjectsMainView from './features/projects/components/ProjectsMainView';
 import { Routes, Route } from 'react-router-dom';
 import type { Project } from './shared/types';

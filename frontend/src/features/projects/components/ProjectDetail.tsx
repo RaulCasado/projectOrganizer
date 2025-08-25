@@ -1,16 +1,12 @@
-import type { Project } from '../types/Project';
-import type { Idea } from '../types/Idea';
-import type { Task } from '../types/Task';
-import TaskList from './TaskList';
-import TaskForm from './TaskForm';
-import { useState } from 'react';
-import TaskFilters from './TaskFilters';
-import MVPSection from './MVPSection';
-import type { BlogEntry } from '../types/Project';
-import ProjectBlog from './ProjectBlog';
-import ProjectResources from './ProjectResources';
-import type { Resource } from '../types/Project';
-import IdeaPanel from './IdeaPanel';
+import { useState } from 'react'
+import type { Project, BlogEntry, Resource } from '../../../shared/types';
+import type { Idea } from '../../../shared/types/Idea';
+import type { Task } from '../../../shared/types/Task';
+import { TaskList, TaskForm, TaskFilters } from '../../tasks/components';
+import { ProjectBlog } from '../../blog/components';
+import { ProjectResources } from '../../resources/components';
+import { MVPSection } from './';
+import { IdeaPanel } from '../../ideas/components';
 
 interface ProjectDetailProps {
   project: Project;

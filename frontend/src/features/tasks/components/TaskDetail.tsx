@@ -1,4 +1,4 @@
-import type { Task } from '../types/Task';
+import type { Task } from '../../../shared/types/Task';
 
 interface TaskDetailProps {
     task : Task;

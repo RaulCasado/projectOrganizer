@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { Idea } from '../types/Idea';
+import type { Idea } from '../../../shared/types/Idea';
 import IdeaPanel from './IdeaPanel';
 
 interface IdeasMainViewProps {

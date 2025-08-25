@@ -1,4 +1,4 @@
-import type { Task } from "../types/Task";
+import type { Task } from "../../../shared/types/Task";
 import { Link } from 'react-router-dom';
 import Swal from "sweetalert2";
 

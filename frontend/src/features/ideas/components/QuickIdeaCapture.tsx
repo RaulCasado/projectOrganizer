@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Idea } from '../types/Idea';
+import type { Idea } from '../../../shared/types/Idea';
 
 interface QuickIdeaCaptureProps {
     onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt' | 'projectId'>) => void;

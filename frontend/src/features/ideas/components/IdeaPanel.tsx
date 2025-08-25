@@ -1,4 +1,4 @@
-import type { Idea } from '../types/Idea';
+import type { Idea } from '../../../shared/types/Idea';
 import QuickIdeaCapture from './QuickIdeaCapture';
 import IdeaList from './IdeaList';
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Resource } from '../types/Project';
+import type { Resource } from '../../../shared/types/Project';
 import Swal from 'sweetalert2';
 
 interface ProjectResourcesProps {

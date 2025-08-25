@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Project } from '../types/Project';
+import type { Project } from '../../../shared/types';
 import { Link } from 'react-router-dom';
 import ProjectFilters from './ProjectFilters';
 import Swal from 'sweetalert2';

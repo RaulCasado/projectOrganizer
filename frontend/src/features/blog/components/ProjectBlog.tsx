@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type { BlogEntry } from "../types/Project";
+import type { BlogEntry } from '../../../shared/types';
 import BlogForm from './BlogForm';
 import BlogList from "./BlogList";
 import Swal from "sweetalert2";
 import BlogDetail from "./BlogDetail";
-import Modal from './Modal'
+import Modal from '../../../shared/components/Modal'
 
 interface ProjectBlogProps {
     blogEntries?: BlogEntry[];

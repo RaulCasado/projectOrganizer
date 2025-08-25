@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import ProjectsMainView from './components/ProjectsMainView';
+import ProjectsMainView from './features/projects/components/ProjectsMainView';
 import { Routes, Route } from 'react-router-dom';
-import type { Project } from './types/Project';
-import type { Idea } from './types/Idea';
-import ProjectDetail from './components/ProjectDetail';
+import type { Project } from './shared/types';
+import type { Idea } from './shared/types/Idea';
+import ProjectDetail from './features/projects/components/ProjectDetail';
 import { useParams } from 'react-router-dom';
-import TaskDetail from './components/TaskDetail';
-import type { Task } from './types/Task';
-import Dashboard from './components/Dashboard';
-import { useNotifications } from './hooks/useNotifications';
-import IdeasMainView from './components/IdeasMainView';
+import TaskDetail from './features/tasks/components/TaskDetail';
+import type { Task } from './shared/types/Task';
+import Dashboard from './features/dashboard/components/Dashboard';
+import { useNotifications } from './shared/hooks/useNotifications';
+import IdeasMainView from './features/ideas/components/IdeasMainView';
 
 function ProjectDetailWrapper({ 
   projects, 

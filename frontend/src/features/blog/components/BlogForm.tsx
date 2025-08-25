@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { BlogEntry } from '../types/Project';
+import type { BlogEntry } from '../../../shared/types';
 import Swal from 'sweetalert2';
 
 interface BlogFormProps {

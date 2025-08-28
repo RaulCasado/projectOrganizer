@@ -310,3 +310,247 @@ Por ejemplo he visto que date-fns es una buena libreria para manejar fechas en j
 
 
 Hecho las ideas tanto de un proyecto como en general ideas generales que pueda tener.
+
+
+Vale he decidido dejar el css para el final ahora mismo me voy a concentrar en terminar todas las features que tenia pensadas de momento solo me falta implementar la zona de dibujos y ya cuando termine esto refactorizamos es decir separamos mas los componente hacemos un poco de polish de algunas feautres y ya añadimos css para rematar despues de esto hariamos lo que es el backend y el sync pero ahora mismo no tengo ni idea de como hacerlo ya se planteará cuando llegue el día de momento vamos a centrarnos en terminar esto.
+
+MI idea con los dibujos era guardarlo en el localStorage, vale problema numero 1 los dibujos se han de guardar en base64 y tienes que tambien guardar cosas como que has utilizado para dibujarlos etc. Como por ejmeplo lapiz goma cuadrados etc. Principalmente es que el localStorage esta limitado entre unos 5 mb hasta 20 mb esto se puede extender si el usuario quiere pero claro no podemos obligar a los usuarios a deslimitar esto ya que cada uno es libre de hacer lo que quiera entonces el problema es como hacemos el tema de los dibujos? lo guardamos en local storage hasta que no se puedan guardar mas segun mis calculos podriamos guardar unos 20 dibujos pero claro tambien mandar esto al backend puede ser una tarea bastante pesado otra solucion seria que no se guardase en el navegador y simplemente se pudiese exportar como imagen pero claro ya hay sitios que hacen esto mucho mas completo y facil por lo que no tendria mucho sentido implementarlo si ya existe mucho mejor en otros lugares, ademas que son herramientas bastante conocidas. Otra opcion seria la de dejarlo en el session storage y simplemente hacer sync si el usuario esta logeado hasta un limite de x dibujos no se tendre que ver pq la solucion no es demasiado obvia
+
+
+¡**EXCELENTE PREGUNTA**! 🎯 No es una tontería para nada, es una observación **muy inteligente** que hacen developers senior. Tienes razón en ambas cosas.
+
+## 🚨 **SÍ, muchos imports = Code smell**
+
+### **❌ Componente con demasiadas responsabilidades:**
+```typescript
+// RED FLAG: 20+ imports
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
+import { format, parseISO, startOfWeek, endOfWeek } from 'date-fns';
+import { validateEmail, validatePhone, sanitizeInput } from '../utils/validation';
+import { exportToPDF, exportToCSV, exportToExcel } from '../utils/export';
+import { calculateStats, generateReport } from '../utils/analytics';
+import { Project, Task, Idea, QuickSketch, User } from '../types';
+import { projectService, taskService, ideaService, sketchService } from '../services';
+import { useProjects, useTasks, useIdeas, useSketches, useAuth } from '../hooks';
+import { Button, Modal, Form, Table, Chart, FileUpload } from '../components';
+
+// Este componente está haciendo DEMASIADO
+function ProjectDashboardAnalyticsExportManagerForm() {
+  // 300+ líneas de código...
+}
+```
+
+### **✅ Componente bien enfocado:**
+```typescript
+// GOOD: 3-8 imports max
+import React from 'react';
+import { QuickSketch } from '../../../shared/types';
+import { useSketchCanvas } from '../hooks/useSketchCanvas';
+
+// Responsabilidad única: Dibujar
+function SketchCanvas({ onSave, onCancel }) {
+  // 30-50 líneas de código
+}
+```
+
+## 🏗️ **Soluciones en proyectos grandes:**
+
+### **1. 📦 Barrel Exports (como Laravel facades):**
+
+```typescript
+// src/shared/index.ts - "Dependency Injection Container"
+export * from './types';
+export * from './services';
+export * from './hooks';
+export * from './utils';
+export * from './config';
+
+// Uso en componentes:
+import { 
+  QuickSketch, 
+  sketchStorageService, 
+  useSketches, 
+  SKETCH_CONFIG 
+} from '../../../shared'; // ← UNA SOLA línea
+```
+
+### **2. 🎯 Custom Hooks que agrupan dependencias:**
+
+```typescript
+// hooks/useProjectWorkflow.ts - Agrupa toda la lógica relacionada
+export const useProjectWorkflow = (projectId: string) => {
+  const projects = useProjects();
+  const tasks = useTasks(projectId);
+  const ideas = useIdeas(projectId);
+  const sketches = useSketches(projectId);
+  const { showSuccess, showError } = useNotifications();
+  
+  const createTask = useCallback((taskData) => {
+    // Lógica compleja aquí
+  }, []);
+  
+  const linkSketchToTask = useCallback((sketchId, taskId) => {
+    // Lógica compleja aquí
+  }, []);
+  
+  return {
+    // API simplificada
+    project: projects.current,
+    tasks: tasks.list,
+    ideas: ideas.list,
+    sketches: sketches.list,
+    actions: {
+      createTask,
+      linkSketchToTask,
+      // ... más acciones
+    }
+  };
+};
+
+// Componente simplificado:
+import { useProjectWorkflow } from '../hooks/useProjectWorkflow';
+
+function ProjectDetail({ projectId }) {
+  const { project, tasks, sketches, actions } = useProjectWorkflow(projectId);
+  
+  return (
+    <div>
+      {/* UI simple, lógica en el hook */}
+    </div>
+  );
+}
+```
+
+### **3. 🏭 Context Providers (como Service Containers):**
+
+```typescript
+// contexts/ProjectContext.tsx
+const ProjectContext = createContext();
+
+export const ProjectProvider = ({ children, projectId }) => {
+  const projects = useProjects();
+  const tasks = useTasks(projectId);
+  const sketches = useSketches(projectId);
+  const notifications = useNotifications();
+  
+  const value = {
+    // Toda la lógica aquí
+    project: projects.current,
+    tasks,
+    sketches,
+    createTask: tasks.create,
+    linkSketchToTask: (sketchId, taskId) => {
+      // Lógica compleja
+    }
+  };
+  
+  return (
+    <ProjectContext.Provider value={value}>
+      {children}
+    </ProjectContext.Provider>
+  );
+};
+
+// Componentes sin imports pesados:
+function TaskList() {
+  const { tasks, createTask } = useContext(ProjectContext);
+  return <div>{/* UI simple */}</div>;
+}
+```
+
+### **4. 📁 Feature-based imports:**
+
+```typescript
+// features/projects/index.ts
+export { ProjectDetail } from './components/ProjectDetail';
+export { ProjectForm } from './components/ProjectForm';
+export { useProjects } from './hooks/useProjects';
+export { projectService } from './services/projectService';
+
+// App.tsx - Imports organizados
+import { ProjectDetail, ProjectForm } from './features/projects';
+import { IdeaList, IdeaForm } from './features/ideas';
+import { SketchCanvas, SketchList } from './features/sketches';
+```
+
+## 🎯 **Estrategias específicas:**
+
+### **🔍 Detectar componentes sobrecargados:**
+```bash
+# Contar imports por archivo
+grep -c "^import" src/**/*.tsx | sort -t: -k2 -nr
+
+# Output:
+# src/components/ProjectDetail.tsx:23  ← RED FLAG
+# src/components/Dashboard.tsx:18     ← RED FLAG
+# src/components/TaskForm.tsx:6       ← OK
+```
+
+### **🏗️ Refactoring pattern:**
+```typescript
+// ANTES: Componente monolítico
+function ProjectDetail() {
+  // 15+ imports
+  // 200+ líneas
+  // Multiple responsabilities
+}
+
+// DESPUÉS: Componente orquestador + hooks especializados
+function ProjectDetail({ projectId }) {
+  const workflow = useProjectWorkflow(projectId);
+  
+  return (
+    <ProjectProvider projectId={projectId}>
+      <ProjectHeader />
+      <ProjectTasks />
+      <ProjectSketches />
+      <ProjectIdeas />
+    </ProjectProvider>
+  );
+}
+```
+
+
+State explosion
+
+  // Guardar estado en historial para undo/redo
+    const saveToHistory = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const imageData = canvas.toDataURL();
+
+    setCanvasHistory(prev => {
+        const currentIndex = prev.length - 1; // índice actual
+        const newHistory = prev.slice(0, currentIndex + 1);
+        newHistory.push(imageData);
+        return newHistory;
+    });
+
+    setHistoryIndex(prev => prev + 1); // este sí usa prev correctamente
+    }, []);
+
+
+Lo que tenia antes es decir el codigo de abajo dependia de una variables externa como lo es history index lo que puede llegar a desincronizar el estado, desfasos entre componentes y rerenders innecesarios.
+
+“Si estás actualizando un estado en función del valor anterior, usa siempre la forma con prev y evita meter dependencias externas en el cálculo.”
+
+  const saveToHistory = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const imageData = canvas.toDataURL();
+    setCanvasHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(imageData);
+      return newHistory;
+    });
+    setHistoryIndex(prev => prev + 1);
+  }, [historyIndex]);
+
+
+
+Vale vamos a pararnos aqui un momentin pq hay cosas que no me cuadran. Vale empecemos por el use effect del principio lo he separada para que sea mas limpio es decir el primero se inicializa al principio valga la redundancia y el segundo se ejecuta solo cuando cambian width y height pero la cosa es que claro tu antes estabas rehaciendo todo el canvas es decir lo recreabas. Tambien he hecho el withCtx para centralizar la logica repetida que tenemos (pero no la uso). Ahora tambien me he dado cuenta de una cosa y es que si le damos a clear history pero teniamos un canvas vacio se añadira otro canvas vacio por lo que si le damos a rendu no haria nada visualmente ya que simplemente serian 2 lienzos vacios. Tambien he visto que el rendu undu  esta un poco meh lo de hacer new Image y tal creo que en navegadores modernos esta un poco desfasado eso. Tambien he cambiado el saveToHIstory ya que tenia historyINdex pero esto al ser algo externo puede ser que este desencronizado con el prev actual ya que cada render es como una foto del estado y esto puede llevar a fallos en lo que es la coordinacion dependencias fantasma etc. No se que opinas de mi resumen. Una ultima cosa que queria apuntar es que podriamos poner un limite al rendu/undo rollo 20 e ir quitando las snapshots mas antiguas para que no se llene tanto la RAM. Que opinas de todo?

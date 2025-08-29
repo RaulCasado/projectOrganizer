@@ -1,5 +1,6 @@
 import type { Project } from '../types';
 import { DateUtils } from '../utils';
+import { LocalStorageService } from './localStorageService';
 class NotificationService {
     static async requestPermission(): Promise<boolean> {
         if (!('Notification' in window)) {
@@ -44,12 +45,12 @@ class NotificationService {
         
         const timeIdentifier = (frequency === 'daily') ? today : thisWeek;
         const storageKey = `lastNotified_${notificationType}`;
-        const lastNotified = localStorage.getItem(storageKey);
+        const lastNotified = LocalStorageService.get<string>(storageKey, '');
 
         const hasBeenNotified = lastNotified === timeIdentifier;
 
         if (!hasBeenNotified) {
-            localStorage.setItem(storageKey, timeIdentifier);
+            LocalStorageService.set(storageKey, timeIdentifier);
         }
         
         return !hasBeenNotified;

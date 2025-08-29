@@ -1,6 +1,7 @@
 import type { QuickSketch, SketchStorageInfo } from '../types';
 import { SKETCH_CONFIG } from '../config/sketchConfig';
 import { DateUtils } from '../utils';
+import { LocalStorageService } from './localStorageService';
 
 class SketchStorageService {
     private readonly config = SKETCH_CONFIG.storage;
@@ -37,7 +38,7 @@ class SketchStorageService {
                 ...metadata
             };
 
-            localStorage.setItem(`${this.config.storagePrefix}${sketch.id}`, JSON.stringify(sketch));
+            LocalStorageService.set(`${this.config.storagePrefix}${sketch.id}`, sketch);
 
             return sketch;
         } catch (error) {
@@ -48,11 +49,10 @@ class SketchStorageService {
 
     getSketch(id: string): QuickSketch | null {
         try {
-            const stored = localStorage.getItem(`${this.config.storagePrefix}${id}`);
-            if (stored) {
-                const sketch = JSON.parse(stored) as QuickSketch;
+            const sketch = LocalStorageService.get<QuickSketch | null>(`${this.config.storagePrefix}${id}`, null);
+            if (sketch) {
                 sketch.lastAccessed = DateUtils.timestampNow();
-                localStorage.setItem(`${this.config.storagePrefix}${id}`, JSON.stringify(sketch));
+                LocalStorageService.set(`${this.config.storagePrefix}${id}`, sketch);
                 return sketch;
             }
             return null;
@@ -75,20 +75,18 @@ class SketchStorageService {
         getAllSketches(): QuickSketch[] {
                 const sketches: QuickSketch[] = [];
                 
-                const sketchKeys = Object.keys(localStorage).filter(key => 
-                        key.startsWith(this.config.storagePrefix)
-                );
+                const sketchKeys = LocalStorageService.getKeysWithPrefix(this.config.storagePrefix);
                 
                 for (const key of sketchKeys) {
                         try {
-                                const sketchData = localStorage.getItem(key);
+                                const sketchData = LocalStorageService.getRawItem(key);
                                 if (sketchData) {
                                         const sketch = JSON.parse(sketchData) as QuickSketch;
                                         sketches.push(sketch);
                                 }
                         } catch (error) {
                                 console.error('Error parsing sketch:', key, error);
-                                localStorage.removeItem(key);
+                                LocalStorageService.remove(key);
                         }
                 }
 
@@ -97,7 +95,7 @@ class SketchStorageService {
 
     deleteSketch(id: string): boolean {
         try {
-            localStorage.removeItem(`${this.config.storagePrefix}${id}`);
+            LocalStorageService.remove(`${this.config.storagePrefix}${id}`);
             return true;
         } catch (error) {
             console.error('Error eliminando sketch:', error);

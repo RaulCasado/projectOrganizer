@@ -11,6 +11,7 @@ import Dashboard from './features/dashboard/components/Dashboard';
 import { useNotifications } from './shared/hooks/useNotifications';
 import IdeasMainView from './features/ideas/components/IdeasMainView';
 import { DateUtils } from './shared';
+import { LocalStorageService } from './shared/services/localStorageService';
 
 function ProjectDetailWrapper({ 
   projects, 
@@ -67,24 +68,22 @@ function TaskDetailWrapper({ projects }: { projects: Project[] }) {
 }
 
 function App() {
-  const [projects, setProjects] = useState<Project[]>(() => {
-    const savedProjects = localStorage.getItem('projects');
-    return savedProjects ? JSON.parse(savedProjects) : [];
-  });
+  const [projects, setProjects] = useState<Project[]>(() => 
+    LocalStorageService.get<Project[]>('projects', [])
+  );
 
-  const [ideas, setIdeas] = useState<Idea[]>(() => {
-    const savedIdeas = localStorage.getItem('ideas');
-    return savedIdeas ? JSON.parse(savedIdeas) : [];
-  });
+  const [ideas, setIdeas] = useState<Idea[]>(() => 
+    LocalStorageService.get<Idea[]>('ideas', [])
+  );
 
   useNotifications(projects);
 
   useEffect(() => {
-    localStorage.setItem('projects', JSON.stringify(projects));
+    LocalStorageService.set('projects', projects);
   }, [projects]);
 
   useEffect(() => {
-    localStorage.setItem('ideas', JSON.stringify(ideas));
+    LocalStorageService.set('ideas', ideas);
   }, [ideas]);
 
   const handleAddProject = (projectData: Omit<Project, 'id'>) => {

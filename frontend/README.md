@@ -569,3 +569,5 @@ Como he dicho he empezado el refactor haciendo una clase de utilidad para centra
 He empezado por Dashboard.tsx y perfecto todo muy bien, tambien me he preguntado como afecta al rendimiento el hecho de que estemos haciendo muchas instancias de date pero segun la documentacion de date-fns, estas funciones son bastante ligeras y optimizadas para su uso, por lo que no deberia haber un impacto significativo en el rendimiento.
 
 Habria que mirar si notification service tendria que ser un singleton o no
+
+Las ideas al estar en una key diferente del local storage no se borra si se borra su proyecto habria que mirar el pq o como hacerlo basicamente seria hacer un bucle por las tareas hasta encontrar una con el id del proyecto que se haya eliminado hasta entonces no crear ideas.

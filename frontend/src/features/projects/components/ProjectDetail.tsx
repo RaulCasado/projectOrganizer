@@ -1,14 +1,14 @@
 import { useProjectTasks } from '../hooks/useProjectTasks';
 import { useProjectSketches } from '../../sketches/hooks/useProjectSketches';
-import SketchesGrid from '../../sketches/components/SketchesGrid';
 import ProjectOverview from './ProjectOverview';
+import TasksSection from './TasksSection';
+import IdeasSection from './IdeasSection';
+import ResourcesSection from './ResourcesSection';
+import SketchesSection from './SketchesSection';
+import BlogSection from './BlogSection';
 import type { Project, BlogEntry, Resource } from '../../../shared/types';
 import type { Idea } from '../../../shared/types/Idea';
-import { TaskList, TaskForm, TaskFilters } from '../../tasks/components';
-import { ProjectBlog } from '../../blog/components';
-import { ProjectResources } from '../../resources/components';
 import { MVPSection } from './';
-import { IdeaPanel } from '../../ideas/components';
 import SketchCanvas from '../../sketches/components/SketchCanvas';
 import { DateUtils } from '../../../shared';
 
@@ -94,63 +94,46 @@ function ProjectDetail({
         onUpdateMVP={handleUpdateMVP}
       />
 
-      <ProjectResources
-        resources={project.resources}
+      <ResourcesSection
+        resources={project.resources || []}
         onUpdateResources={handleUpdateResources}
       />
 
-      <ProjectBlog 
-        blogEntries={project.blogEntries}
+      <BlogSection
+        blogEntries={project.blogEntries || []}
         onUpdateBlogEntries={handleUpdateBlogEntries}
         project={project}
       />
 
-      <section className="project-sketches">
-        <div className="section-header">
-          <h3>📐 Quick Sketches ({sketchCount}/{maxSketches})</h3>
-        </div>
+      <SketchesSection
+        sketches={sketches}
+        error={sketchesError}
+        sketchCount={sketchCount}
+        maxSketches={maxSketches}
+        isAtLimit={isAtLimit}
+        onEditSketch={handleEditSketch}
+        onDeleteSketch={handleDeleteSketch}
+        onOpenSketchModal={handleOpenSketchModal}
+      />
 
-        <SketchesGrid
-          sketches={sketches}
-          error={sketchesError}
-          sketchCount={sketchCount}
-          maxSketches={maxSketches}
-          isAtLimit={isAtLimit}
-          onEditSketch={handleEditSketch}
-          onDeleteSketch={handleDeleteSketch}
-          onOpenSketchModal={handleOpenSketchModal}
-        />
-
-        {isAtLimit && (
-          <div className="limit-warning">
-            ⚠️ Has alcanzado el límite de {maxSketches} sketches por proyecto.
-            Elimina algunos para crear nuevos.
-          </div>
-        )}
-      </section>
-
-      <TaskForm 
-        onAddTask={editingTask ? undefined : handleAddTask}
-        onUpdateTask={editingTask ? handleUpdateTask : undefined}
+      <TasksSection
         editingTask={editingTask}
-        onCancel={editingTask ? handleCancelEdit : undefined}
-      />
-      <TaskFilters 
+        setEditingTask={setEditingTask}
         statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
         priorityFilter={priorityFilter}
+        setPriorityFilter={setPriorityFilter}
         searchText={searchText}
-        onStatusFilterChange={setStatusFilter}
-        onPriorityFilterChange={setPriorityFilter}
-        onSearchTextChange={setSearchText}
-      />
-      <TaskList 
-        tasks={filteredTasks} 
-        onToggleTask={handleToggleTask}
-        onDeleteTask={handleDeleteTask}
-        onEditTask={setEditingTask}
+        setSearchText={setSearchText}
+        filteredTasks={filteredTasks}
+        handleUpdateTask={handleUpdateTask}
+        handleAddTask={handleAddTask}
+        handleToggleTask={handleToggleTask}
+        handleDeleteTask={handleDeleteTask}
+        handleCancelEdit={handleCancelEdit}
       />
 
-      <IdeaPanel 
+      <IdeasSection
         projectId={project.id}
         ideas={ideas}
         onAddIdea={onAddIdea}

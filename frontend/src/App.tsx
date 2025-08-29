@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import ProjectsMainView from './features/projects/components/ProjectsMainView';
 import { Routes, Route } from 'react-router-dom';
 import type { Project } from './shared/types';
@@ -8,10 +7,9 @@ import { useParams } from 'react-router-dom';
 import TaskDetail from './features/tasks/components/TaskDetail';
 import type { Task } from './shared/types/Task';
 import Dashboard from './features/dashboard/components/Dashboard';
-import { useNotifications } from './shared/hooks/useNotifications';
+import { useNotifications, useLocalStorage } from './shared/hooks';
 import IdeasMainView from './features/ideas/components/IdeasMainView';
 import { DateUtils } from './shared';
-import { LocalStorageService } from './shared/services/localStorageService';
 
 function ProjectDetailWrapper({ 
   projects, 
@@ -68,23 +66,10 @@ function TaskDetailWrapper({ projects }: { projects: Project[] }) {
 }
 
 function App() {
-  const [projects, setProjects] = useState<Project[]>(() => 
-    LocalStorageService.get<Project[]>('projects', [])
-  );
-
-  const [ideas, setIdeas] = useState<Idea[]>(() => 
-    LocalStorageService.get<Idea[]>('ideas', [])
-  );
+  const [projects, setProjects] = useLocalStorage<Project[]>('projects', []);
+  const [ideas, setIdeas] = useLocalStorage<Idea[]>('ideas', []);
 
   useNotifications(projects);
-
-  useEffect(() => {
-    LocalStorageService.set('projects', projects);
-  }, [projects]);
-
-  useEffect(() => {
-    LocalStorageService.set('ideas', ideas);
-  }, [ideas]);
 
   const handleAddProject = (projectData: Omit<Project, 'id'>) => {
     const newProject: Project = {

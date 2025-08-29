@@ -4,11 +4,12 @@ import BlogForm from './BlogForm';
 import BlogList from "./BlogList";
 import Swal from "sweetalert2";
 import BlogDetail from "./BlogDetail";
-import Modal from '../../../shared/components/Modal'
+import Modal from '../../../shared/components/Modal';
+import { DateUtils } from "../../../shared";
 
 interface ProjectBlogProps {
     blogEntries?: BlogEntry[];
-    onUpdateBlogEntries: (entries : BlogEntry[]) => void;
+    onUpdateBlogEntries: (entries: BlogEntry[]) => void;
     project?: { name: string };
 }
 
@@ -31,7 +32,7 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
             const newEntry: BlogEntry = {
                 id: crypto.randomUUID(),
                 ...entryData,
-                createdAt: new Date().toISOString(),
+                createdAt: DateUtils.timestampNow(),
             };
             onUpdateBlogEntries([...blogEntries, newEntry]);
         }
@@ -41,33 +42,26 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
 
     const handleExportWeek = () => {
         const getLastWeekEntries = () => {
-            const today = new Date();
-            const sevenDaysAgo = new Date(today);
-            sevenDaysAgo.setDate(today.getDate() - 7);
-            
-            return blogEntries.filter(entry => {
-                const entryDate = new Date(entry.date);
-                return entryDate >= sevenDaysAgo && entryDate <= today;
-            }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+            const lastWeekEntries = DateUtils.filterRecentDays(blogEntries, 7, 'date');
+            return DateUtils.sortByDate(lastWeekEntries, 'date', 'asc');
         };
 
         const generateMarkdown = () => {
             const weekEntries = getLastWeekEntries();
-            const today = new Date();
-            const sevenDaysAgo = new Date(today);
-            sevenDaysAgo.setDate(today.getDate() - 7);
             
             if (weekEntries.length === 0) {
                 Swal.fire('Sin entradas', 'No hay entradas en los últimos 7 días', 'info');
                 return;
             }
 
+            const weekRange = DateUtils.getWeekRange();
+            
             const totalTime = weekEntries.reduce((sum, entry) => sum + (entry.timeSpent || 0), 0);
             const allTags = weekEntries.flatMap(entry => entry.tags || []);
             const uniqueTags = [...new Set(allTags)];
             
             let markdown = `# Progreso Semanal - ${project?.name || 'Proyecto'}\n`;
-            markdown += `**Semana del ${sevenDaysAgo.toLocaleDateString()} al ${today.toLocaleDateString()}**\n\n`;
+            markdown += `**Semana del ${DateUtils.formatShort(weekRange.start)} al ${DateUtils.formatShort(weekRange.end)}**\n\n`;
             
             markdown += `## 📊 Resumen\n`;
             markdown += `- Total de entradas: ${weekEntries.length}\n`;
@@ -80,9 +74,8 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
             markdown += `## 📝 Entradas diarias\n\n`;
             
             weekEntries.forEach(entry => {
-                const entryDate = new Date(entry.date);
-                const dayName = entryDate.toLocaleDateString('es-ES', { weekday: 'long' });
-                const dateFormatted = entryDate.toLocaleDateString('es-ES');
+                const dayName = DateUtils.formatWeekday(entry.date);
+                const dateFormatted = DateUtils.formatShort(entry.date);
                 
                 markdown += `### ${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dateFormatted}\n`;
                 markdown += `**${entry.title}**\n\n`;
@@ -172,29 +165,27 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
     };
 
     return (
-        <div className="project-blog">
-            <div className="project-blog__header">
-            <h3>📝 Diario del Proyecto</h3>
-            
-            <div className="project-blog__actions">
-                {blogEntries.length > 0 && (
-                <button 
-                    onClick={handleExportWeek}
-                    className="project-blog__button project-blog__button--export"
-                >
-                    📤 Exportar semana
-                </button>
-                )}
+        <div>
+            <div>
+                <h3>📝 Diario del Proyecto</h3>
                 
-                {!isWriting && (
-                <button 
-                    onClick={() => setIsWriting(true)}
-                    className="project-blog__button project-blog__button--new"
-                >
-                    ➕ Nueva Entrada
-                </button>
-                )}
-            </div>
+                <div>
+                    {blogEntries.length > 0 && (
+                        <button 
+                            onClick={handleExportWeek}
+                        >
+                            📤 Exportar semana
+                        </button>
+                    )}
+                    
+                    {!isWriting && (
+                        <button 
+                            onClick={() => setIsWriting(true)}
+                        >
+                            ➕ Nueva Entrada
+                        </button>
+                    )}
+                </div>
             </div>
             
             {isWriting && (

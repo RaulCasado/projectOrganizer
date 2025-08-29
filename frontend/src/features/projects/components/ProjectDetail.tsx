@@ -9,6 +9,7 @@ import { MVPSection } from './';
 import { IdeaPanel } from '../../ideas/components';
 import { useSketches } from '../../../shared/hooks/useSketches';
 import SketchCanvas from '../../sketches/components/SketchCanvas';
+import { DateUtils } from '../../../shared';
 
 interface ProjectDetailProps {
   project: Project;
@@ -74,7 +75,7 @@ function ProjectDetail({
     const updatedProject = {
       ...project,
       resources,
-      lastActivityDate: new Date().toISOString().split('T')[0]
+      lastActivityDate: DateUtils.dateToday()
     };
     onUpdateProject(updatedProject);
   };
@@ -83,7 +84,7 @@ function ProjectDetail({
     onUpdateProject({
       ...project,
       blogEntries,
-      lastActivityDate: new Date().toISOString().split('T')[0]
+      lastActivityDate: DateUtils.dateToday()
     });
   };
   const filteredTasks = getFilteredTasks();
@@ -115,7 +116,7 @@ function ProjectDetail({
   const handleAddTask = (taskData: Omit<Task, 'id' | 'createdAt'>) => {
     const newTask: Task = {
       id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      createdAt: DateUtils.timestampNow(),
       ...taskData,
     };
 
@@ -133,7 +134,7 @@ function ProjectDetail({
         ? { 
             ...task, 
             completed: !task.completed,
-            completedAt: !task.completed ? new Date().toISOString() : undefined
+            completedAt: !task.completed ? DateUtils.timestampNow() : undefined
           }
         : task
     );
@@ -282,7 +283,7 @@ function ProjectDetail({
                       <p className="sketch-description">{sketch.description}</p>
                     )}
                     <small className="sketch-date">
-                      {new Date(sketch.createdAt).toLocaleDateString()}
+                      {DateUtils.formatShort(sketch.createdAt)}
                     </small>
                   </div>
                   

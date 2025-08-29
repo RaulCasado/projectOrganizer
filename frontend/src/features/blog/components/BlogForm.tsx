@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { BlogEntry } from '../../../shared/types';
 import Swal from 'sweetalert2';
+import { DateUtils } from '../../../shared/utils';
 
 interface BlogFormProps {
     onSave: (entry: Omit<BlogEntry, 'id' | 'createdAt'>) => void;
@@ -10,8 +11,8 @@ interface BlogFormProps {
 
 function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
     const isEditing = !!editingEntry;
-    const todayFormatted = new Date().toISOString().split("T")[0];
-    
+    const todayFormatted = DateUtils.dateToday();
+
     const [formData, setFormData] = useState({
         title: "",
         content: "",
@@ -77,8 +78,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
 
     return (
         <div>
-            <h4>{isEditing ? 'Editar' : 'Nueva'} entrada - {new Date().toLocaleDateString()}</h4>
-            
+            <h4>{isEditing ? 'Editar' : 'Nueva'} entrada - {DateUtils.formatShort(DateUtils.timestampNow())}</h4>
             <div>
                 <input
                     type="text"

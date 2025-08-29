@@ -1,5 +1,5 @@
 import type { Project } from '../types';
-
+import { DateUtils } from '../utils';
 class NotificationService {
     static async requestPermission(): Promise<boolean> {
         if (!('Notification' in window)) {
@@ -38,11 +38,11 @@ class NotificationService {
     }
 
     static shouldNotify(notificationType: string, frequency: 'daily' | 'weekly' = 'daily'): boolean {
-        const now = new Date();
-        const today = now.toDateString();
-        const thisWeek = this.getWeekIdentifier(now);
-        const timeIdentifier = (frequency === 'daily') ? today : thisWeek;
 
+        const today = DateUtils.formatShort(DateUtils.timestampNow());
+        const thisWeek = DateUtils.getCurrentWeekId();
+        
+        const timeIdentifier = (frequency === 'daily') ? today : thisWeek;
         const storageKey = `lastNotified_${notificationType}`;
         const lastNotified = localStorage.getItem(storageKey);
 
@@ -55,29 +55,11 @@ class NotificationService {
         return !hasBeenNotified;
     }
 
-    private static getWeekIdentifier(date: Date): string {
-        const year = date.getFullYear();
-        const week = this.getWeekNumber(date);
-        return `${year}-W${week}`;
-    }
-
-    private static getWeekNumber(date: Date): number {
-        const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-        const dayNum = d.getUTCDay() || 7;
-        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-        const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-        return Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
-    }
-
     static checkAbandonedProjects(projects: Project[]): void {
         if (!this.shouldNotify('abandoned', 'daily')) return;
 
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-        const abandoned = projects.filter(project =>
-            project.lastActivityDate &&
-            new Date(project.lastActivityDate) < sevenDaysAgo
+        const abandoned = projects.filter(projects => 
+            projects.lastActivityDate && DateUtils.isOlderThan(projects.lastActivityDate, 7)
         );
 
         if (abandoned.length > 0) {
@@ -120,13 +102,13 @@ class NotificationService {
     }
 
     static checkDailyBlog(projects: Project[]): void {
-        const currentHour = new Date().getHours();
+        const currentHour = DateUtils.getCurrentHour();
 
         if (currentHour < 18) return;
 
         if (!this.shouldNotify('dailyBlog', 'daily')) return;
 
-        const today = new Date().toISOString().split('T')[0];
+        const today = DateUtils.dateToday();
         const todayEntries = projects.flatMap(p => p.blogEntries || [])
             .filter(entry => entry.date === today);
 

@@ -1,5 +1,5 @@
 import type { BlogEntry } from '../../../shared/types';
-
+import { DateUtils } from '../../../shared';
 interface BlogDetailProps {
     entry: BlogEntry;
     onEdit: () => void;
@@ -13,21 +13,13 @@ function BlogDetail({ entry, onEdit, onDelete }: BlogDetailProps) {
                 <h2 className="blog-detail-title">{entry.title}</h2>
                 <div className="blog-detail-meta">
                     <span>
-                        📅 {new Date(entry.date).toLocaleDateString('es-ES', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}
+                        📅 {DateUtils.formatLong(entry.date)}
                     </span>
                     {entry.timeSpent && entry.timeSpent > 0 && (
                         <span>⏱️ {entry.timeSpent} minutos</span>
                     )}
                     <span>
-                        🕒 {new Date(entry.createdAt).toLocaleTimeString('es-ES', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
+                        🕒 {DateUtils.formatTime(entry.createdAt)}
                     </span>
                 </div>
                 {entry.tags && entry.tags.length > 0 && (

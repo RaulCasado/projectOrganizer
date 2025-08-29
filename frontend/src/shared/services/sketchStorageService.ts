@@ -1,5 +1,6 @@
 import type { QuickSketch, SketchStorageInfo } from '../types';
 import { SKETCH_CONFIG } from '../config/sketchConfig';
+import { DateUtils } from '../utils';
 
 class SketchStorageService {
     private readonly config = SKETCH_CONFIG.storage;
@@ -20,12 +21,13 @@ class SketchStorageService {
             const imageData = canvas.toDataURL('image/jpeg', this.config.compressionQuality);
             const estimatedSize = this.calculateSize(imageData);
 
+            const now = DateUtils.timestampNow();
             const sketch: QuickSketch = {
                 id: crypto.randomUUID(),
                 imageData,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                lastAccessed: new Date().toISOString(),
+                createdAt: now,
+                updatedAt: now,
+                lastAccessed: now,
                 metadata: {
                     width: canvas.width,
                     height: canvas.height,
@@ -49,7 +51,7 @@ class SketchStorageService {
             const stored = localStorage.getItem(`${this.config.storagePrefix}${id}`);
             if (stored) {
                 const sketch = JSON.parse(stored) as QuickSketch;
-                sketch.lastAccessed = new Date().toISOString();
+                sketch.lastAccessed = DateUtils.timestampNow();
                 localStorage.setItem(`${this.config.storagePrefix}${id}`, JSON.stringify(sketch));
                 return sketch;
             }
@@ -89,10 +91,8 @@ class SketchStorageService {
                                 localStorage.removeItem(key);
                         }
                 }
-                
-                return sketches.sort((a, b) => 
-                        new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime()
-                );
+
+                return DateUtils.sortByDate(sketches, 'lastAccessed', 'desc');
         }
 
     deleteSketch(id: string): boolean {
@@ -137,9 +137,7 @@ class SketchStorageService {
             return 0;
         }
 
-        const sortedSketches = sketches.sort((a, b) => 
-            new Date(a.lastAccessed).getTime() - new Date(b.lastAccessed).getTime()
-        );
+        const sortedSketches = DateUtils.sortByDate(sketches, 'lastAccessed', 'asc');
 
         const toDelete = sortedSketches.slice(0, sketches.length - maxSketches);
         let deleted = 0;

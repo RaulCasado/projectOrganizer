@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Project } from '../../../shared/types';
+import { DateUtils } from '../../../shared';
 
 interface DashboardProps {
   projects: Project[];
@@ -28,22 +29,17 @@ function Dashboard({ projects }: DashboardProps) {
   };
 
   const getActiveProjects = () => {
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
-    return projects
-      .filter(p => p.lastActivityDate && new Date(p.lastActivityDate) >= sevenDaysAgo)
-      .sort((a, b) => new Date(b.lastActivityDate!).getTime() - new Date(a.lastActivityDate!).getTime())
-      .slice(0, 5);
+    return DateUtils.sortByDate(
+      DateUtils.filterRecentDays(projects, 7, 'lastActivityDate'),
+      'lastActivityDate',
+      'desc'
+    ).slice(0, 5);
   };
 
   const getAbandonedProjects = () => {
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
     return projects
-      .filter(p => p.lastActivityDate && new Date(p.lastActivityDate) < sevenDaysAgo)
-      .sort((a, b) => new Date(a.lastActivityDate!).getTime() - new Date(b.lastActivityDate!).getTime())
+      .filter(p => p.lastActivityDate && DateUtils.isOlderThan(p.lastActivityDate, 7))
+      .sort((a, b) => DateUtils.daysSince(a.lastActivityDate!) - DateUtils.daysSince(b.lastActivityDate!))
       .slice(0, 3);
   };
 
@@ -72,9 +68,12 @@ function Dashboard({ projects }: DashboardProps) {
       }))
     );
     
-    return allEntries
-      .sort((a, b) => new Date(b.date || b.createdAt).getTime() - new Date(a.date || a.createdAt).getTime())
-      .slice(0, 5);
+    const entriesWithDates = allEntries.map(entry => ({
+        ...entry,
+        sortDate: entry.date || entry.createdAt
+      }));
+      
+      return DateUtils.sortByDate(entriesWithDates, 'sortDate', 'desc').slice(0, 5);
   };
 
   const getProjectsWithoutMVP = () => {
@@ -87,14 +86,6 @@ function Dashboard({ projects }: DashboardProps) {
   const popularTags = getPopularTags();
   const recentActivity = getRecentActivity();
   const projectsWithoutMVP = getProjectsWithoutMVP();
-
-  const getDaysAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    const diffTime = today.getTime() - date.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
 
   return (
     <div>
@@ -152,9 +143,7 @@ function Dashboard({ projects }: DashboardProps) {
                     📂 {project.name}
                   </Link>
                   <span>
-                    {getDaysAgo(project.lastActivityDate!) === 0 ? 'Hoy' : 
-                     getDaysAgo(project.lastActivityDate!) === 1 ? 'Ayer' : 
-                     `Hace ${getDaysAgo(project.lastActivityDate!)} días`}
+                    {DateUtils.getRelativeLabel(project.lastActivityDate!)}
                   </span>
                 </div>
               ))
@@ -189,7 +178,7 @@ function Dashboard({ projects }: DashboardProps) {
                       💔 {project.name}
                     </Link>
                     <div>
-                      Sin actividad hace {getDaysAgo(project.lastActivityDate!)} días
+                      Sin actividad hace {DateUtils.daysSince(project.lastActivityDate!)} días
                     </div>
                   </div>
                 </div>
@@ -215,7 +204,7 @@ function Dashboard({ projects }: DashboardProps) {
                     "{entry.title}"
                   </div>
                   <div>
-                    {new Date(entry.date || entry.createdAt).toLocaleDateString()}
+                    { DateUtils.formatShort(entry.date || entry.createdAt)}
                     {entry.timeSpent && entry.timeSpent > 0 && (
                       <span> • {entry.timeSpent} min</span>
                     )}

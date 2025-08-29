@@ -1,5 +1,5 @@
 import type { BlogEntry } from '../../../shared/types';
-
+import { DateUtils } from '../../../shared';
 interface BlogListProps {
     entries: BlogEntry[];
     onViewEntry?: (entry: BlogEntry) => void;
@@ -16,10 +16,7 @@ function BlogList({ entries, onViewEntry, onEditEntry, onDeleteEntry }: BlogList
             </div>
         );
     }
-
-    const sortedEntries = entries.sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    const sortedEntries = DateUtils.sortByDate(entries, 'createdAt', 'desc');
 
     return (
         <div>
@@ -46,7 +43,7 @@ function BlogList({ entries, onViewEntry, onEditEntry, onDeleteEntry }: BlogList
                         </div>
                     </div>
                     <div>
-                        Fecha: {new Date(entry.date).toLocaleDateString()}
+                        Fecha: {DateUtils.formatShort(entry.date)}
                         {entry.timeSpent && entry.timeSpent > 0 && ` | Tiempo invertido: ${entry.timeSpent} min`}
                         {entry.tags && entry.tags.length > 0 && ` | Etiquetas: ${entry.tags.join(', ')}`}
                     </div>

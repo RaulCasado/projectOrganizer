@@ -10,6 +10,7 @@ import type { Task } from './shared/types/Task';
 import Dashboard from './features/dashboard/components/Dashboard';
 import { useNotifications } from './shared/hooks/useNotifications';
 import IdeasMainView from './features/ideas/components/IdeasMainView';
+import { DateUtils } from './shared';
 
 function ProjectDetailWrapper({ 
   projects, 
@@ -108,11 +109,10 @@ function App() {
     );
   };
 
-  // ✅ Funciones para manejar ideas
   const handleAddIdea = (ideaData: Omit<Idea, 'id' | 'createdAt'>) => {
     const newIdea: Idea = {
       id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
+      createdAt: DateUtils.timestampNow(),
       ...ideaData
     };
     setIdeas(prevIdeas => [...prevIdeas, newIdea]);
@@ -137,7 +137,7 @@ function App() {
       id: crypto.randomUUID(),
       name: idea.title,
       tags: idea.tags,
-      lastActivityDate: new Date().toISOString(),
+      lastActivityDate: DateUtils.dateToday(),
       tasks: [],
       blogEntries: [],
       resources: [],

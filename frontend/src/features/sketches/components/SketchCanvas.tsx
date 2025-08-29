@@ -188,12 +188,6 @@ export function SketchCanvas({
                             stopDrawing();
                         }}
                         className={`sketch-canvas ${isDrawing ? 'drawing' : ''}`}
-                        style={{
-                            border: '2px solid #ddd',
-                            borderRadius: '8px',
-                            cursor: currentTool === 'eraser' ? 'crosshair' : 'crosshair',
-                            touchAction: 'none'
-                        }}
                     />
                 </div>
 

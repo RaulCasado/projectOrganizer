@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Resource } from '../../../shared/types/Project';
 import Swal from 'sweetalert2';
+import { DateUtils } from '../../../shared';
 
 interface ProjectResourcesProps {
     resources?: Resource[];
@@ -58,7 +59,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
                 url: formData.url.trim(),
                 description: formData.description.trim(),
                 category: formData.category,
-                createdAt: new Date().toISOString()
+                createdAt: DateUtils.timestampNow()
             };
 
             onUpdateResources([...resources, newResource]);
@@ -211,7 +212,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
                                             </p>
                                         )}
                                         <div>
-                                            Añadido: {new Date(resource.createdAt).toLocaleDateString()}
+                                            Añadido: {DateUtils.formatShort(resource.createdAt)}
                                         </div>
                                     </div>
                                     <div>

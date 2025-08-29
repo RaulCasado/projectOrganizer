@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Idea } from '../../../shared/types/Idea';
 import IdeaPanel from './IdeaPanel';
+import { DateUtils } from '../../../shared';
 
 interface IdeasMainViewProps {
     ideas: Idea[];
@@ -28,22 +29,24 @@ function IdeasMainView({
         return idea.status === filter;
     });
 
-    const sortedIdeas = [...filteredIdeas].sort((a, b) => {
+    const sortedIdeas = (() => {
+        const sorted = [...filteredIdeas];
+        
         switch (sortBy) {
             case 'newest':
-                return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+                return DateUtils.sortByDate(sorted, 'createdAt', 'desc');
             case 'oldest':
-                return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+                return DateUtils.sortByDate(sorted, 'createdAt', 'asc');
             case 'priority': {
                 const priorityOrder = { high: 3, medium: 2, low: 1 };
-                return priorityOrder[b.priority] - priorityOrder[a.priority];
+                return sorted.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
             }
             case 'title':
-                return a.title.localeCompare(b.title);
+                return sorted.sort((a, b) => a.title.localeCompare(b.title));
             default:
-                return 0;
+                return sorted;
         }
-    });
+    })();
 
     const stats = {
         total: generalIdeas.length,

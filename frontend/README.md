@@ -554,3 +554,18 @@ Lo que tenia antes es decir el codigo de abajo dependia de una variables externa
 
 
 Vale vamos a pararnos aqui un momentin pq hay cosas que no me cuadran. Vale empecemos por el use effect del principio lo he separada para que sea mas limpio es decir el primero se inicializa al principio valga la redundancia y el segundo se ejecuta solo cuando cambian width y height pero la cosa es que claro tu antes estabas rehaciendo todo el canvas es decir lo recreabas. Tambien he hecho el withCtx para centralizar la logica repetida que tenemos (pero no la uso). Ahora tambien me he dado cuenta de una cosa y es que si le damos a clear history pero teniamos un canvas vacio se añadira otro canvas vacio por lo que si le damos a rendu no haria nada visualmente ya que simplemente serian 2 lienzos vacios. Tambien he visto que el rendu undu  esta un poco meh lo de hacer new Image y tal creo que en navegadores modernos esta un poco desfasado eso. Tambien he cambiado el saveToHIstory ya que tenia historyINdex pero esto al ser algo externo puede ser que este desencronizado con el prev actual ya que cada render es como una foto del estado y esto puede llevar a fallos en lo que es la coordinacion dependencias fantasma etc. No se que opinas de mi resumen. Una ultima cosa que queria apuntar es que podriamos poner un limite al rendu/undo rollo 20 e ir quitando las snapshots mas antiguas para que no se llene tanto la RAM. Que opinas de todo?
+
+
+Sketches done ahora puedes dibujar usando la api de canvas
+
+
+Primero vamos a refactorizar el tema de las fechas, despues el tema del localStorage, tercero no se si hacer un Swal service o algo asi? que centralice todo el tema del sweet alert y ya despues de esto refactorizar los componentes mas grandes para hacerlos mas manejables. Finalmente añadiriamos un css profesional para que se vea bien. Para el tema de las fechas podriamos usar date-fns o day.js para simplificar la manipulacion de fechas.
+
+De momento todos los archivos que usan fechas son Dashboard.tsx, ProjectBlog, sketchStorage, notificationService, ProjectDetail, app, blogform, blogdetail, projectsmainview, projectresourcer, bloglist, ideasmainview, idealist
+
+
+Como he dicho he empezado el refactor haciendo una clase de utilidad para centralizar todo el tema de las fechas esto hace que los componentes no tengan que estas haciendo metodos propios para calcular proyectos de x fechas etc de esto se ocupa el DateUtils.
+
+He empezado por Dashboard.tsx y perfecto todo muy bien, tambien me he preguntado como afecta al rendimiento el hecho de que estemos haciendo muchas instancias de date pero segun la documentacion de date-fns, estas funciones son bastante ligeras y optimizadas para su uso, por lo que no deberia haber un impacto significativo en el rendimiento.
+
+Habria que mirar si notification service tendria que ser un singleton o no

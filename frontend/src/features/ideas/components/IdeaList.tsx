@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Idea } from '../../../shared/types/Idea';
-
+import { DateUtils } from '../../../shared';
 interface IdeaListProps {
     ideas: Idea[];
     onUpdateIdea: (idea: Idea) => void;
@@ -147,7 +147,7 @@ function IdeaList({
                                         </span>
                                         <span>{getStatusEmoji(idea.status)} {idea.status}</span>
                                         <span>
-                                            {new Date(idea.createdAt).toLocaleDateString()}
+                                            {DateUtils.formatShort(idea.createdAt)}
                                         </span>
                                     </div>
                                 </div>

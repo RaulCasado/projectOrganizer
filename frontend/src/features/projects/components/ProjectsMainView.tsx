@@ -3,6 +3,7 @@ import type { Project } from '../../../shared/types';
 import { Link } from 'react-router-dom';
 import ProjectFilters from './ProjectFilters';
 import Swal from 'sweetalert2';
+import { DateUtils } from '../../../shared';
 
 interface ProjectsMainViewProps {
   projects: Project[];
@@ -216,7 +217,7 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
 
                   {project.lastActivityDate && (
                     <div>
-                      📅 Última actividad: {new Date(project.lastActivityDate).toLocaleDateString()}
+                      📅 Última actividad: {DateUtils.formatShort(project.lastActivityDate)}
                     </div>
                   )}
                 </div>

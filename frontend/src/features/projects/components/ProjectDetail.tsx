@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { useProjectTasks } from '../hooks/useProjectTasks';
 import type { Project, BlogEntry, Resource } from '../../../shared/types';
 import type { Idea } from '../../../shared/types/Idea';
-import type { Task } from '../../../shared/types/Task';
 import { TaskList, TaskForm, TaskFilters } from '../../tasks/components';
 import { ProjectBlog } from '../../blog/components';
 import { ProjectResources } from '../../resources/components';
@@ -29,10 +29,22 @@ function ProjectDetail({
   onDeleteIdea
 }: ProjectDetailProps) {
 
-  const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'pending'>('all');
-  const [priorityFilter, setPriorityFilter] = useState<'all' | 'low' | 'medium' | 'high'>('all');
-  const [searchText, setSearchText] = useState('');
+  const {
+    editingTask,
+    setEditingTask,
+    statusFilter,
+    setStatusFilter,
+    priorityFilter,
+    setPriorityFilter,
+    searchText,
+    setSearchText,
+    filteredTasks,
+    handleUpdateTask,
+    handleAddTask,
+    handleToggleTask,
+    handleDeleteTask,
+    handleCancelEdit,
+  } = useProjectTasks(project, onUpdateProject);
 
   const [showSketchModal, setShowSketchModal] = useState(false);
   const [editingSketch, setEditingSketch] = useState<{
@@ -51,26 +63,6 @@ function ProjectDetail({
     deleteSketch 
   } = useSketches({ projectId: project.id });
 
-  const getFilteredTasks = () => {
-        if (!project.tasks) return [];
-
-        return project.tasks.filter(task => {
-            if (statusFilter === 'completed' && !task.completed) return false;
-            if (statusFilter === 'pending' && task.completed) return false;
-
-            if (priorityFilter !== 'all' && task.priority !== priorityFilter) return false;
-
-            if (searchText) {
-                const searchLower = searchText.toLowerCase();
-                const titleMatch = task.title.toLowerCase().includes(searchLower);
-                const descriptionMatch = task.description?.toLowerCase().includes(searchLower) || false;
-                if (!titleMatch && !descriptionMatch) return false;
-            }
-
-            return true;
-        });
-    };
-
   const handleUpdateResources = (resources: Resource[]) => {
     const updatedProject = {
       ...project,
@@ -87,69 +79,11 @@ function ProjectDetail({
       lastActivityDate: DateUtils.dateToday()
     });
   };
-  const filteredTasks = getFilteredTasks();
 
   const handleUpdateMVP = (mvp: string) => {
     onUpdateProject({
       ...project,
       mvp
-    });
-  };
-
-  const handleUpdateTask = (updatedTask: Task) => {
-    const updatedTasks = (project.tasks || []).map(task =>
-      task.id === updatedTask.id ? updatedTask : task
-    );
-
-    onUpdateProject({
-      ...project,
-      tasks: updatedTasks,
-    });
-
-    setEditingTask(undefined);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTask(undefined);
-  };
-
-  const handleAddTask = (taskData: Omit<Task, 'id' | 'createdAt'>) => {
-    const newTask: Task = {
-      id: crypto.randomUUID(),
-      createdAt: DateUtils.timestampNow(),
-      ...taskData,
-    };
-
-    const updatedProject = {
-      ...project,
-      tasks: [...(project.tasks || []), newTask],
-    };
-    
-    onUpdateProject(updatedProject);
-  };
-
-  const handleToggleTask = (taskId: string) => {
-    const updatedTasks = (project.tasks || []).map(task =>
-      task.id === taskId 
-        ? { 
-            ...task, 
-            completed: !task.completed,
-            completedAt: !task.completed ? DateUtils.timestampNow() : undefined
-          }
-        : task
-    );
-    
-    onUpdateProject({
-      ...project,
-      tasks: updatedTasks,
-    });
-  };
-
-  const handleDeleteTask = (taskId: string) => {
-    const updatedTasks = (project.tasks || []).filter(task => task.id !== taskId);
-    onUpdateProject({
-      ...project,
-      tasks: updatedTasks,
     });
   };
 

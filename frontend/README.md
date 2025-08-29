@@ -571,3 +571,13 @@ He empezado por Dashboard.tsx y perfecto todo muy bien, tambien me he preguntado
 Habria que mirar si notification service tendria que ser un singleton o no
 
 Las ideas al estar en una key diferente del local storage no se borra si se borra su proyecto habria que mirar el pq o como hacerlo basicamente seria hacer un bucle por las tareas hasta encontrar una con el id del proyecto que se haya eliminado hasta entonces no crear ideas.
+
+
+Vale he refactorizado y centralizado todo el tema del swal un hook y un servicio para que los componentes no tengan ni idea de que libreria se este usando por debajo mucho mas limpio y si decido cambiar la logica de swal por otra libreria o metodo no tendria que tocar los componentes. Muy buena idea si me preguntan a mi.
+
+
+Ahora me gustaria empezar por el tema de los componentes dios que son componentes que hace todo y dividirlos en partes mas pequeñas empezare por los mas grandes y pues bueno ire afinando los mas pequeños despues si es que hay que hacerles algo claro. Tambien habia estado pensando en como mejorar la gestion del estado en estos componentes, quizas utilizando un contexto o un gestor de estado como Redux o MobX para tener una mejor organizacion y evitar el "prop drilling". Este mismo problema de gestion del estado es lo que he estado discutiendo conmigo mismo sobre el Swal ya que no sabia hasta que punto hacerlas context + hook o simplemente servicio + hook como he estado haciendo al final me he decidido por la segunda opcion como he dicho antes mas que nada pq realmente solo tengo que mostrar una alerta o mensaje si en un futuro quisiera tener colas de mensajes o los componentes tuviesen que saber que notificaciones hay si que tendriamos que hacer como la primera opcion mas de momento la segunda va bien.
+
+Habria que considerar si el prop drilling en mi proyecto se considera excesivo o algo perjudicial arquitectónicamente hablando ya que en el caso de projectdetail por ejemplo onaddidea no hace nada simplemente se la pasa a otro componente y si ese componente se la pasa a otro componente tendriamos que ver si realmente es necesario que todos esos componentes intermedios tengan que conocer esa funcion o si podriamos simplificar la estructura de alguna manera.
+
+La idea del refactor es sacar la logica a un custom hook que el componente lo use y sacar componentes mas pequeños para ser mas manejables por ejemplo en ProjectDetail ( es por el que he empezado) podemos sacar varios componentes de sketch ya que los puse para ver si funcionaban y ahi se quedo tambien podemos sacar toda la logica a varios hooks y bueno reestructurar un poco el componente si hicese falta.

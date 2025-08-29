@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Resource } from '../../../shared/types/Project';
-import Swal from 'sweetalert2';
+import { useNotification } from '../../../shared';
 import { DateUtils } from '../../../shared';
 
 interface ProjectResourcesProps {
@@ -19,6 +19,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
     });
 
     const isEditing = !!editingResource;
+    const { notifySuccess, confirmDelete , notifyInfo} = useNotification();
 
     const handleEditResource = (resource: Resource) => {
         setEditingResource(resource);
@@ -33,7 +34,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
 
     const handleSave = () => {
         if (!formData.title.trim() || !formData.url.trim()) {
-            Swal.fire('Error', 'Título y URL son obligatorios', 'error');
+            notifyInfo('Error', 'Título y URL son obligatorios');
             return;
         }
 
@@ -51,7 +52,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
             );
 
             onUpdateResources(updatedResources);
-            Swal.fire('¡Actualizado!', 'Recurso actualizado correctamente', 'success');
+            notifySuccess('¡Actualizado!', 'Recurso actualizado correctamente');
         } else {
             const newResource: Resource = {
                 id: crypto.randomUUID(),
@@ -63,7 +64,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
             };
 
             onUpdateResources([...resources, newResource]);
-            Swal.fire('¡Añadido!', 'Recurso guardado correctamente', 'success');
+            notifySuccess('¡Añadido!', 'Recurso guardado correctamente');
         }
         
         setFormData({ title: '', url: '', description: '', category: 'documentation' });
@@ -81,21 +82,14 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
         const resource = resources.find(r => r.id === resourceId);
         if (!resource) return;
 
-        const result = await Swal.fire({
-            title: '¿Eliminar recurso?',
-            text: `¿Seguro que quieres eliminar "${resource.title}"?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        });
+        const result = await confirmDelete('recurso', resource.title);
 
-        if (result.isConfirmed) {
+        if (result) {
             onUpdateResources(resources.filter(r => r.id !== resourceId));
             if (editingResource?.id === resourceId) {
                 handleCancel();
             }
-            Swal.fire('¡Eliminado!', 'Recurso eliminado', 'success');
+            notifySuccess('¡Eliminado!', 'Recurso eliminado');
         }
     };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { BlogEntry } from '../../../shared/types';
-import Swal from 'sweetalert2';
+import { useNotification } from '../../../shared';
 import { DateUtils } from '../../../shared/utils';
 
 interface BlogFormProps {
@@ -12,7 +12,7 @@ interface BlogFormProps {
 function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
     const isEditing = !!editingEntry;
     const todayFormatted = DateUtils.dateToday();
-
+    const { notifySuccess, notifyError } = useNotification();
     const [formData, setFormData] = useState({
         title: "",
         content: "",
@@ -43,7 +43,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
 
     const handleSave = () => {
         if (!formData.title.trim() || !formData.content.trim()) {
-            Swal.fire("Error", "Título y contenido son obligatorios", "error");
+            notifyError("Título y contenido son obligatorios");
             return;
         }
 
@@ -66,14 +66,7 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
                 date: todayFormatted,
             });
         }
-
-        Swal.fire({
-            title: isEditing ? 'Entrada actualizada' : 'Entrada guardada',
-            text: `Tu registro diario ha sido ${isEditing ? 'actualizado' : 'guardado'}`,
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-        });
+        notifySuccess(`Tu registro diario ha sido ${isEditing ? 'actualizado' : 'guardado'}`);
     };
 
     return (

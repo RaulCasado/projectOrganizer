@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Project } from '../../../shared/types';
 import { Link } from 'react-router-dom';
 import ProjectFilters from './ProjectFilters';
-import Swal from 'sweetalert2';
+import { useNotification } from '../../../shared';
 import { DateUtils } from '../../../shared';
 
 interface ProjectsMainViewProps {
@@ -20,6 +20,7 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
   const [newProjectTags, setNewProjectTags] = useState<string[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const { notifySuccess, confirmDelete } = useNotification();
 
   const isEditing = !!editingProject;
 
@@ -81,33 +82,11 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
   };
 
   const handleDeleteProject = async (project: Project) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      html: `
-        <p>Vas a eliminar el proyecto:</p>
-        <strong>"${project.name}"</strong>
-        <br><br>
-        <small>Esta acción no se puede deshacer.</small>
-      `,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-      backdrop: true,
-      allowOutsideClick: false,
-    });
+    const result = await confirmDelete('proyecto', project.name);
 
-    if (result.isConfirmed) {
+    if (result) {
       onDeleteProject(project.id);
-      Swal.fire({
-        title: '¡Eliminado!',
-        text: `El proyecto "${project.name}" ha sido eliminado.`,
-        icon: 'success',
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      notifySuccess(`El proyecto "${project.name}" ha sido eliminado.`);
     }
   };
 

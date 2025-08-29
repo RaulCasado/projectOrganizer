@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Swal from 'sweetalert2';
+import { useNotification } from '../../../shared';
 
 interface MVPSectionProps {
     mvp?: string;
@@ -10,26 +10,18 @@ function MVPSection({ mvp, onUpdateMVP }: MVPSectionProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [mvpText, setMvpText] = useState(mvp || '');
 
+    const { notifySuccess , notifyInfo} = useNotification();
+
     const handleSave = async () => {
         if (!mvpText.trim()) {
-            Swal.fire({
-                title: 'MVP vacío',
-                text: 'Por favor, define tu MVP antes de guardar',
-                icon: 'warning'
-            });
+            notifyInfo('Por favor, define tu MVP antes de guardar');
             return;
         }
 
         onUpdateMVP(mvpText.trim());
         setIsEditing(false);
-        
-        Swal.fire({
-            title: '¡MVP actualizado!',
-            text: 'Tu definición de MVP ha sido guardada exitosamente',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-        });
+
+        notifySuccess('Tu definición de MVP ha sido guardada exitosamente');
     };
 
     const handleCancel = () => {

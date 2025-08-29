@@ -1,6 +1,6 @@
 import type { Task } from "../../../shared/types/Task";
 import { Link } from 'react-router-dom';
-import Swal from "sweetalert2";
+import { useNotification } from "../../../shared";
 
 interface TaskListProps {
     tasks: Task[];
@@ -10,30 +10,17 @@ interface TaskListProps {
 }
 
 function TaskList( {tasks, onToggleTask, onDeleteTask, onEditTask}: TaskListProps ) {
+    const { notifySuccess, confirmDelete } = useNotification();
     if (tasks.length === 0) {
         return <p>No tasks available</p>;
     }
 
-    const handleDeleteTask = (task: Task) => {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: 'Esta acción no se puede deshacer.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                onDeleteTask(task.id);
-                Swal.fire({
-                    title: '¡Eliminado!',
-                    text: `La tarea "${task.title}" ha sido eliminada.`,
-                    icon: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
-        });
+        const handleDeleteTask = async (task: Task) => {
+        const confirmed = await confirmDelete('tarea', task.title);
+        if (confirmed) {
+            onDeleteTask(task.id);
+            notifySuccess(`La tarea "${task.title}" ha sido eliminada.`, '¡Eliminado!');
+        }
     }
 
     return (

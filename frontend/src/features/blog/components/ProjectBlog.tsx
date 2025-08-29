@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { BlogEntry } from '../../../shared/types';
 import BlogForm from './BlogForm';
 import BlogList from "./BlogList";
-import Swal from "sweetalert2";
+import { useNotification } from '../../../shared';
 import BlogDetail from "./BlogDetail";
 import Modal from '../../../shared/components/Modal';
 import { DateUtils } from "../../../shared";
@@ -17,6 +17,7 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
     const [isWriting, setIsWriting] = useState(false);
     const [selectedEntry, setSelectedEntry] = useState<BlogEntry | null>(null);
     const [editingEntry, setEditingEntry] = useState<BlogEntry | null>(null);
+    const { showPreview, notifySuccess,confirmDelete, notifyError } = useNotification();
 
     const handleSaveEntry = (entryData: Omit<BlogEntry, 'id' | 'createdAt'>) => {
         if (editingEntry) {
@@ -50,7 +51,7 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
             const weekEntries = getLastWeekEntries();
             
             if (weekEntries.length === 0) {
-                Swal.fire('Sin entradas', 'No hay entradas en los últimos 7 días', 'info');
+                notifyError('No hay entradas en los últimos 7 días');
                 return;
             }
 
@@ -99,31 +100,11 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
         if (!markdown) return;
 
         navigator.clipboard.writeText(markdown).then(() => {
-            Swal.fire({
-                title: '📤 ¡Exportado!',
-                text: 'El resumen semanal se ha copiado al portapapeles',
-                icon: 'success',
-                showConfirmButton: true,
-                confirmButtonText: 'Ver preview',
-                showCancelButton: true,
-                cancelButtonText: 'Cerrar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: 'Preview del Markdown',
-                        html: `<pre style="text-align: left; max-height: 400px; overflow-y: auto;">${markdown}</pre>`,
-                        width: '80%',
-                        confirmButtonText: 'Cerrar'
-                    });
-                }
-            });
+            navigator.clipboard.writeText(markdown).then(() => {
+                showPreview(markdown);
+            })
         }).catch(() => {
-            Swal.fire({
-                title: 'Markdown generado',
-                html: `<textarea readonly style="width: 100%; height: 400px;">${markdown}</textarea>`,
-                width: '80%',
-                confirmButtonText: 'Cerrar'
-            });
+            showPreview(markdown);
         });
     };
 
@@ -141,26 +122,12 @@ function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: Project
         const entry = blogEntries.find(e => e.id === entryId);
         if (!entry) return;
 
-        const result = await Swal.fire({
-            title: '¿Eliminar entrada?',
-            text: `¿Seguro que quieres eliminar "${entry.title}"?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#dc3545'
-        });
+        const result = await confirmDelete('entrada', entry.title);
 
-        if (result.isConfirmed) {
+        if (result) {
             onUpdateBlogEntries(blogEntries.filter(e => e.id !== entryId));
             setSelectedEntry(null);
-            Swal.fire({
-                title: '¡Eliminada!',
-                text: 'La entrada ha sido eliminada',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-            });
+            notifySuccess('La entrada ha sido eliminada');
         }
     };
 

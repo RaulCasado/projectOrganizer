@@ -1,30 +1,25 @@
 import type { Idea } from '../../../shared/types/Idea';
 import QuickIdeaCapture from './QuickIdeaCapture';
 import IdeaList from './IdeaList';
+import { useIdeasWithProjects } from '../../../contexts';
 
 interface IdeaPanelProps {
     projectId?: string;
-    ideas: Idea[];
-    onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
-    onUpdateIdea: (idea: Idea) => void;
-    onDeleteIdea: (ideaId: string) => void;
-    onPromoteToProject?: (idea: Idea) => void;
+    ideas?: Idea[]; // Ideas filtradas opcionalmente
 }
 
-function IdeaPanel({
-    projectId,
-    ideas,
-    onAddIdea,
-    onUpdateIdea,
-    onDeleteIdea,
-    onPromoteToProject
-}: IdeaPanelProps) {
+function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
+    const { ideas: allIdeas, addIdea, updateIdea, deleteIdea, promoteToProject } = useIdeasWithProjects();
+    
+    // Usar las ideas pasadas como prop o filtrar de todas las ideas
+    const ideas = ideasProp || allIdeas;
+    
     const filteredIdeas = projectId 
         ? ideas.filter(idea => idea.projectId === projectId)
         : ideas.filter(idea => !idea.projectId);
 
     const handleAddIdea = (ideaData: Omit<Idea, 'id' | 'createdAt' | 'projectId'>) => {
-        onAddIdea({
+        addIdea({
             ...ideaData,
             projectId,
         });
@@ -84,9 +79,9 @@ function IdeaPanel({
 
             <IdeaList 
                 ideas={filteredIdeas}
-                onUpdateIdea={onUpdateIdea}
-                onDeleteIdea={onDeleteIdea}
-                onPromoteToProject={projectId ? undefined : onPromoteToProject}
+                onUpdateIdea={updateIdea}
+                onDeleteIdea={deleteIdea}
+                onPromoteToProject={projectId ? undefined : promoteToProject}
                 showPromoteButton={!projectId}
             />
 

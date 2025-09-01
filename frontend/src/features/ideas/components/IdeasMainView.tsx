@@ -6,7 +6,7 @@ import { useIdeasMainView } from '../hooks/useIdeasMainView';
 import { useIdeasWithProjects } from '../../../contexts';
 
 function IdeasMainView() {
-    const { ideas, addIdea, updateIdea, deleteIdea, promoteToProject } = useIdeasWithProjects();
+    const { ideas } = useIdeasWithProjects();
   const {
     filter,
     setFilter,
@@ -31,13 +31,7 @@ function IdeasMainView() {
         filteredCount={sortedIdeas.length}
       />
 
-      <IdeaPanel
-        ideas={sortedIdeas}
-        onAddIdea={addIdea}
-        onUpdateIdea={updateIdea}
-        onDeleteIdea={deleteIdea}
-        onPromoteToProject={promoteToProject}
-      />
+      <IdeaPanel ideas={sortedIdeas} />
     </div>
   );
 }

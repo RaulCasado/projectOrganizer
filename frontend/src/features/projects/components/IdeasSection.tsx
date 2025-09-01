@@ -3,18 +3,12 @@ import { useProjectDetailContext } from '../../../contexts/useProjectDetailConte
 
 function IdeasSection() {
   const {
-    project,
-    ideas,
-    ideaActions
+    project
   } = useProjectDetailContext();
   return (
     <section className="project-ideas">
       <IdeaPanel
         projectId={project.id}
-        ideas={ideas}
-        onAddIdea={ideaActions.addIdea}
-        onUpdateIdea={ideaActions.updateIdea}
-        onDeleteIdea={ideaActions.deleteIdea}
       />
     </section>
   );

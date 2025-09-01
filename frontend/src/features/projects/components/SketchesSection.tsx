@@ -1,27 +1,17 @@
-import type { QuickSketch } from '../../../shared/types';
 import SketchesGrid from '../../sketches/components/SketchesGrid';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface SketchesSectionProps {
-  sketches: QuickSketch[];
-  error: string | null;
-  sketchCount: number;
-  maxSketches: number;
-  isAtLimit: boolean;
-  onEditSketch: (sketch: QuickSketch) => void;
-  onDeleteSketch: (sketchId: string) => void;
-  onOpenSketchModal: () => void;
-}
-
-function SketchesSection({
-  sketches,
-  error,
-  sketchCount,
-  maxSketches,
-  isAtLimit,
-  onEditSketch,
-  onDeleteSketch,
-  onOpenSketchModal
-}: SketchesSectionProps) {
+function SketchesSection() {
+  const {
+    sketches,
+    sketchesError,
+    sketchCount,
+    maxSketches,
+    isAtLimit,
+    handleEditSketch,
+    handleDeleteSketch,
+    handleOpenSketchModal
+  } = useProjectDetailContext();
   return (
     <section className="project-sketches">
       <div className="section-header">
@@ -30,13 +20,13 @@ function SketchesSection({
 
       <SketchesGrid
         sketches={sketches}
-        error={error}
+        error={sketchesError}
         sketchCount={sketchCount}
         maxSketches={maxSketches}
         isAtLimit={isAtLimit}
-        onEditSketch={onEditSketch}
-        onDeleteSketch={onDeleteSketch}
-        onOpenSketchModal={onOpenSketchModal}
+        onEditSketch={handleEditSketch}
+        onDeleteSketch={handleDeleteSketch}
+        onOpenSketchModal={handleOpenSketchModal}
       />
 
       {isAtLimit && (

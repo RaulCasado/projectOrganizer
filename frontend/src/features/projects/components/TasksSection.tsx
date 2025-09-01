@@ -1,39 +1,25 @@
-import { TaskForm, TaskFilters, TaskList } from '../../tasks/components';
-import type { Task } from '../../../shared/types';
+import TaskForm from '../../tasks/components/TaskForm';
+import TaskFilters from '../../tasks/components/TaskFilters';
+import TaskList from '../../tasks/components/TaskList';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface TasksSectionProps {
-    editingTask: Task | undefined;
-    setEditingTask: (task: Task | undefined) => void;
-    statusFilter: 'all' | 'completed' | 'pending';
-    setStatusFilter: (filter: 'all' | 'completed' | 'pending') => void;
-    priorityFilter: 'all' | 'low' | 'medium' | 'high';
-    setPriorityFilter: (filter: 'all' | 'low' | 'medium' | 'high') => void;
-    searchText: string;
-    setSearchText: (text: string) => void;
-    filteredTasks: Task[];
-    handleUpdateTask: (task: Task) => void;
-    handleAddTask: (taskData: Omit<Task, 'id' | 'createdAt'>) => void;
-    handleToggleTask: (taskId: string) => void;
-    handleDeleteTask: (taskId: string) => void;
-    handleCancelEdit: () => void;
-}
-
-function TasksSection({
-    editingTask,
-    setEditingTask,
-    statusFilter,
-    setStatusFilter,
-    priorityFilter,
-    setPriorityFilter,
-    searchText,
-    setSearchText,
-    filteredTasks,
-    handleUpdateTask,
-    handleAddTask,
-    handleToggleTask,
-    handleDeleteTask,
-    handleCancelEdit,
-}: TasksSectionProps) {
+function TasksSection() {
+    const {
+        filteredTasks,
+        statusFilter,
+        priorityFilter,
+        searchText,
+        editingTask,
+        setStatusFilter,
+        setPriorityFilter,
+        setSearchText,
+        setEditingTask,
+        handleAddTask,
+        handleUpdateTask,
+        handleToggleTask,
+        handleDeleteTask,
+        handleCancelEdit,
+    } = useProjectDetailContext();
     return (
         <>
             <TaskForm

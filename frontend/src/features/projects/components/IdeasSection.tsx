@@ -1,29 +1,20 @@
-import type { Idea } from '../../../shared/types/Idea';
 import { IdeaPanel } from '../../ideas/components';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface IdeasSectionProps {
-  projectId: string;
-  ideas: Idea[];
-  onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
-  onUpdateIdea: (idea: Idea) => void;
-  onDeleteIdea: (ideaId: string) => void;
-}
-
-function IdeasSection({
-  projectId,
-  ideas,
-  onAddIdea,
-  onUpdateIdea,
-  onDeleteIdea
-}: IdeasSectionProps) {
+function IdeasSection() {
+  const {
+    project,
+    ideas,
+    ideaActions
+  } = useProjectDetailContext();
   return (
     <section className="project-ideas">
       <IdeaPanel
-        projectId={projectId}
+        projectId={project.id}
         ideas={ideas}
-        onAddIdea={onAddIdea}
-        onUpdateIdea={onUpdateIdea}
-        onDeleteIdea={onDeleteIdea}
+        onAddIdea={ideaActions.addIdea}
+        onUpdateIdea={ideaActions.updateIdea}
+        onDeleteIdea={ideaActions.deleteIdea}
       />
     </section>
   );

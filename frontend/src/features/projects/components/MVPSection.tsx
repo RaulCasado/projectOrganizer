@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { useNotification } from '../../../shared';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface MVPSectionProps {
-    mvp?: string;
-    onUpdateMVP: (mvp: string) => void;
-}
-
-function MVPSection({ mvp, onUpdateMVP }: MVPSectionProps) {
+function MVPSection() {
+    const { mvp, handleUpdateMVP } = useProjectDetailContext();
     const [isEditing, setIsEditing] = useState(false);
     const [mvpText, setMvpText] = useState(mvp || '');
 
@@ -18,7 +15,7 @@ function MVPSection({ mvp, onUpdateMVP }: MVPSectionProps) {
             return;
         }
 
-        onUpdateMVP(mvpText.trim());
+        handleUpdateMVP(mvpText.trim());
         setIsEditing(false);
 
         notifySuccess('Tu definición de MVP ha sido guardada exitosamente');

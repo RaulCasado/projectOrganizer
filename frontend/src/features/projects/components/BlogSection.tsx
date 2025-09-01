@@ -1,21 +1,16 @@
-import type { BlogEntry, Project } from '../../../shared/types';
 import { ProjectBlog } from '../../blog/components';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface BlogSectionProps {
-  blogEntries: BlogEntry[];
-  onUpdateBlogEntries: (blogEntries: BlogEntry[]) => void;
-  project: Project;
-}
-
-function BlogSection({
-  blogEntries,
-  onUpdateBlogEntries,
-  project
-}: BlogSectionProps) {
+function BlogSection() {
+  const {
+    project,
+    blogEntries,
+    handleUpdateBlogEntries
+  } = useProjectDetailContext();
   return (
     <ProjectBlog
       blogEntries={blogEntries}
-      onUpdateBlogEntries={onUpdateBlogEntries}
+      onUpdateBlogEntries={handleUpdateBlogEntries}
       project={project}
     />
   );

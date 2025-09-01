@@ -1,20 +1,16 @@
-import type { Resource } from '../../../shared/types/Project';
 import { ProjectResources } from '../../resources/components';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface ResourcesSectionProps {
-  resources: Resource[];
-  onUpdateResources: (resources: Resource[]) => void;
-}
-
-function ResourcesSection({
-  resources,
-  onUpdateResources
-}: ResourcesSectionProps) {
+function ResourcesSection() {
+  const {
+    resources,
+    handleUpdateResources
+  } = useProjectDetailContext();
   return (
     <section className="project-resources">
       <ProjectResources
         resources={resources}
-        onUpdateResources={onUpdateResources}
+        onUpdateResources={handleUpdateResources}
       />
     </section>
   );

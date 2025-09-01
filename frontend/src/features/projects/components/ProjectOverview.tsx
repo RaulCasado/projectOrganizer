@@ -1,10 +1,7 @@
-import type { Project } from '../../../shared/types';
+import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-interface ProjectOverviewProps {
-    project: Project;
-}
-
-function ProjectOverview({ project }: ProjectOverviewProps) {
+function ProjectOverview() {
+    const { project } = useProjectDetailContext();
     return (
         <>
             <h1>{project.name}</h1>

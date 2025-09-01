@@ -1,4 +1,4 @@
-export { default as TaskDetail } from './TaskDetail';
-export { default as TaskList } from './TaskList';
-export { default as TaskForm } from './TaskForm';
-export { default as TaskFilters } from './TaskFilters';
+export { TaskDetail } from './TaskDetail';
+export { TaskList } from './TaskList';
+export { TaskForm } from './TaskForm';
+export { TaskFilters } from './TaskFilters';

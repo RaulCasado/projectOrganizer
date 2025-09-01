@@ -9,7 +9,7 @@ interface TaskListProps {
     onEditTask: (task: Task) => void;
 }
 
-function TaskList( {tasks, onToggleTask, onDeleteTask, onEditTask}: TaskListProps ) {
+export function TaskList( {tasks, onToggleTask, onDeleteTask, onEditTask}: TaskListProps ) {
     const { notifySuccess, confirmDelete } = useNotification();
     if (tasks.length === 0) {
         return <p>No tasks available</p>;
@@ -42,5 +42,3 @@ function TaskList( {tasks, onToggleTask, onDeleteTask, onEditTask}: TaskListProp
         </ul>
     );
 }
-
-export default TaskList;

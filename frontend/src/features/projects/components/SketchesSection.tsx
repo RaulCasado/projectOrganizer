@@ -1,4 +1,4 @@
-import SketchesGrid from '../../sketches/components/SketchesGrid';
+import {SketchesGrid} from '../../sketches/components/SketchesGrid';
 import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
 function SketchesSection() {

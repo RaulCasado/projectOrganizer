@@ -8,7 +8,7 @@ interface TaskFormProps {
     onCancel?: () => void;
 }
 
-function TaskForm({ onAddTask, onUpdateTask, editingTask, onCancel }: TaskFormProps) {
+export function TaskForm({ onAddTask, onUpdateTask, editingTask, onCancel }: TaskFormProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('low');
@@ -81,5 +81,3 @@ function TaskForm({ onAddTask, onUpdateTask, editingTask, onCancel }: TaskFormPr
         </div>
     );
 }
-
-export default TaskForm;

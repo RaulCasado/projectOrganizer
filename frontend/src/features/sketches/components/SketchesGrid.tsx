@@ -12,7 +12,7 @@ interface SketchesGridProps {
     onOpenSketchModal: () => void;
 }
 
-function SketchesGrid({
+export function SketchesGrid({
     sketches,
     loading,
     error,
@@ -48,5 +48,3 @@ function SketchesGrid({
         </div>
     );
 }
-
-export default SketchesGrid;

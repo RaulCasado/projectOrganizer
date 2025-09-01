@@ -4,7 +4,7 @@ export { default as ProjectFilters } from './ProjectFilters';
 export { default as ProjectForm } from './ProjectForm';
 export { default as ProjectList } from './ProjectList';
 export { default as MVPSection } from './MVPSection';
-export { default as TasksSection } from './TasksSection';
+export { TasksSection } from './TasksSection';
 export { default as IdeasSection } from './IdeasSection';
 export { default as ResourcesSection } from './ResourcesSection';
 export { default as SketchesSection } from './SketchesSection';

@@ -972,3 +972,6 @@ Completado el refactor de projectdetail he aplicado un contexto para el solo par
 
 
 Vale todavia queda trabajo por hacer por ahora nos centraremos en eliminar el prop drilling excesivo por ejemplo en ProjectForm se le siguen pasando muchas props, en IdeaMainView la parte de IdeasFilter tambien se le pasan muchas y en ExpandedForm tambien bastantes. Una vez hagamos esto podemos hacer un useForm generico para que los formularios puedan usarlo. Despues haremos lo de los exports mejorados para no tener tantas lineas de import al principio de los componentes etc. Unificar los repositorios en uno solo y memoizar si fuese necesario habria que verlo.
+
+
+Revisar la logica de IdeasMainViewContext y en general revisar que los hooks y context esten en las carpetas correctas.

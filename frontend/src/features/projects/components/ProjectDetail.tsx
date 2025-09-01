@@ -1,5 +1,5 @@
 import ProjectOverview from './ProjectOverview';
-import TasksSection from './TasksSection';
+import {TasksSection} from './TasksSection';
 import IdeasSection from './IdeasSection';
 import ResourcesSection from './ResourcesSection';
 import SketchesSection from './SketchesSection';

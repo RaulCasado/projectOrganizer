@@ -1,9 +1,9 @@
-import TaskForm from '../../tasks/components/TaskForm';
-import TaskFilters from '../../tasks/components/TaskFilters';
-import TaskList from '../../tasks/components/TaskList';
+import {TaskForm} from '../../tasks/components/TaskForm';
+import {TaskFilters} from '../../tasks/components/TaskFilters';
+import {TaskList} from '../../tasks/components/TaskList';
 import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
-function TasksSection() {
+export function TasksSection() {
     const {
         filteredTasks,
         statusFilter,
@@ -46,4 +46,3 @@ function TasksSection() {
     );
 }
 
-export default TasksSection;

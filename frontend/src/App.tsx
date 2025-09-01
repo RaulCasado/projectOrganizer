@@ -2,7 +2,7 @@ import ProjectsMainView from './features/projects/components/ProjectsMainView';
 import { Routes, Route } from 'react-router-dom';
 import ProjectDetail from './features/projects/components/ProjectDetail';
 import { useParams } from 'react-router-dom';
-import TaskDetail from './features/tasks/components/TaskDetail';
+import {TaskDetail} from './features/tasks/components/TaskDetail';
 import type { Task } from './shared/types/Task';
 import Dashboard from './features/dashboard/components/Dashboard';
 import { useNotifications } from './shared/hooks';

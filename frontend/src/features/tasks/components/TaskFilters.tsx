@@ -7,7 +7,7 @@ interface TaskFiltersProps {
     onSearchTextChange : (searchText: string) => void;
 }
 
-function TaskFilters( {statusFilter, priorityFilter, searchText, onStatusFilterChange, onPriorityFilterChange, onSearchTextChange} : TaskFiltersProps ) {
+export function TaskFilters( {statusFilter, priorityFilter, searchText, onStatusFilterChange, onPriorityFilterChange, onSearchTextChange} : TaskFiltersProps ) {
     return (
         <div>
             <h4>Filtros</h4>
@@ -45,5 +45,3 @@ function TaskFilters( {statusFilter, priorityFilter, searchText, onStatusFilterC
         </div>
     )
 }
-
-export default TaskFilters;

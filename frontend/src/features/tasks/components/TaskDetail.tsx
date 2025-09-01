@@ -4,7 +4,7 @@ interface TaskDetailProps {
     task : Task;
 }
 
-function TaskDetail({ task }: TaskDetailProps) {
+export function TaskDetail({ task }: TaskDetailProps) {
     return (
         <div>
             <h2>{task.title}</h2>
@@ -13,5 +13,3 @@ function TaskDetail({ task }: TaskDetailProps) {
         </div>
     );
 }
-
-export default TaskDetail;

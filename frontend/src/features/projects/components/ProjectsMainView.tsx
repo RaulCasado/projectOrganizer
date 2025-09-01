@@ -3,16 +3,10 @@ import ProjectFilters from './ProjectFilters';
 import ProjectForm from './ProjectForm';
 import ProjectList from './ProjectList';
 import { useProjectsMainViewLogic } from '../hooks/useProjectsMainViewLogic';
-import type { Project } from '../../../shared/types';
+import { useProjects } from '../../../contexts';
 
-interface ProjectsMainViewProps {
-  projects: Project[];
-  onAddProject: (project: Omit<Project, 'id'>) => void;
-  onDeleteProject: (projectId: string) => void;
-  onUpdateProject: (project: Project) => void;
-}
-
-function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdateProject }: ProjectsMainViewProps) {
+function ProjectsMainView() {
+  const { projects, addProject, deleteProject, updateProject } = useProjects();
   const {
     newProjectName,
     setNewProjectName,
@@ -34,9 +28,9 @@ function ProjectsMainView({ projects, onAddProject, onDeleteProject, onUpdatePro
     setEditingProject,
   } = useProjectsMainViewLogic({
     projects,
-    onAddProject,
-    onDeleteProject,
-    onUpdateProject,
+    onAddProject: addProject,
+    onDeleteProject: deleteProject,
+    onUpdateProject: updateProject,
   });
 
   return (

@@ -1,57 +1,35 @@
 import ProjectsMainView from './features/projects/components/ProjectsMainView';
 import { Routes, Route } from 'react-router-dom';
-import type { Project } from './shared/types';
-import type { Idea } from './shared/types/Idea';
 import ProjectDetail from './features/projects/components/ProjectDetail';
 import { useParams } from 'react-router-dom';
 import TaskDetail from './features/tasks/components/TaskDetail';
 import type { Task } from './shared/types/Task';
 import Dashboard from './features/dashboard/components/Dashboard';
-import { useNotifications, useLocalStorage } from './shared/hooks';
+import { useNotifications } from './shared/hooks';
 import IdeasMainView from './features/ideas/components/IdeasMainView';
-import { DateUtils } from './shared';
+import { ProjectsProvider, IdeasProvider, useProjects } from './contexts';
 
-function ProjectDetailWrapper({ 
-  projects, 
-  ideas,
-  onUpdateProject,
-  onAddIdea,
-  onUpdateIdea,
-  onDeleteIdea
-}: { 
-  projects: Project[]; 
-  ideas: Idea[];
-  onUpdateProject: (project: Project) => void; 
-  onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
-  onUpdateIdea: (idea: Idea) => void;
-  onDeleteIdea: (ideaId: string) => void;
-}) {
+function ProjectDetailWrapper() {
   const { id } = useParams<{ id: string }>();
-  const project = projects.find(p => p.id === id);
+  const { getProject } = useProjects();
+  
+  const project = getProject(id!);
   
   if (!project) {
     return <div>Proyecto no encontrado</div>;
   }
   
-  return (
-    <ProjectDetail 
-      project={project} 
-      ideas={ideas}
-      onUpdateProject={onUpdateProject}
-      onAddIdea={onAddIdea}
-      onUpdateIdea={onUpdateIdea}
-      onDeleteIdea={onDeleteIdea}
-    />
-  );
+  return <ProjectDetail project={project} />;
 }
 
-function TaskDetailWrapper({ projects }: { projects: Project[] }) {
+function TaskDetailWrapper() {
   const { taskId } = useParams<{ taskId: string }>();
+  const { projects } = useProjects();
   
   let foundTask: Task | undefined;
 
   for (const project of projects) {
-    const task = project.tasks?.find(t => t.id === taskId);
+    const task = project.tasks?.find((t: Task) => t.id === taskId);
     if (task) {
       foundTask = task;
       break;
@@ -65,119 +43,31 @@ function TaskDetailWrapper({ projects }: { projects: Project[] }) {
   return <TaskDetail task={foundTask} />;
 }
 
-function App() {
-  const [projects, setProjects] = useLocalStorage<Project[]>('projects', []);
-  const [ideas, setIdeas] = useLocalStorage<Idea[]>('ideas', []);
-
+function AppRoutes() {
+  const { projects } = useProjects();
+  
   useNotifications(projects);
 
-  const handleAddProject = (projectData: Omit<Project, 'id'>) => {
-    const newProject: Project = {
-      id: crypto.randomUUID(),
-      ...projectData
-    };
-    setProjects(prevProjects => [...prevProjects, newProject]);
-  };
-
-  const handleUpdateProject = (updatedProject: Project) => {
-    setProjects(prevProjects => 
-      prevProjects.map(project => 
-        project.id === updatedProject.id ? updatedProject : project
-      )
-    );
-  };
-
-  const handleDeleteProject = (projectId: string) => {
-    setProjects(prevProjects => 
-      prevProjects.filter(project => project.id !== projectId)
-    );
-  };
-
-  const handleAddIdea = (ideaData: Omit<Idea, 'id' | 'createdAt'>) => {
-    const newIdea: Idea = {
-      id: crypto.randomUUID(),
-      createdAt: DateUtils.timestampNow(),
-      ...ideaData
-    };
-    setIdeas(prevIdeas => [...prevIdeas, newIdea]);
-  };
-
-  const handleUpdateIdea = (updatedIdea: Idea) => {
-    setIdeas(prevIdeas => 
-      prevIdeas.map(idea => 
-        idea.id === updatedIdea.id ? updatedIdea : idea
-      )
-    );
-  };
-
-  const handleDeleteIdea = (ideaId: string) => {
-    setIdeas(prevIdeas => 
-      prevIdeas.filter(idea => idea.id !== ideaId)
-    );
-  };
-
-  const handlePromoteToProject = (idea: Idea) => {
-    const newProject: Project = {
-      id: crypto.randomUUID(),
-      name: idea.title,
-      tags: idea.tags,
-      lastActivityDate: DateUtils.dateToday(),
-      tasks: [],
-      blogEntries: [],
-      resources: [],
-      mvp: idea.description.length > 50 ? idea.description : undefined,
-    };
-    
-    setProjects(prevProjects => [...prevProjects, newProject]);
-    
-    setIdeas(prevIdeas => prevIdeas.map(i => 
-      i.id === idea.id 
-        ? { ...i, status: 'promoted' as const, promotedToProjectId: newProject.id }
-        : i
-    ));
-  };
-  
-
   return (
-    <div>
-      <Routes>
-        <Route
-          path="/"
-          element={<ProjectsMainView projects={projects} 
-          onAddProject={handleAddProject} onDeleteProject={handleDeleteProject} 
-          onUpdateProject={handleUpdateProject} />}
-        />
-        <Route
-          path="/ideas"
-          element={<IdeasMainView 
-            ideas={ideas}
-            onAddIdea={handleAddIdea}
-            onUpdateIdea={handleUpdateIdea}
-            onDeleteIdea={handleDeleteIdea}
-            onPromoteToProject={handlePromoteToProject}
-          />}
-        />
-        <Route
-          path="/project/:id"
-          element={<ProjectDetailWrapper 
-            projects={projects} 
-            ideas={ideas}
-            onUpdateProject={handleUpdateProject}
-            onAddIdea={handleAddIdea}
-            onUpdateIdea={handleUpdateIdea}
-            onDeleteIdea={handleDeleteIdea}
-          />}
-        />
-        <Route
-          path="/tasks/:taskId"
-          element={<TaskDetailWrapper projects={projects} />}
-        />
-        <Route
-          path="/dashboard"
-          element={<Dashboard projects={projects} />}
-        />
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="/" element={<ProjectsMainView />} />
+      <Route path="/ideas" element={<IdeasMainView />} />
+      <Route path="/project/:id" element={<ProjectDetailWrapper />} />
+      <Route path="/tasks/:taskId" element={<TaskDetailWrapper />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <ProjectsProvider>
+      <IdeasProvider>
+        <div>
+          <AppRoutes />
+        </div>
+      </IdeasProvider>
+    </ProjectsProvider>
   );
 }
 

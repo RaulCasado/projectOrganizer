@@ -7,28 +7,18 @@ import ResourcesSection from './ResourcesSection';
 import SketchesSection from './SketchesSection';
 import BlogSection from './BlogSection';
 import type { Project, BlogEntry, Resource } from '../../../shared/types';
-import type { Idea } from '../../../shared/types/Idea';
 import { MVPSection } from './';
 import SketchCanvas from '../../sketches/components/SketchCanvas';
 import { DateUtils } from '../../../shared';
+import { useProjects, useIdeas } from '../../../contexts';
 
 interface ProjectDetailProps {
   project: Project;
-  ideas: Idea[];
-  onUpdateProject: (updatedProject: Project) => void;
-  onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
-  onUpdateIdea: (idea: Idea) => void;
-  onDeleteIdea: (ideaId: string) => void;
 }
 
-function ProjectDetail({ 
-  project, 
-  ideas,
-  onUpdateProject,
-  onAddIdea,
-  onUpdateIdea,
-  onDeleteIdea
-}: ProjectDetailProps) {
+function ProjectDetail({ project }: ProjectDetailProps) {
+  const { updateProject } = useProjects();
+  const { ideas, addIdea, updateIdea, deleteIdea } = useIdeas();
 
   const {
     editingTask,
@@ -45,7 +35,7 @@ function ProjectDetail({
     handleToggleTask,
     handleDeleteTask,
     handleCancelEdit,
-  } = useProjectTasks(project, onUpdateProject);
+  } = useProjectTasks(project, updateProject);
 
   const {
     sketches,
@@ -67,11 +57,11 @@ function ProjectDetail({
       resources,
       lastActivityDate: DateUtils.dateToday()
     };
-    onUpdateProject(updatedProject);
+    updateProject(updatedProject);
   };
 
   const handleUpdateBlogEntries = (blogEntries: BlogEntry[]) => {
-    onUpdateProject({
+    updateProject({
       ...project,
       blogEntries,
       lastActivityDate: DateUtils.dateToday()
@@ -79,7 +69,7 @@ function ProjectDetail({
   };
 
   const handleUpdateMVP = (mvp: string) => {
-    onUpdateProject({
+    updateProject({
       ...project,
       mvp
     });
@@ -136,9 +126,9 @@ function ProjectDetail({
       <IdeasSection
         projectId={project.id}
         ideas={ideas}
-        onAddIdea={onAddIdea}
-        onUpdateIdea={onUpdateIdea}
-        onDeleteIdea={onDeleteIdea}
+        onAddIdea={addIdea}
+        onUpdateIdea={updateIdea}
+        onDeleteIdea={deleteIdea}
       />
 
       <SketchCanvas

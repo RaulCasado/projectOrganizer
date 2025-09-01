@@ -5,13 +5,10 @@ import AbandonedProjects from './AbandonedProjects';
 import RecentActivity from './RecentActivity';
 import QuickActions from './QuickActions';
 import { useDashboardLogic } from '../hooks/useDashboardLogic';
-import type { Project } from '../../../shared/types';
+import { useProjects } from '../../../contexts';
 
-interface DashboardProps {
-  projects: Project[];
-}
-
-function Dashboard({ projects }: DashboardProps) {
+function Dashboard() {
+  const { projects } = useProjects();
   const {
     stats,
     activeProjects,

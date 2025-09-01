@@ -1,25 +1,12 @@
-import type { Idea } from '../../../shared/types/Idea';
 import IdeaPanel from './IdeaPanel';
 import IdeasHeader from './IdeasHeader';
 import IdeasStats from './IdeasStats';
 import IdeasFilters from './IdeasFilters';
 import { useIdeasMainView } from '../hooks/useIdeasMainView';
+import { useIdeasWithProjects } from '../../../contexts';
 
-interface IdeasMainViewProps {
-    ideas: Idea[];
-    onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt'>) => void;
-    onUpdateIdea: (idea: Idea) => void;
-    onDeleteIdea: (ideaId: string) => void;
-    onPromoteToProject: (idea: Idea) => void;
-}
-
-function IdeasMainView({
-    ideas,
-    onAddIdea,
-    onUpdateIdea,
-    onDeleteIdea,
-    onPromoteToProject
-}: IdeasMainViewProps) {
+function IdeasMainView() {
+    const { ideas, addIdea, updateIdea, deleteIdea, promoteToProject } = useIdeasWithProjects();
   const {
     filter,
     setFilter,
@@ -46,10 +33,10 @@ function IdeasMainView({
 
       <IdeaPanel
         ideas={sortedIdeas}
-        onAddIdea={onAddIdea}
-        onUpdateIdea={onUpdateIdea}
-        onDeleteIdea={onDeleteIdea}
-        onPromoteToProject={onPromoteToProject}
+        onAddIdea={addIdea}
+        onUpdateIdea={updateIdea}
+        onDeleteIdea={deleteIdea}
+        onPromoteToProject={promoteToProject}
       />
     </div>
   );

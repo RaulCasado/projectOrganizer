@@ -965,3 +965,5 @@ function ResourceForm() {
 3. CSS profesional
 
 ¿Te parece bien este plan? ¿Quieres que empecemos por alguna fase específica o tienes alguna prioridad diferente?
+
+Para solucionar varios de mis problemas o para intentarlos al menos he creado un contexto para los proyectos ideas etc. Para evitar el prop drilling y así intentar también bajar las líneas de código y responsabilidades de cada componente.

@@ -1,12 +1,8 @@
 import { createContext, useCallback } from 'react';
-import type { Project, BlogEntry, Resource } from '../shared/types/Project';
-import type { Idea } from '../shared/types/Idea';
-import type { Task } from '../shared/types/Task';
-import type { QuickSketch } from '../shared/types/QuickSketch';
 import { useProjects, useIdeas } from './index';
-import { useProjectTasks } from '../features/projects/hooks/useProjectTasks';
-import { useProjectSketches } from '../features/sketches/hooks/useProjectSketches';
-import { DateUtils } from '../shared/utils/dateUtils';
+import { useProjectTasks, useProjectSketches } from '../features';
+import { DateUtils } from '../shared';
+import type { Project, BlogEntry, Resource, Idea, Task, QuickSketch } from '../shared';
 
 interface ProjectDetailContextType {
   project: Project;

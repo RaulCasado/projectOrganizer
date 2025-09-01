@@ -1,13 +1,15 @@
-import ProjectOverview from './ProjectOverview';
-import {TasksSection} from './TasksSection';
-import IdeasSection from './IdeasSection';
-import ResourcesSection from './ResourcesSection';
-import SketchesSection from './SketchesSection';
-import BlogSection from './BlogSection';
-import type { Project } from '../../../shared/types';
-import { MVPSection } from './';
-import SketchCanvas from '../../sketches/components/SketchCanvas';
+import type { Project } from '../../../shared';
+import { SketchCanvas } from '../../../features';
 import { ProjectDetailProvider, useProjectDetailContext } from '../../../contexts';
+import {
+  ProjectOverview,
+  TasksSection,
+  IdeasSection,
+  ResourcesSection,
+  SketchesSection,
+  BlogSection,
+  MVPSection
+} from './';
 
 interface ProjectDetailProps {
   project: Project;

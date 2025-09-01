@@ -1,9 +1,8 @@
 import { useCallback } from 'react';
 import { useIdeas } from './useIdeas';
 import { useProjects } from './useProjects';
-import type { Idea } from '../shared/types/Idea';
-import type { Project } from '../shared/types/Project';
-import { DateUtils } from '../shared/utils/dateUtils';
+import type { Idea, Project } from '../shared';
+import { DateUtils } from '../shared';    
 
 export function useIdeasWithProjects() {
   const ideasContext = useIdeas();

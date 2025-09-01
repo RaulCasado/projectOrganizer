@@ -1,9 +1,6 @@
-import type { BlogEntry } from '../../../shared/types';
-import BlogForm from './BlogForm';
-import BlogList from "./BlogList";
-import BlogToolbar from './BlogToolbar';
-import BlogModal from './BlogModal';
+import type { BlogEntry } from '../../../shared';
 import { useProjectBlog } from '../hooks/useProjectBlog';
+import { BlogForm, BlogList, BlogToolbar, BlogModal } from './';
 
 interface ProjectBlogProps {
     blogEntries?: BlogEntry[];

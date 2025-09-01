@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom';
-import ProjectFilters from './ProjectFilters';
-import ProjectForm from './ProjectForm';
-import ProjectList from './ProjectList';
 import { useProjectsMainViewLogic } from '../hooks/useProjectsMainViewLogic';
 import { useProjects } from '../../../contexts';
 import type { Project } from '../../../shared';
+import { ProjectFilters, ProjectForm, ProjectList } from './';
 
 function ProjectsMainView() {
   const { projects, addProject, deleteProject, updateProject } = useProjects();

@@ -1,9 +1,5 @@
-import IdeaPanel from './IdeaPanel';
-import IdeasHeader from './IdeasHeader';
-import IdeasStats from './IdeasStats';
-import IdeasFilters from './IdeasFilters';
-import { useIdeasWithProjects } from '../../../contexts';
-import { IdeasMainViewProvider } from '../../../contexts/IdeasMainViewContext';
+import { useIdeasWithProjects, IdeasMainViewProvider } from '../../../contexts';
+import { IdeaPanel, IdeasHeader, IdeasStats, IdeasFilters } from './';
 
 function IdeasMainViewContent() {
   return (

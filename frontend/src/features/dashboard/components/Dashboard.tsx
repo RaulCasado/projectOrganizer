@@ -1,11 +1,13 @@
-import StatsCards from './StatsCards';
-import ActiveProjects from './ActiveProjects';
-import PopularTags from './PopularTags';
-import AbandonedProjects from './AbandonedProjects';
-import RecentActivity from './RecentActivity';
-import QuickActions from './QuickActions';
 import { useDashboardLogic } from '../hooks/useDashboardLogic';
 import { useProjects } from '../../../contexts';
+import { 
+  StatsCards, 
+  ActiveProjects, 
+  PopularTags, 
+  AbandonedProjects, 
+  RecentActivity, 
+  QuickActions 
+} from './';
 
 function Dashboard() {
   const { projects } = useProjects();

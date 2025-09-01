@@ -1,13 +1,8 @@
-import ProjectsMainView from './features/projects/components/ProjectsMainView';
-import { Routes, Route } from 'react-router-dom';
-import ProjectDetail from './features/projects/components/ProjectDetail';
-import { useParams } from 'react-router-dom';
-import {TaskDetail} from './features/tasks/components/TaskDetail';
-import type { Task } from './shared/types/Task';
-import Dashboard from './features/dashboard/components/Dashboard';
-import { useNotifications } from './shared/hooks';
-import IdeasMainView from './features/ideas/components/IdeasMainView';
+import { Routes, Route, useParams } from 'react-router-dom';
+import { ProjectsMainView, ProjectDetail, TaskDetail, Dashboard, IdeasMainView } from './features';
 import { ProjectsProvider, IdeasProvider, useProjects } from './contexts';
+import { useNotifications } from './shared';
+import type { Task } from './shared';  
 
 function ProjectDetailWrapper() {
   const { id } = useParams<{ id: string }>();

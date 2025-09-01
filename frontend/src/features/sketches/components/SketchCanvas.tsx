@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useSketchCanvas } from '../../../shared/hooks/useSketchCanvas';
-import { useSketches } from '../../../shared/hooks/useSketches';
-import type { SketchTool } from '../../../shared/types';
-import Modal from '../../../shared/components/Modal';
+import { useSketchCanvas, useSketches } from '../../../shared';
+import type { SketchTool } from '../../../shared';
+import { Modal } from '../../../shared';
 
 interface SketchCanvasProps {
     isOpen: boolean;

@@ -1,8 +1,7 @@
-import type { Idea } from '../../../shared/types/Idea';
-import EmptyIdeas from './EmptyIdeas';
-import IdeaItem from './IdeaItem';
-import IdeaEditForm from './IdeaEditForm';
-import { useIdeaList } from '../hooks/useIdeaList';
+import type { Idea } from '../../../shared';
+import { EmptyIdeas, IdeaItem, IdeaEditForm } from './';
+import { useIdeaList } from '../hooks/useIdeaList'; 
+
 interface IdeaListProps {
     ideas: Idea[];
     onUpdateIdea: (idea: Idea) => void;

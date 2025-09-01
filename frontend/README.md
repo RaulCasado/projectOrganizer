@@ -581,3 +581,387 @@ Ahora me gustaria empezar por el tema de los componentes dios que son componente
 Habria que considerar si el prop drilling en mi proyecto se considera excesivo o algo perjudicial arquitectónicamente hablando ya que en el caso de projectdetail por ejemplo onaddidea no hace nada simplemente se la pasa a otro componente y si ese componente se la pasa a otro componente tendriamos que ver si realmente es necesario que todos esos componentes intermedios tengan que conocer esa funcion o si podriamos simplificar la estructura de alguna manera.
 
 La idea del refactor es sacar la logica a un custom hook que el componente lo use y sacar componentes mas pequeños para ser mas manejables por ejemplo en ProjectDetail ( es por el que he empezado) podemos sacar varios componentes de sketch ya que los puse para ver si funcionaban y ahi se quedo tambien podemos sacar toda la logica a varios hooks y bueno reestructurar un poco el componente si hicese falta.
+
+
+Revisar resource form, los componentes han sido refactorizados completamentes menos el sketch ya que quiero revisarlo mejor la idea ha sido igual para todos realmente quitamos logica haciendo un hook y dividimos en componentes más pequeños.
+
+
+Recopilando información del área de trabajoBasándome en el código actual y la estructura del proyecto, aquí tienes las **principales áreas que deberíamos refactorizar** para mejorar la mantenibilidad, escalabilidad y calidad del código. He priorizado por impacto y facilidad de implementación:
+
+## 🔧 **1. Componentes con Múltiples Responsabilidades**
+
+### **ProjectDetail.tsx** (URGENTE - Alto impacto)
+Actualmente maneja:
+- Estado de edición de tareas
+- Filtros de tareas
+- CRUD completo de tareas
+- 3 componentes principales
+- Lógica de sketches, ideas, blog
+
+**Solución:** Dividir en componentes más pequeños + custom hooks
+
+```tsx
+// hooks/useProjectWorkflow.ts - Centralizar lógica
+export const useProjectWorkflow = (projectId: string) => {
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [statusFilter, setStatusFilter] = useState<TaskStatus>('all');
+  // ... lógica centralizada
+  
+  return {
+    // Estado y acciones
+    editingTask,
+    setEditingTask,
+    statusFilter,
+    setStatusFilter,
+    filteredTasks,
+    handleAddTask,
+    handleUpdateTask,
+    handleDeleteTask
+  };
+};
+
+// ProjectDetail.tsx - Solo orquestador
+function ProjectDetail({ project, ideas, onUpdateProject, onAddIdea, onUpdateIdea, onDeleteIdea }: ProjectDetailProps) {
+  const workflow = useProjectWorkflow(project.id);
+  
+  return (
+    <div>
+      <ProjectHeader project={project} />
+      <TasksSection {...workflow} />
+      <SketchesSection projectId={project.id} />
+      <BlogSection project={project} />
+      <IdeasSection ideas={ideas} onAddIdea={onAddIdea} />
+    </div>
+  );
+}
+```
+
+## 🎯 **2. Prop Drilling Excesivo**
+
+### **Problema actual:**
+```tsx
+// App.tsx -> ProjectDetail.tsx -> TasksSection -> TaskList -> TaskItem
+// Cada nivel pasa las mismas props: onToggleTask, onDeleteTask, etc.
+```
+
+**Solución:** Context Provider para estado compartido
+
+```tsx
+// contexts/ProjectContext.tsx
+const ProjectContext = createContext<ProjectContextType | null>(null);
+
+export const ProjectProvider = ({ project, children }: { project: Project; children: React.ReactNode }) => {
+  const [tasks, setTasks] = useState(project.tasks || []);
+  
+  const value = {
+    project,
+    tasks,
+    addTask: (task: Task) => setTasks(prev => [...prev, task]),
+    updateTask: (taskId: string, updates: Partial<Task>) => {
+      // lógica de actualización
+    },
+    deleteTask: (taskId: string) => {
+      // lógica de eliminación
+    }
+  };
+  
+  return (
+    <ProjectContext.Provider value={value}>
+      {children}
+    </ProjectContext.Provider>
+  );
+};
+
+// Uso en componentes
+function TaskList() {
+  const { tasks, deleteTask } = useContext(ProjectContext);
+  // Sin props drilling!
+}
+```
+
+## 📝 **3. Formularios - Duplicación y Validación**
+
+### **Problema:** Cada formulario maneja validación de forma diferente
+```tsx
+// TaskForm, ResourceForm, IdeaForm, etc. tienen lógica similar
+const [errors, setErrors] = useState({});
+const [isSubmitting, setIsSubmitting] = useState(false);
+// Validación repetitiva...
+```
+
+**Solución:** Hook genérico para formularios
+
+```tsx
+// hooks/useForm.ts
+export function useForm<T extends Record<string, any>>(
+  initialValues: T,
+  validationSchema?: ValidationSchema<T>
+) {
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const validate = useCallback(() => {
+    if (!validationSchema) return true;
+    // lógica de validación
+  }, [values, validationSchema]);
+  
+  const handleSubmit = useCallback(async (onSubmit: (values: T) => Promise<void>) => {
+    setIsSubmitting(true);
+    if (validate()) {
+      try {
+        await onSubmit(values);
+        setValues(initialValues); // Reset
+      } catch (error) {
+        // manejar error
+      }
+    }
+    setIsSubmitting(false);
+  }, [values, validate, initialValues]);
+  
+  return {
+    values,
+    errors,
+    isSubmitting,
+    setValues,
+    setFieldValue: (field: keyof T, value: any) => 
+      setValues(prev => ({ ...prev, [field]: value })),
+    handleSubmit
+  };
+}
+
+// Uso en ResourceForm
+function ResourceForm({ onSave, onCancel }: ResourceFormProps) {
+  const validationSchema = {
+    title: (value: string) => value.length < 3 ? 'Título muy corto' : '',
+    url: (value: string) => !isValidUrl(value) ? 'URL inválida' : ''
+  };
+  
+  const { values, errors, isSubmitting, setFieldValue, handleSubmit } = useForm(
+    { title: '', url: '', description: '', category: 'other' },
+    validationSchema
+  );
+  
+  return (
+    <form onSubmit={(e) => handleSubmit(onSave)}>
+      {/* Campos con errores automáticos */}
+    </form>
+  );
+}
+```
+
+## 🔄 **4. Estado Global - Consolidar Servicios**
+
+### **Problema:** Múltiples servicios separados sin coordinación
+```tsx
+// LocalStorageService, NotificationService, SketchStorageService
+// Cada uno maneja su propio estado y errores
+```
+
+**Solución:** Servicio unificado con patrón Repository
+
+```tsx
+// services/repository.ts
+class Repository {
+  private localStorage = new LocalStorageService();
+  private notifications = new NotificationService();
+  
+  // Proyectos
+  async getProjects(): Promise<Project[]> {
+    try {
+      return this.localStorage.get('projects', []);
+    } catch (error) {
+      this.notifications.error('Error cargando proyectos');
+      throw error;
+    }
+  }
+  
+  async saveProject(project: Project): Promise<void> {
+    await this.localStorage.set(`project_${project.id}`, project);
+    this.notifications.success('Proyecto guardado');
+  }
+  
+  // Ideas
+  async getIdeas(): Promise<Idea[]> {
+    // lógica similar
+  }
+  
+  // Tasks
+  async getTasks(projectId: string): Promise<Task[]> {
+    // lógica similar
+  }
+}
+
+export const repository = new Repository();
+```
+
+## 📦 **5. Imports - Barrel Exports Mejorados**
+
+### **Problema:** Imports largos y desorganizados
+```tsx
+import { TaskList } from '../../../features/tasks/components/TaskList';
+import { TaskForm } from '../../../features/tasks/components/TaskForm';
+import { TaskFilters } from '../../../features/tasks/components/TaskFilters';
+```
+
+**Solución:** Index files mejorados
+
+```tsx
+// features/tasks/index.ts
+export { TaskList, TaskForm, TaskFilters } from './components';
+export { useTasks, useTaskFilters } from './hooks';
+export { taskService } from './services';
+export type { Task, TaskStatus } from './types';
+
+// features/index.ts
+export * from './tasks';
+export * from './projects';
+export * from './ideas';
+export * from './blog';
+
+// Uso simplificado
+import { TaskList, TaskForm, useTasks } from '../features';
+```
+
+## ⚡ **6. Performance - Memoización Estratégica**
+
+### **Problema:** Re-renders innecesarios
+```tsx
+// Componentes que recalculan valores en cada render
+const filteredTasks = tasks.filter(task => 
+  task.title.toLowerCase().includes(searchText.toLowerCase())
+);
+```
+
+**Solución:** useMemo y useCallback estratégicos
+
+```tsx
+// hooks/useFilteredTasks.ts
+export const useFilteredTasks = (tasks: Task[], filters: TaskFilters) => {
+  return useMemo(() => {
+    return tasks.filter(task => {
+      const matchesSearch = task.title.toLowerCase().includes(filters.search.toLowerCase());
+      const matchesStatus = filters.status === 'all' || task.status === filters.status;
+      const matchesPriority = filters.priority === 'all' || task.priority === filters.priority;
+      
+      return matchesSearch && matchesStatus && matchesPriority;
+    });
+  }, [tasks, filters.search, filters.status, filters.priority]);
+};
+
+// Componente memoizado
+const TaskList = memo(({ tasks, onToggleTask, onDeleteTask }: TaskListProps) => {
+  const filteredTasks = useFilteredTasks(tasks, { search: '', status: 'all', priority: 'all' });
+  
+  return (
+    <ul>
+      {filteredTasks.map(task => (
+        <TaskItem 
+          key={task.id} 
+          task={task} 
+          onToggle={onToggleTask} 
+          onDelete={onDeleteTask} 
+        />
+      ))}
+    </ul>
+  );
+});
+```
+
+## 🎨 **7. UI/UX - Componentes Reutilizables**
+
+### **Problema:** Estilos y componentes repetitivos
+```tsx
+// Múltiples botones con estilos similares
+<button style={{ backgroundColor: '#28a745', color: 'white', ... }}>Guardar</button>
+```
+
+**Solución:** Sistema de componentes base
+
+```tsx
+// components/ui/Button.tsx
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  loading?: boolean;
+}
+
+export const Button = ({ 
+  variant = 'primary', 
+  size = 'md', 
+  loading, 
+  children, 
+  ...props 
+}: ButtonProps) => {
+  const baseStyles = 'btn';
+  const variantStyles = `btn-${variant}`;
+  const sizeStyles = `btn-${size}`;
+  
+  return (
+    <button 
+      className={`${baseStyles} ${variantStyles} ${sizeStyles} ${loading ? 'loading' : ''}`}
+      disabled={loading || props.disabled}
+      {...props}
+    >
+      {loading ? <Spinner /> : children}
+    </button>
+  );
+};
+
+// components/ui/Input.tsx
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+}
+
+export const Input = ({ label, error, ...props }: InputProps) => (
+  <div className="input-group">
+    {label && <label>{label}</label>}
+    <input className={`input ${error ? 'error' : ''}`} {...props} />
+    {error && <span className="error-message">{error}</span>}
+  </div>
+);
+
+// Uso simplificado
+import { Button, Input } from '../components/ui';
+
+function ResourceForm() {
+  return (
+    <div>
+      <Input 
+        label="Título" 
+        value={title} 
+        onChange={setTitle} 
+        error={errors.title} 
+      />
+      <Button variant="primary" loading={isSubmitting}>
+        Guardar
+      </Button>
+    </div>
+  );
+}
+```
+
+## 📋 **Plan de Implementación Priorizado**
+
+### **Fase 1: Fundamentos (Esta semana)**
+1. ✅ Crear hook `useForm` genérico
+2. ✅ Implementar Context para ProjectDetail
+3. ✅ Barrel exports mejorados
+
+### **Fase 2: Componentes (Próxima semana)**
+1. Refactorizar ProjectDetail.tsx
+2. Crear componentes UI base
+3. Memoizar componentes críticos
+
+### **Fase 3: Arquitectura (Semana siguiente)**
+1. Servicio Repository unificado
+2. Mejorar manejo de errores global
+3. Optimizar performance
+
+### **Fase 4: Pulido (Final)**
+1. Tests unitarios
+2. Documentación
+3. CSS profesional
+
+¿Te parece bien este plan? ¿Quieres que empecemos por alguna fase específica o tienes alguna prioridad diferente?

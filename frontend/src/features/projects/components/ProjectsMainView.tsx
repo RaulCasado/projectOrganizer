@@ -1,4 +1,3 @@
-// ProjectsMainView.tsx - CORREGIDO
 import { Link } from 'react-router-dom';
 import ProjectFilters from './ProjectFilters';
 import ProjectForm from './ProjectForm';
@@ -22,17 +21,14 @@ function ProjectsMainView() {
     onDeleteProject: deleteProject,
   });
 
-  // 🎯 Handler simplificado para guardar proyectos
   const handleSaveProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'lastActivityDate'>) => {
     if (editingProject) {
-      // Editar proyecto existente
       updateProject({
         ...editingProject,
         ...projectData,
         lastActivityDate: new Date().toISOString()
       });
     } else {
-      // Crear nuevo proyecto
       addProject(projectData);
     }
     setEditingProject(null);
@@ -49,7 +45,6 @@ function ProjectsMainView() {
         </Link>
       </div>
 
-      {/* ✅ USAR LA INTERFAZ NUEVA */}
       <ProjectForm
         editingProject={editingProject}
         onSave={handleSaveProject}

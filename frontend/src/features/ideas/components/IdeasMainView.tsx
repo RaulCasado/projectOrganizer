@@ -2,37 +2,27 @@ import IdeaPanel from './IdeaPanel';
 import IdeasHeader from './IdeasHeader';
 import IdeasStats from './IdeasStats';
 import IdeasFilters from './IdeasFilters';
-import { useIdeasMainView } from '../hooks/useIdeasMainView';
 import { useIdeasWithProjects } from '../../../contexts';
+import { IdeasMainViewProvider } from '../../../contexts/IdeasMainViewContext';
 
-function IdeasMainView() {
-    const { ideas } = useIdeasWithProjects();
-  const {
-    filter,
-    setFilter,
-    sortBy,
-    setSortBy,
-    sortedIdeas,
-    stats,
-  } = useIdeasMainView({ ideas });
-
+function IdeasMainViewContent() {
   return (
     <div>
       <IdeasHeader />
-
-      <IdeasStats stats={stats} />
-
-      <IdeasFilters
-        filter={filter}
-        setFilter={setFilter}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        totalIdeas={stats.total}
-        filteredCount={sortedIdeas.length}
-      />
-
-      <IdeaPanel ideas={sortedIdeas} />
+      <IdeasStats />
+      <IdeasFilters />
+      <IdeaPanel />
     </div>
+  );
+}
+
+function IdeasMainView() {
+  const { ideas } = useIdeasWithProjects();
+
+  return (
+    <IdeasMainViewProvider ideas={ideas}>
+      <IdeasMainViewContent />
+    </IdeasMainViewProvider>
   );
 }
 

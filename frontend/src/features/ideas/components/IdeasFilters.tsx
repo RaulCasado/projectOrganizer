@@ -1,13 +1,15 @@
-interface IdeasFiltersProps {
-  filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived';
-  setFilter: (filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived') => void;
-  sortBy: 'newest' | 'oldest' | 'priority' | 'title';
-  setSortBy: (sortBy: 'newest' | 'oldest' | 'priority' | 'title') => void;
-  totalIdeas: number;
-  filteredCount: number;
-}
+import { useIdeasMainViewContext } from '../../../contexts/IdeasMainViewContext';
 
-function IdeasFilters({ filter, setFilter, sortBy, setSortBy, totalIdeas, filteredCount }: IdeasFiltersProps) {
+function IdeasFilters() {
+  const { 
+    filter, 
+    setFilter, 
+    sortBy, 
+    setSortBy, 
+    stats, 
+    filteredCount 
+  } = useIdeasMainViewContext();
+
   return (
     <div>
       <div>
@@ -18,11 +20,11 @@ function IdeasFilters({ filter, setFilter, sortBy, setSortBy, totalIdeas, filter
           value={filter}
           onChange={(e) => setFilter(e.target.value as 'all' | 'inbox' | 'processing' | 'promoted' | 'archived')}
         >
-          <option value="all">🔍 Todas ({totalIdeas})</option>
-          <option value="inbox">📥 Inbox ({filteredCount})</option>
-          <option value="processing">⚙️ Procesando ({filteredCount})</option>
-          <option value="promoted">🚀 Promovidas ({filteredCount})</option>
-          <option value="archived">📦 Archivadas ({filteredCount})</option>
+          <option value="all">🔍 Todas ({stats.total})</option>
+          <option value="inbox">📥 Inbox ({stats.inbox})</option>
+          <option value="processing">⚙️ Procesando ({stats.processing})</option>
+          <option value="promoted">🚀 Promovidas ({stats.promoted})</option>
+          <option value="archived">📦 Archivadas ({stats.archived})</option>
         </select>
       </div>
 
@@ -42,7 +44,7 @@ function IdeasFilters({ filter, setFilter, sortBy, setSortBy, totalIdeas, filter
       </div>
 
       <div>
-        Mostrando {filteredCount} de {totalIdeas} ideas
+        Mostrando {filteredCount} de {stats.total} ideas
       </div>
     </div>
   );

@@ -1,55 +1,17 @@
-interface IdeasStatsProps {
-  stats: {
-    total: number;
-    inbox: number;
-    processing: number;
-    promoted: number;
-    archived: number;
-  };
-}
+import { useIdeasMainViewContext } from '../../../contexts/IdeasMainViewContext';
 
-function IdeasStats({ stats }: IdeasStatsProps) {
+function IdeasStats() {
+  const { stats } = useIdeasMainViewContext();
+
   return (
     <div>
+      <h3>📊 Estadísticas</h3>
       <div>
-        <div>
-          {stats.total}
-        </div>
-        <div>
-          Total Ideas
-        </div>
-      </div>
-      <div>
-        <div>
-          {stats.inbox}
-        </div>
-        <div>
-          📥 Inbox
-        </div>
-      </div>
-      <div>
-        <div>
-          {stats.processing}
-        </div>
-        <div>
-          ⚙️ Procesando
-        </div>
-      </div>
-      <div>
-        <div>
-          {stats.promoted}
-        </div>
-        <div>
-          🚀 Promovidas
-        </div>
-      </div>
-      <div>
-        <div>
-          {stats.archived}
-        </div>
-        <div>
-          📦 Archivadas
-        </div>
+        <span>📥 Inbox: {stats.inbox}</span>
+        <span>⚙️ Procesando: {stats.processing}</span>
+        <span>🚀 Promovidas: {stats.promoted}</span>
+        <span>📦 Archivadas: {stats.archived}</span>
+        <span>🔢 Total: {stats.total}</span>
       </div>
     </div>
   );

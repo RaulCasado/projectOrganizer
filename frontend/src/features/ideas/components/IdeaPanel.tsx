@@ -5,13 +5,12 @@ import { useIdeasWithProjects } from '../../../contexts';
 
 interface IdeaPanelProps {
     projectId?: string;
-    ideas?: Idea[]; // Ideas filtradas opcionalmente
+    ideas?: Idea[];
 }
 
 function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
     const { ideas: allIdeas, addIdea, updateIdea, deleteIdea, promoteToProject } = useIdeasWithProjects();
     
-    // Usar las ideas pasadas como prop o filtrar de todas las ideas
     const ideas = ideasProp || allIdeas;
     
     const filteredIdeas = projectId 

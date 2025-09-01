@@ -1,74 +1,121 @@
+import { useEffect, useState } from "react";
+import type { Project } from "../../../shared";
+import { useNotification } from "../../../shared";
+
 interface ProjectFormProps {
-  newProjectName: string;
-  setNewProjectName: (name: string) => void;
-  newProjectStack: string[];
-  setNewProjectStack: (stack: string[]) => void;
-  newProjectRequirements: string[];
-  setNewProjectRequirements: (requirements: string[]) => void;
-  newProjectDependencies: string[];
-  setNewProjectDependencies: (dependencies: string[]) => void;
-  newProjectTags: string[];
-  setNewProjectTags: (tags: string[]) => void;
-  isEditing: boolean;
-  onAddProject: () => void;
-  onCancelEdit: () => void;
+  editingProject?: Project | null;
+  onSave: (projectData: Omit<Project, 'id' | 'createdAt' | 'lastActivityDate'>) => void;
+  onCancel: () => void;
 }
 
-function ProjectForm({
-  newProjectName,
-  setNewProjectName,
-  newProjectStack,
-  setNewProjectStack,
-  newProjectRequirements,
-  setNewProjectRequirements,
-  newProjectDependencies,
-  setNewProjectDependencies,
-  newProjectTags,
-  setNewProjectTags,
-  isEditing,
-  onAddProject,
-  onCancelEdit,
-}: ProjectFormProps) {
+function ProjectForm({ editingProject, onSave, onCancel }: ProjectFormProps) {
+  const {notifyInfo} = useNotification();
+
+  const [formData, setFormData] = useState({
+    name: editingProject?.name || '',
+    stack: editingProject?.stack || [],
+    requirements: editingProject?.requirements || [],
+    dependencies: editingProject?.dependencies || [],
+    tags: editingProject?.tags || []
+  });
+
+  useEffect(() => {
+    setFormData({
+      name: editingProject?.name || '',
+      stack: editingProject?.stack || [],
+      requirements: editingProject?.requirements || [],
+      dependencies: editingProject?.dependencies || [],
+      tags: editingProject?.tags || []
+    });
+  }, [editingProject]);
+
+  const updateField = (field: keyof typeof formData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name.trim()) {
+      notifyInfo('El nombre del proyecto es obligatorio');
+      return;
+    }
+
+    onSave(formData);
+    
+    if (!editingProject) {
+      setFormData({
+        name: '',
+        stack: [],
+        requirements: [],
+        dependencies: [],
+        tags: []
+      });
+    }
+  };
+
+  const isEditing = !!editingProject;
+
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <h3>{isEditing ? 'Edit Project' : 'Add Project'}</h3>
+      
       <input
         type="text"
-        value={newProjectName}
+        value={formData.name}
         placeholder="Project Name"
-        onChange={e => setNewProjectName(e.target.value)}
+        onChange={e => updateField('name', e.target.value)}
+        required
       />
+      
       <input
         type="text"
         placeholder="Stack (comma separated)"
-        value={newProjectStack.join(', ')}
-        onChange={e => setNewProjectStack(e.target.value.split(',').map(item => item.trim()))}
+        value={formData.stack.join(', ')}
+        onChange={e => updateField('stack', 
+          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
+        )}
       />
+      
       <input
         type="text"
         placeholder="Requirements (comma separated)"
-        value={newProjectRequirements.join(', ')}
-        onChange={e => setNewProjectRequirements(e.target.value.split(',').map(item => item.trim()))}
+        value={formData.requirements.join(', ')}
+        onChange={e => updateField('requirements', 
+          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
+        )}
       />
+      
       <input
         type="text"
         placeholder="Dependencies (comma separated)"
-        value={newProjectDependencies.join(', ')}
-        onChange={e => setNewProjectDependencies(e.target.value.split(',').map(item => item.trim()))}
+        value={formData.dependencies.join(', ')}
+        onChange={e => updateField('dependencies', 
+          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
+        )}
       />
+      
       <input
         type="text"
         placeholder="Tags (comma separated)"
-        value={newProjectTags.join(', ')}
-        onChange={e => setNewProjectTags(e.target.value.split(',').map(item => item.trim()))}
+        value={formData.tags.join(', ')}
+        onChange={e => updateField('tags', 
+          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
+        )}
       />
-      <button onClick={onAddProject}>
-        {isEditing ? 'Update Project' : 'Add Project'}
-      </button>
-      {isEditing && (
-        <button onClick={onCancelEdit}>Cancel</button>
-      )}
-    </div>
+      
+      <div>
+        <button type="submit">
+          {isEditing ? 'Update Project' : 'Add Project'}
+        </button>
+        
+        {isEditing && (
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+      </div>
+    </form>
   );
 }
 

@@ -1,37 +1,42 @@
+// ProjectsMainView.tsx - CORREGIDO
 import { Link } from 'react-router-dom';
 import ProjectFilters from './ProjectFilters';
 import ProjectForm from './ProjectForm';
 import ProjectList from './ProjectList';
 import { useProjectsMainViewLogic } from '../hooks/useProjectsMainViewLogic';
 import { useProjects } from '../../../contexts';
+import type { Project } from '../../../shared';
 
 function ProjectsMainView() {
   const { projects, addProject, deleteProject, updateProject } = useProjects();
   const {
-    newProjectName,
-    setNewProjectName,
-    newProjectStack,
-    setNewProjectStack,
-    newProjectRequirements,
-    setNewProjectRequirements,
-    newProjectDependencies,
-    setNewProjectDependencies,
-    newProjectTags,
-    setNewProjectTags,
     selectedTag,
     setSelectedTag,
-    isEditing,
+    editingProject,
+    setEditingProject,
     availableTags,
     filteredProjects,
-    handleAddProject,
     handleDeleteProject,
-    setEditingProject,
   } = useProjectsMainViewLogic({
     projects,
-    onAddProject: addProject,
     onDeleteProject: deleteProject,
-    onUpdateProject: updateProject,
   });
+
+  // 🎯 Handler simplificado para guardar proyectos
+  const handleSaveProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'lastActivityDate'>) => {
+    if (editingProject) {
+      // Editar proyecto existente
+      updateProject({
+        ...editingProject,
+        ...projectData,
+        lastActivityDate: new Date().toISOString()
+      });
+    } else {
+      // Crear nuevo proyecto
+      addProject(projectData);
+    }
+    setEditingProject(null);
+  };
 
   return (
     <div>
@@ -44,20 +49,11 @@ function ProjectsMainView() {
         </Link>
       </div>
 
+      {/* ✅ USAR LA INTERFAZ NUEVA */}
       <ProjectForm
-        newProjectName={newProjectName}
-        setNewProjectName={setNewProjectName}
-        newProjectStack={newProjectStack}
-        setNewProjectStack={setNewProjectStack}
-        newProjectRequirements={newProjectRequirements}
-        setNewProjectRequirements={setNewProjectRequirements}
-        newProjectDependencies={newProjectDependencies}
-        setNewProjectDependencies={setNewProjectDependencies}
-        newProjectTags={newProjectTags}
-        setNewProjectTags={setNewProjectTags}
-        isEditing={isEditing}
-        onAddProject={handleAddProject}
-        onCancelEdit={() => setEditingProject(null)}
+        editingProject={editingProject}
+        onSave={handleSaveProject}
+        onCancel={() => setEditingProject(null)}
       />
 
       <ProjectFilters

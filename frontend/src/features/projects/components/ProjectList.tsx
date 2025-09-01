@@ -5,7 +5,7 @@ import { DateUtils } from '../../../shared';
 interface ProjectListProps {
   projects: Project[];
   onEditProject: (project: Project) => void;
-  onDeleteProject: (project: Project) => void;
+  onDeleteProject: (projectId : string) => void;
   selectedTag: string | null;
   setSelectedTag: (tag: string | null) => void;
 }
@@ -66,7 +66,7 @@ function ProjectList({
                 <button onClick={() => onEditProject(project)}>
                   ✏️ Editar
                 </button>
-                <button onClick={() => onDeleteProject(project)}>
+                <button onClick={() => onDeleteProject(project.id)}>
                   🗑️ Eliminar
                 </button>
               </div>

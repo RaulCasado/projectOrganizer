@@ -1,42 +1,46 @@
-import React from 'react';
-
+import { useForm } from '../../../shared/hooks/useForm';
+import type { IdeaFormData } from '../../../shared/types/Idea';
 interface ExpandedFormProps {
-  description: string;
-  setDescription: (description: string) => void;
-  priority: 'low' | 'medium' | 'high';
-  setPriority: (priority: 'low' | 'medium' | 'high') => void;
-  category: 'feature' | 'project' | 'improvement' | 'research' | 'other';
-  setCategory: (category: 'feature' | 'project' | 'improvement' | 'research' | 'other') => void;
-  tags: string;
-  setTags: (tags: string) => void;
   title: string;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (formData: IdeaFormData) => void;
   onCancel: () => void;
 }
 
 function ExpandedForm({
-  description,
-  setDescription,
-  priority,
-  setPriority,
-  category,
-  setCategory,
-  tags,
-  setTags,
   title,
   onSubmit,
   onCancel,
 }: ExpandedFormProps) {
+  const validationSchema = {
+    description: (value: string) => 
+      value.length < 10 ? 'Descripción muy corta (10 caracteres mínimo)' : undefined,
+  }
+
+  const {
+    values,
+    errors,
+    isSubmitting,
+    setFieldValue,
+    handleSubmit
+  } = useForm({
+    description : '',
+    priority : 'medium' as const,
+    category : 'feature' as const,
+    tags : ''
+  },validationSchema);
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      handleSubmit(() => onSubmit({title, ...values}));
+    }}>
       <div>
         <div>
           <label>
             Prioridad:
           </label>
           <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
+            value={values.priority}
+            onChange={(e) => setFieldValue('priority', e.target.value as any)}
           >
             <option value="low">🟢 Baja</option>
             <option value="medium">🟡 Media</option>
@@ -49,8 +53,8 @@ function ExpandedForm({
             Categoría:
           </label>
           <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value as 'feature' | 'project' | 'improvement' | 'research' | 'other')}
+            value={values.category}
+            onChange={(e) => setFieldValue('category',e.target.value as any)}
           >
             <option value="feature">✨ Feature</option>
             <option value="project">🚀 Proyecto</option>
@@ -66,8 +70,8 @@ function ExpandedForm({
           Descripción:
         </label>
         <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={values.description}
+          onChange={(e) => setFieldValue('description',e.target.value)}
           placeholder="Describe tu idea con más detalle..."
           rows={3}
         />
@@ -79,12 +83,14 @@ function ExpandedForm({
         </label>
         <input
           type="text"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
+          value={values.tags}
+          onChange={(e) => setFieldValue('tags',e.target.value)}
           placeholder="frontend, ui, mejora, ..."
         />
       </div>
-
+      <div>
+        {errors.description && <span className="error">{errors.description}</span>}
+      </div>
       <div>
         <button
           type="button"
@@ -94,9 +100,9 @@ function ExpandedForm({
         </button>
         <button
           type="submit"
-          disabled={!title.trim()}
+          disabled={isSubmitting}
         >
-          Crear Idea
+          {isSubmitting ? 'Creando...': 'Crear Idea'}
         </button>
       </div>
     </form>

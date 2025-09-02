@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Idea } from '../../../shared/types/Idea';
+import type { Idea, IdeaFormData } from '../../../shared/types/Idea';
 
 interface UseQuickIdeaCaptureProps {
   onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt' | 'projectId'>) => void;
@@ -13,19 +13,17 @@ export function useQuickIdeaCapture({ onAddIdea }: UseQuickIdeaCaptureProps) {
   const [tags, setTags] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim()) return;
+  const handleSubmit = (formData : IdeaFormData) => {
     const newIdea = {
-      title: title.trim(),
-      description: description.trim(),
-      priority,
-      category,
+      title: formData.title,
+      description: formData.description,
+      priority: formData.priority,
+      category: formData.category,
+      tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       status: 'inbox' as const,
-      tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0),
     };
     onAddIdea(newIdea);
-    resetForm();
+    resetLocalForm();
   };
 
   const handleQuickAdd = () => {
@@ -42,7 +40,7 @@ export function useQuickIdeaCapture({ onAddIdea }: UseQuickIdeaCaptureProps) {
     setTitle('');
   };
 
-  const resetForm = () => {
+  const resetLocalForm = () => {
     setTitle('');
     setDescription('');
     setPriority('medium');

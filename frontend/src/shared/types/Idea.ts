@@ -10,3 +10,11 @@ export type Idea = {
     projectId?: string;
     promotedToProjectId?: string;
 };
+
+export type IdeaFormData = {
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high';
+  category: 'feature' | 'project' | 'improvement' | 'research' | 'other';
+  tags: string;
+};

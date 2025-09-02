@@ -11,14 +11,6 @@ function QuickIdeaCapture({ onAddIdea }: QuickIdeaCaptureProps) {
   const {
     title,
     setTitle,
-    description,
-    setDescription,
-    priority,
-    setPriority,
-    category,
-    setCategory,
-    tags,
-    setTags,
     isExpanded,
     handleSubmit,
     handleQuickAdd,
@@ -37,14 +29,6 @@ function QuickIdeaCapture({ onAddIdea }: QuickIdeaCaptureProps) {
 
       {isExpanded && (
         <ExpandedForm
-          description={description}
-          setDescription={setDescription}
-          priority={priority}
-          setPriority={setPriority}
-          category={category}
-          setCategory={setCategory}
-          tags={tags}
-          setTags={setTags}
           title={title}
           onSubmit={handleSubmit}
           onCancel={toggleExpanded}

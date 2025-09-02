@@ -9,7 +9,7 @@ export const useProjectsMainViewLogic = ({
   onDeleteProject: (projectId: string) => void;
 }) => {
   const [selectedTag, setSelectedTag] = useState<string | null>('all');
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
+
   const { confirmDelete } = useNotification();
   const availableTags = useMemo(() => {
     const allTags = projects.flatMap(project => project.tags || []);
@@ -33,8 +33,6 @@ export const useProjectsMainViewLogic = ({
   return {
     selectedTag,
     setSelectedTag,
-    editingProject,
-    setEditingProject,
     availableTags,
     filteredProjects,
     handleDeleteProject,

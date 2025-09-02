@@ -1,17 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useProjectsMainViewLogic } from '../hooks/useProjectsMainViewLogic';
 import { useProjects } from '../../../contexts';
-import type { Project } from '../../../shared';
 import { ProjectFilters, ProjectForm, ProjectList } from './';
-import { DateUtils } from '../../../shared';
 
 function ProjectsMainView() {
-  const { projects, addProject, deleteProject, updateProject } = useProjects();
+  const { projects, deleteProject, setEditingProject } = useProjects();
   const {
     selectedTag,
     setSelectedTag,
-    editingProject,
-    setEditingProject,
     availableTags,
     filteredProjects,
     handleDeleteProject,
@@ -20,18 +16,6 @@ function ProjectsMainView() {
     onDeleteProject: deleteProject,
   });
 
-  const handleSaveProject = (projectData: Omit<Project, 'id' | 'createdAt' | 'lastActivityDate'>) => {
-    if (editingProject) {
-      updateProject({
-        ...editingProject,
-        ...projectData,
-        lastActivityDate: DateUtils.timestampNow()
-      });
-    } else {
-      addProject(projectData);
-    }
-    setEditingProject(null);
-  };
 
   return (
     <div>
@@ -45,9 +29,6 @@ function ProjectsMainView() {
       </div>
 
       <ProjectForm
-        editingProject={editingProject}
-        onSave={handleSaveProject}
-        onCancel={() => setEditingProject(null)}
       />
 
       <ProjectFilters

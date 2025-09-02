@@ -32,3 +32,11 @@ export type Project = {
   blogEntries?: BlogEntry[];
   lastActivityDate?: string;
 };
+
+export type ProjectFormData = {
+  name : string;
+  stack : string [];
+  requirements : string [];
+  dependencies : string [];
+  tags : string[];
+}

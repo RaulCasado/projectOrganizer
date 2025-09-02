@@ -1,116 +1,111 @@
-import { useEffect, useState } from "react";
-import type { Project } from "../../../shared";
-import { useNotification } from "../../../shared";
+import { useProjects } from '../../../contexts';
 
-interface ProjectFormProps {
-  editingProject?: Project | null;
-  onSave: (projectData: Omit<Project, 'id' | 'createdAt' | 'lastActivityDate'>) => void;
-  onCancel: () => void;
-}
-
-function ProjectForm({ editingProject, onSave, onCancel }: ProjectFormProps) {
-  const {notifyInfo} = useNotification();
-
-  const [formData, setFormData] = useState({
-    name: editingProject?.name || '',
-    stack: editingProject?.stack || [],
-    requirements: editingProject?.requirements || [],
-    dependencies: editingProject?.dependencies || [],
-    tags: editingProject?.tags || []
-  });
-
-  useEffect(() => {
-    setFormData({
-      name: editingProject?.name || '',
-      stack: editingProject?.stack || [],
-      requirements: editingProject?.requirements || [],
-      dependencies: editingProject?.dependencies || [],
-      tags: editingProject?.tags || []
-    });
-  }, [editingProject]);
-
-  const updateField = (field: keyof typeof formData, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.name.trim()) {
-      notifyInfo('El nombre del proyecto es obligatorio');
-      return;
-    }
-
-    onSave(formData);
-    
-    if (!editingProject) {
-      setFormData({
-        name: '',
-        stack: [],
-        requirements: [],
-        dependencies: [],
-        tags: []
-      });
-    }
-  };
-
+function ProjectForm() {
+  const { 
+    projectForm, 
+    editingProject, 
+    handleSaveProject,
+    setEditingProject 
+  } = useProjects();
+  
+  const { values, errors, isSubmitting, setFieldValue, handleSubmit } = projectForm;
   const isEditing = !!editingProject;
 
+  const handleArrayField = (field: keyof typeof values, value: string) => {
+    const array = value.split(',').map(item => item.trim()).filter(Boolean);
+    setFieldValue(field, array);
+  };
+
+  const handleCancel = () => {
+    setEditingProject(null);
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      handleSubmit(() => handleSaveProject(values));
+    }}>
       <h3>{isEditing ? 'Edit Project' : 'Add Project'}</h3>
       
-      <input
-        type="text"
-        value={formData.name}
-        placeholder="Project Name"
-        onChange={e => updateField('name', e.target.value)}
-        required
-      />
-      
-      <input
-        type="text"
-        placeholder="Stack (comma separated)"
-        value={formData.stack.join(', ')}
-        onChange={e => updateField('stack', 
-          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
-        )}
-      />
-      
-      <input
-        type="text"
-        placeholder="Requirements (comma separated)"
-        value={formData.requirements.join(', ')}
-        onChange={e => updateField('requirements', 
-          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
-        )}
-      />
-      
-      <input
-        type="text"
-        placeholder="Dependencies (comma separated)"
-        value={formData.dependencies.join(', ')}
-        onChange={e => updateField('dependencies', 
-          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
-        )}
-      />
-      
-      <input
-        type="text"
-        placeholder="Tags (comma separated)"
-        value={formData.tags.join(', ')}
-        onChange={e => updateField('tags', 
-          e.target.value.split(',').map(item => item.trim()).filter(Boolean)
-        )}
-      />
+      <div>
+        <label htmlFor="project-name">Project Name *</label>
+        <input
+          id="project-name"
+          type="text"
+          value={values.name}
+          placeholder="Project Name"
+          onChange={(e) => setFieldValue('name', e.target.value)}
+          disabled={isSubmitting}
+          required
+        />
+        {errors.name && <span className="error">{errors.name}</span>}
+      </div>
       
       <div>
-        <button type="submit">
-          {isEditing ? 'Update Project' : 'Add Project'}
+        <label htmlFor="project-stack">Stack (comma separated)</label>
+        <input
+          id="project-stack"
+          type="text"
+          placeholder="React, Node.js, TypeScript..."
+          value={values.stack.join(', ')}
+          onChange={(e) => handleArrayField('stack', e.target.value)}
+          disabled={isSubmitting}
+        />
+      </div>
+      
+      <div>
+        <label htmlFor="project-requirements">Requirements (comma separated)</label>
+        <input
+          id="project-requirements"
+          type="text"
+          placeholder="User authentication, Payment system..."
+          value={values.requirements.join(', ')}
+          onChange={(e) => handleArrayField('requirements', e.target.value)}
+          disabled={isSubmitting}
+        />
+      </div>
+      
+      <div>
+        <label htmlFor="project-dependencies">Dependencies (comma separated)</label>
+        <input
+          id="project-dependencies"
+          type="text"
+          placeholder="Stripe, AWS SDK..."
+          value={values.dependencies.join(', ')}
+          onChange={(e) => handleArrayField('dependencies', e.target.value)}
+          disabled={isSubmitting}
+        />
+      </div>
+      
+      <div>
+        <label htmlFor="project-tags">Tags (comma separated)</label>
+        <input
+          id="project-tags"
+          type="text"
+          placeholder="web, mobile, api..."
+          value={values.tags.join(', ')}
+          onChange={(e) => handleArrayField('tags', e.target.value)}
+          disabled={isSubmitting}
+        />
+      </div>
+      
+      <div>
+        <button 
+          type="submit" 
+          disabled={isSubmitting || !values.name.trim()}
+        >
+          {isSubmitting ? 
+            (isEditing ? 'Updating...' : 'Creating...') : 
+            (isEditing ? 'Update Project' : 'Add Project')
+          }
         </button>
         
         {isEditing && (
-          <button type="button" onClick={onCancel}>
+          <button 
+            type="button" 
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
             Cancel
           </button>
         )}

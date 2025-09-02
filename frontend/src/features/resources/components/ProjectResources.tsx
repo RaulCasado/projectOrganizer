@@ -1,32 +1,47 @@
 import type { Resource } from '../../../shared/types/Project';
-import { useProjectResources } from '../hooks/useProjectResources';
+import { useProjectDetailContext } from '../../../contexts';
 import { ResourceForm } from './ResourceForm';
 import { ResourceList } from './ResourceList';
+import { useState } from 'react';
 
-interface ProjectResourcesProps {
-    resources?: Resource[];
-    onUpdateResources: (resources: Resource[]) => void;
-}
+function ProjectResources() {
+    const { 
+        resources,
+        editingResource,
+        setEditingResource,
+        handleDeleteResource
+    } = useProjectDetailContext();
+    
+    const [isAdding, setIsAdding] = useState(false);
+    
+    const getCategoryIcon = (category: Resource['category']) => {
+        const icons = {
+            documentation: '📚',
+            tutorial: '🎓',
+            tool: '🔧',
+            inspiration: '💡',
+            other: '📎'
+        };
+        return icons[category];
+    };
 
-function ProjectResources({ resources = [], onUpdateResources }: ProjectResourcesProps) {
-    const {
-        isAdding,
-        setIsAdding,
-        isEditing,
-        formData,
-        setFormData,
-        handleEditResource,
-        handleSave,
-        handleCancel,
-        handleDelete,
-        getCategoryIcon
-    } = useProjectResources({ resources, onUpdateResources });
+    const handleEditResource = (resource: Resource) => {
+        setEditingResource(resource);
+        setIsAdding(true);
+    };
+
+    const handleCancel = () => {
+        setIsAdding(false);
+        setEditingResource(undefined);
+    };
+
+    const showForm = isAdding || !!editingResource;
 
     return (
         <div>
             <div>
                 <h3>🔗 Recursos del Proyecto</h3>
-                {!isAdding && (
+                {!showForm && (
                     <button
                         onClick={() => setIsAdding(true)}
                     >
@@ -36,11 +51,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
             </div>
 
             <ResourceForm
-                isAdding={isAdding}
-                isEditing={isEditing}
-                formData={formData}
-                setFormData={setFormData}
-                onSave={handleSave}
+                isVisible={showForm}
                 onCancel={handleCancel}
             />
 
@@ -49,7 +60,7 @@ function ProjectResources({ resources = [], onUpdateResources }: ProjectResource
                     resources={resources}
                     getCategoryIcon={getCategoryIcon}
                     onEditResource={handleEditResource}
-                    onDeleteResource={handleDelete}
+                    onDeleteResource={handleDeleteResource}
                 />
             </div>
         </div>

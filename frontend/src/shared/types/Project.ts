@@ -40,3 +40,10 @@ export type ProjectFormData = {
   dependencies : string [];
   tags : string[];
 }
+
+export type ResourceFormData = {
+  title: string;
+  url: string;
+  description: string;
+  category: Resource['category'];
+}

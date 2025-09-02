@@ -1,86 +1,125 @@
-import type { Resource } from '../../../shared/types/Project';
+import { useProjectDetailContext } from '../../../contexts';
+import type { ResourceFormData } from '../../../shared';
 
 interface ResourceFormProps {
-    isAdding: boolean;
-    isEditing: boolean;
-    formData: {
-        title: string;
-        url: string;
-        description: string;
-        category: Resource['category'];
-    };
-    setFormData: React.Dispatch<React.SetStateAction<{
-        title: string;
-        url: string;
-        description: string;
-        category: Resource['category'];
-    }>>;
-    onSave: () => void;
-    onCancel: () => void;
+    isVisible?: boolean;
+    onCancel?: () => void;
 }
 
-export function ResourceForm({
-    isAdding,
-    isEditing,
-    formData,
-    setFormData,
-    onSave,
-    onCancel
-}: ResourceFormProps) {
-    if (!isAdding) return null;
+export function ResourceForm({ isVisible = true, onCancel }: ResourceFormProps) {
+    const { 
+        resourceForm,
+        editingResource,
+        handleAddResource,
+        handleUpdateResource,
+        setEditingResource 
+    } = useProjectDetailContext();
+    
+    const { values, errors, isSubmitting, setFieldValue, handleSubmit } = resourceForm;
+    const isEditing = !!editingResource;
+
+    if (!isVisible) return null;
+
+    const onSubmitHandler = async (formData: ResourceFormData) => {
+        if (isEditing && editingResource) {
+            handleUpdateResource({
+                ...editingResource,
+                ...formData
+            });
+        } else {
+            handleAddResource(formData);
+            resourceForm.resetForm();
+        }
+        
+        if (onCancel) {
+            onCancel();
+        }
+    };
+
+    const handleCancel = () => {
+        setEditingResource(undefined);
+        resourceForm.resetForm();
+        if (onCancel) {
+            onCancel();
+        }
+    };
 
     return (
         <div>
             <h4>{isEditing ? 'Editar' : 'Nuevo'} Recurso</h4>
 
-            <div>
-                <input
-                    type="text"
-                    placeholder="Título del recurso"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                />
-            </div>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(onSubmitHandler);
+            }}>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Título del recurso"
+                        value={values.title}
+                        onChange={(e) => setFieldValue('title', e.target.value)}
+                        disabled={isSubmitting}
+                        required
+                    />
+                    {errors.title && <span className="error">{errors.title}</span>}
+                </div>
 
-            <div>
-                <input
-                    type="url"
-                    placeholder="https://ejemplo.com"
-                    value={formData.url}
-                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                />
-            </div>
+                <div>
+                    <input
+                        type="url"
+                        placeholder="https://ejemplo.com"
+                        value={values.url}
+                        onChange={(e) => setFieldValue('url', e.target.value)}
+                        disabled={isSubmitting}
+                        required
+                    />
+                    {errors.url && <span className="error">{errors.url}</span>}
+                </div>
 
-            <div>
-                <input
-                    type="text"
-                    placeholder="Descripción (opcional)"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-            </div>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Descripción (opcional)"
+                        value={values.description}
+                        onChange={(e) => setFieldValue('description', e.target.value)}
+                        disabled={isSubmitting}
+                    />
+                    {errors.description && <span className="error">{errors.description}</span>}
+                </div>
 
-            <div>
-                <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value as Resource['category'] })}
-                >
-                    <option value="documentation">📚 Documentación</option>
-                    <option value="tutorial">🎓 Tutorial</option>
-                    <option value="tool">🔧 Herramienta</option>
-                    <option value="inspiration">💡 Inspiración</option>
-                    <option value="other">📎 Otro</option>
-                </select>
-            </div>
+                <div>
+                    <select
+                        value={values.category}
+                        onChange={(e) => setFieldValue('category', e.target.value as ResourceFormData['category'])}
+                        disabled={isSubmitting}
+                    >
+                        <option value="documentation">📚 Documentación</option>
+                        <option value="tutorial">🎓 Tutorial</option>
+                        <option value="tool">🔧 Herramienta</option>
+                        <option value="inspiration">💡 Inspiración</option>
+                        <option value="other">📎 Otro</option>
+                    </select>
+                </div>
 
-            <div>
-                <button onClick={onSave}>
-                    💾 {isEditing ? 'Actualizar' : 'Guardar'}
-                </button>
-                <button onClick={onCancel}>
-                    ❌ Cancelar
-                </button>
-            </div>
+                <div>
+                    <button 
+                        type="submit"
+                        disabled={isSubmitting || !values.title.trim() || !values.url.trim()}
+                    >
+                        {isSubmitting ? 
+                            (isEditing ? 'Actualizando...' : 'Guardando...') : 
+                            (isEditing ? '💾 Actualizar' : '💾 Guardar')
+                        }
+                    </button>
+                    <button 
+                        type="button" 
+                        onClick={handleCancel}
+                        disabled={isSubmitting}
+                    >
+                        ❌ Cancelar
+                    </button>
+                </div>
+            </form>
         </div>
     );
 }

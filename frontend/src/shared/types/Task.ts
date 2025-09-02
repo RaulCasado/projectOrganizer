@@ -8,3 +8,10 @@ export type Task = {
     completedAt? : string;
     priority : 'low' | 'medium' | 'high';
 }
+
+export type TaskFormData = {
+    title : string;
+    description : string;
+    priority: 'low' | 'medium' | 'high';
+    completed : boolean;
+}

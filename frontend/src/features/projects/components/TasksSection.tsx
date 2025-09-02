@@ -1,6 +1,4 @@
-import {TaskForm} from '../../tasks/components/TaskForm';
-import {TaskFilters} from '../../tasks/components/TaskFilters';
-import {TaskList} from '../../tasks/components/TaskList';
+import { TaskForm, TaskFilters , TaskList} from '../../tasks/components/';
 import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
 export function TasksSection() {
@@ -9,25 +7,17 @@ export function TasksSection() {
         statusFilter,
         priorityFilter,
         searchText,
-        editingTask,
         setStatusFilter,
         setPriorityFilter,
         setSearchText,
         setEditingTask,
-        handleAddTask,
-        handleUpdateTask,
         handleToggleTask,
         handleDeleteTask,
-        handleCancelEdit,
     } = useProjectDetailContext();
+
     return (
         <>
-            <TaskForm
-                onAddTask={editingTask ? undefined : handleAddTask}
-                onUpdateTask={editingTask ? handleUpdateTask : undefined}
-                editingTask={editingTask}
-                onCancel={editingTask ? handleCancelEdit : undefined}
-            />
+            <TaskForm />
             <TaskFilters
                 statusFilter={statusFilter}
                 priorityFilter={priorityFilter}
@@ -45,4 +35,3 @@ export function TasksSection() {
         </>
     );
 }
-

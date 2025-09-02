@@ -1,8 +1,8 @@
-import { createContext, useCallback } from 'react';
+import { createContext, useCallback, useEffect } from 'react';
 import { useProjects, useIdeas } from './index';
 import { useProjectTasks, useProjectSketches } from '../features';
-import { DateUtils } from '../shared';
-import type { Project, BlogEntry, Resource, Idea, Task, QuickSketch } from '../shared';
+import { DateUtils, useForm } from '../shared';
+import type { Project, BlogEntry, Resource, Idea, Task, QuickSketch, TaskFormData } from '../shared';
 
 interface ProjectDetailContextType {
   project: Project;
@@ -28,6 +28,15 @@ interface ProjectDetailContextType {
   handleToggleTask: (taskId: string) => void;
   handleDeleteTask: (taskId: string) => void;
   handleCancelEdit: () => void;
+  
+  taskForm: {
+    values: TaskFormData;
+    errors: Record<string, string | undefined>;
+    isSubmitting: boolean;
+    setFieldValue: (field: keyof TaskFormData, value: string | boolean) => void;
+    handleSubmit: (onSubmit: (data: TaskFormData) => Promise<void> | void) => void;
+    resetForm: () => void;
+  };
   
   sketches: QuickSketch[];
   editingSketch: QuickSketch | null;
@@ -68,6 +77,35 @@ export function ProjectDetailProvider({ project, children }: ProjectDetailProvid
   const taskActions = useProjectTasks(project, updateProject);
   const sketchActions = useProjectSketches(project.id);
   
+  const taskValidationSchema = {
+    title: (value: string) => 
+      !value.trim() ? 'El título es obligatorio' : 
+      value.length < 3 ? 'El título debe tener al menos 3 caracteres' : undefined,
+    description: (value: string) => 
+      value.length > 500 ? 'La descripción no puede exceder 500 caracteres' : undefined,
+  };
+
+  const taskForm = useForm<TaskFormData>({
+    title: taskActions.editingTask?.title || '',
+    description: taskActions.editingTask?.description || '',
+    priority: taskActions.editingTask?.priority || 'low',
+    completed: taskActions.editingTask?.completed || false,
+  }, taskValidationSchema);
+
+  const resetTaskForm = useCallback(() => {
+    const task = taskActions.editingTask;
+    taskForm.resetForm({
+      title: task?.title || '',
+      description: task?.description || '',
+      priority: task?.priority || 'low',
+      completed: task?.completed || false,
+    });
+  }, [taskActions.editingTask, taskForm]);
+
+  useEffect(() => {
+    resetTaskForm();
+  }, [resetTaskForm]);
+  
   const handleUpdateResources = useCallback((resources: Resource[]) => {
     const updatedProject = {
       ...project,
@@ -99,6 +137,8 @@ export function ProjectDetailProvider({ project, children }: ProjectDetailProvid
     ideaActions: { addIdea, updateIdea, deleteIdea },
     
     ...taskActions,
+    
+    taskForm,
     
     ...sketchActions,
     sketchesError: sketchActions.error,

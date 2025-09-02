@@ -3,6 +3,7 @@ import { useProjectsMainViewLogic } from '../hooks/useProjectsMainViewLogic';
 import { useProjects } from '../../../contexts';
 import type { Project } from '../../../shared';
 import { ProjectFilters, ProjectForm, ProjectList } from './';
+import { DateUtils } from '../../../shared';
 
 function ProjectsMainView() {
   const { projects, addProject, deleteProject, updateProject } = useProjects();
@@ -24,7 +25,7 @@ function ProjectsMainView() {
       updateProject({
         ...editingProject,
         ...projectData,
-        lastActivityDate: new Date().toISOString()
+        lastActivityDate: DateUtils.timestampNow()
       });
     } else {
       addProject(projectData);

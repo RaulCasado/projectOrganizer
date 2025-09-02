@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { BlogEntry } from '../../../shared/types';
 import { useNotification } from '../../../shared';
 import { DateUtils } from '../../../shared/utils';
+import { TagInput } from '../../../shared/components/TagInput';
 
 interface BlogFormProps {
     onSave: (entry: Omit<BlogEntry, 'id' | 'createdAt'>) => void;
@@ -103,14 +104,10 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
                     onChange={(e) => setFormData({ ...formData, timeSpent: Number(e.target.value) })}
                 />
                 
-                <input
-                    type="text"
+                <TagInput
+                    value={formData.tags}
+                    onChange={(tags) => setFormData({ ...formData, tags })}
                     placeholder="Tags: bug-fix, feature, learning"
-                    value={formData.tags.join(", ")}
-                    onChange={(e) => setFormData({ 
-                        ...formData, 
-                        tags: e.target.value.split(",").map(tag => tag.trim())
-                    })}
                 />
             </div>
             

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState, useRef } from 'react';
+import { createContext, useCallback, useEffect, useState, useMemo } from 'react';
 import { useProjects, useIdeas } from './index';
 import { useProjectTasks, useProjectSketches } from '../features';
 import { DateUtils, useForm } from '../shared';
@@ -29,7 +29,6 @@ interface ProjectDetailContextType {
   handleDeleteTask: (taskId: string) => void;
   handleCancelEdit: () => void;
   
-  // Task Form Management
   taskForm: {
     values: TaskFormData;
     errors: Record<string, string | undefined>;
@@ -39,7 +38,6 @@ interface ProjectDetailContextType {
     resetForm: () => void;
   };
   
-  // Resource Form Management
   resourceForm: {
     values: ResourceFormData;
     errors: Record<string, string | undefined>;
@@ -93,66 +91,64 @@ export function ProjectDetailProvider({ project, children }: ProjectDetailProvid
   const taskActions = useProjectTasks(project, updateProject);
   const sketchActions = useProjectSketches(project.id);
   
-  const taskValidationSchema = {
+  const taskValidationSchema = useMemo(() => ({
     title: (value: string) => 
       !value.trim() ? 'El título es obligatorio' : 
       value.length < 3 ? 'El título debe tener al menos 3 caracteres' : undefined,
     description: (value: string) => 
       value.length > 500 ? 'La descripción no puede exceder 500 caracteres' : undefined,
-  };
+  }), []);
 
-  const taskForm = useForm<TaskFormData>({
-    title: taskActions.editingTask?.title || '',
-    description: taskActions.editingTask?.description || '',
-    priority: taskActions.editingTask?.priority || 'low',
-    completed: taskActions.editingTask?.completed || false,
-  }, taskValidationSchema);
+  const taskFormInitialValues = useMemo(() => ({
+    title: '',
+    description: '',
+    priority: 'low' as const,
+    completed: false,
+  }), []);
 
-  const resetTaskForm = useCallback(() => {
-    const task = taskActions.editingTask;
-    taskForm.resetForm({
-      title: task?.title || '',
-      description: task?.description || '',
-      priority: task?.priority || 'low',
-      completed: task?.completed || false,
-    });
-  }, [taskActions.editingTask, taskForm]);
+  const taskForm = useForm<TaskFormData>(taskFormInitialValues, taskValidationSchema);
 
   useEffect(() => {
-    resetTaskForm();
-  }, [resetTaskForm]);
+    if (taskActions.editingTask) {
+      taskForm.resetForm({
+        title: taskActions.editingTask.title,
+        description: taskActions.editingTask.description || '',
+        priority: taskActions.editingTask.priority,
+        completed: taskActions.editingTask.completed,
+      });
+    } else {
+      taskForm.resetForm();
+    }
+  }, [taskActions.editingTask]);
   
-  // Resource Form Management
   const [editingResource, setEditingResource] = useState<Resource | undefined>(undefined);
   
-  const resourceValidationSchema = {
+  const resourceValidationSchema = useMemo(() => ({
     title: (value: string) => 
       !value.trim() ? 'El título es obligatorio' : undefined,
     url: (value: string) => 
       !value.trim() ? 'La URL es obligatoria' : undefined,
-  };
+  }), []);
 
-  const resourceForm = useForm<ResourceFormData>({
-    title: editingResource?.title || '',
-    url: editingResource?.url || '',
-    description: editingResource?.description || '',
-    category: editingResource?.category || 'documentation',
-  }, resourceValidationSchema);
+  const resourceFormInitialValues = useMemo(() => ({
+    title: '',
+    url: '',
+    description: '',
+    category: 'documentation' as const,
+  }), []);
 
-  // Reset resource form when editing resource changes
-  const resourceFormRef = useRef(resourceForm);
-  resourceFormRef.current = resourceForm;
-  
+  const resourceForm = useForm<ResourceFormData>(resourceFormInitialValues, resourceValidationSchema);
+
   useEffect(() => {
     if (editingResource) {
-      resourceFormRef.current.resetForm({
+      resourceForm.resetForm({
         title: editingResource.title,
         url: editingResource.url,
         description: editingResource.description || '',
         category: editingResource.category,
       });
     } else {
-      resourceFormRef.current.resetForm();
+      resourceForm.resetForm();
     }
   }, [editingResource]);
   
@@ -206,11 +202,17 @@ export function ProjectDetailProvider({ project, children }: ProjectDetailProvid
     });
   }, [project, updateProject]);
 
-  const value: ProjectDetailContextType = {
+  const ideaActions = useMemo(() => ({
+    addIdea,
+    updateIdea,
+    deleteIdea
+  }), [addIdea, updateIdea, deleteIdea]);
+
+  const contextValue = useMemo(() => ({
     project,
     
     ideas,
-    ideaActions: { addIdea, updateIdea, deleteIdea },
+    ideaActions,
     
     ...taskActions,
     
@@ -235,10 +237,25 @@ export function ProjectDetailProvider({ project, children }: ProjectDetailProvid
     handleUpdateResources,
     handleUpdateBlogEntries,
     handleUpdateMVP,
-  };
+  }), [
+    project,
+    ideas,
+    ideaActions,
+    taskActions,
+    taskForm,
+    resourceForm,
+    editingResource,
+    handleAddResource,
+    handleUpdateResource,
+    handleDeleteResource,
+    sketchActions,
+    handleUpdateResources,
+    handleUpdateBlogEntries,
+    handleUpdateMVP
+  ]);
 
   return (
-    <ProjectDetailContext.Provider value={value}>
+    <ProjectDetailContext.Provider value={contextValue}>
       {children}
     </ProjectDetailContext.Provider>
   );

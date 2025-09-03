@@ -1,5 +1,5 @@
 import type { Idea } from '../../../shared/types/Idea';
-import { DateUtils } from '../../../shared';
+import { DateUtils, useNotification } from '../../../shared';
 
 interface IdeaItemProps {
   idea: Idea;
@@ -26,6 +26,41 @@ function IdeaItem({
   getStatusEmoji,
   getCategoryEmoji,
 }: IdeaItemProps) {
+  const { confirmDelete } = useNotification();
+
+  // 🚀 TOP 1%: Handler con confirmación
+  const handleDeleteIdea = async () => {
+    try {
+      const confirmed = await confirmDelete(
+        `¿Eliminar la idea "${idea.title}"?`,
+        'Esta acción no se puede deshacer'
+      );
+      
+      if (confirmed) {
+        onDelete();
+      }
+    } catch (error) {
+      console.error('Error deleting idea:', error);
+    }
+  };
+  
+  const handlePromoteIdea = async () => {
+    if (!onPromote) return;
+    
+    try {
+      const confirmed = await confirmDelete(
+        `¿Convertir "${idea.title}" en proyecto?`,
+        'Esta acción creará un nuevo proyecto y cambiará el estado de la idea'
+      );
+      
+      if (confirmed) {
+        onPromote(idea);
+      }
+    } catch (error) {
+      console.error('Error promoting idea:', error);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -52,7 +87,10 @@ function IdeaItem({
           <button onClick={onEditStart}>
             ✏️
           </button>
-          <button onClick={onDelete}>
+          <button 
+            onClick={handleDeleteIdea}
+            title="Eliminar idea"
+          >
             🗑️
           </button>
         </div>
@@ -95,7 +133,7 @@ function IdeaItem({
           </div>
 
           {showPromoteButton && onPromote && idea.status !== 'promoted' && (
-            <button onClick={() => onPromote(idea)}>
+            <button onClick={handlePromoteIdea}>
               🚀 Convertir en Proyecto
             </button>
           )}

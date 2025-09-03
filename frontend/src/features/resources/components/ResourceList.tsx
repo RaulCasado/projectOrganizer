@@ -1,6 +1,5 @@
 import type { Resource } from '../../../shared/types/Project';
-import { DateUtils } from '../../../shared';
-
+import { DateUtils, useNotification } from '../../../shared';
 interface ResourceListProps {
     resources: Resource[];
     getCategoryIcon: (category: Resource['category']) => string;
@@ -14,6 +13,23 @@ export function ResourceList({
     onEditResource,
     onDeleteResource
 }: ResourceListProps) {
+    const { confirmDelete } = useNotification();
+
+    const handleDeleteResource = async (resource: Resource) => {
+        try {
+            const confirmed = await confirmDelete(
+                `¿Eliminar recurso "${resource.title}"?`,
+                'Esta acción no se puede deshacer'
+            );
+            
+            if (confirmed) {
+                onDeleteResource(resource.id);
+            }
+        } catch (error) {
+            console.error('Error deleting resource:', error);
+        }
+    };
+
     if (resources.length === 0) {
         return (
             <div>
@@ -58,7 +74,7 @@ export function ResourceList({
                                 ✏️
                             </button>
                             <button
-                                onClick={() => onDeleteResource(resource.id)}
+                                onClick={() => handleDeleteResource(resource)}
                                 title="Eliminar recurso"
                             >
                                 🗑️

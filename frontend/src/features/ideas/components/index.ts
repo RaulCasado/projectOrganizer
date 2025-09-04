@@ -8,5 +8,6 @@ export { default as IdeaEditForm } from './IdeaEditForm';
 export { default as IdeasHeader } from './IdeasHeader';
 export { default as IdeasStats } from './IdeasStats';
 export { default as IdeasFilters } from './IdeasFilters';
+export { default as ProjectIdeasFilters } from './ProjectIdeasFilters';
 export { default as QuickInput } from './QuickInput';
 export { default as ExpandedForm } from './ExpandedForm';

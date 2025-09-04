@@ -1,7 +1,9 @@
 import type { Idea } from '../../../shared/types/Idea';
 import QuickIdeaCapture from './QuickIdeaCapture';
 import IdeaList from './IdeaList';
+import ProjectIdeasFilters from './ProjectIdeasFilters';
 import { useIdeasWithProjects } from '../../../contexts';
+import { useProjectIdeasFilters } from '../hooks/useProjectIdeasFilters';
 
 interface IdeaPanelProps {
     projectId?: string;
@@ -13,9 +15,19 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
     
     const ideas = ideasProp || allIdeas;
     
-    const filteredIdeas = projectId 
+    const projectIdeas = projectId 
         ? ideas.filter(idea => idea.projectId === projectId)
         : ideas.filter(idea => !idea.projectId);
+
+    const {
+        filter,
+        setFilter,
+        sortBy,
+        setSortBy,
+        sortedIdeas,
+        stats,
+        filteredCount
+    } = useProjectIdeasFilters({ ideas: projectIdeas });
 
     const handleAddIdea = (ideaData: Omit<Idea, 'id' | 'createdAt' | 'projectId'>) => {
         addIdea({
@@ -23,11 +35,6 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
             projectId,
         });
     };
-
-    const inboxCount = filteredIdeas.filter(idea => idea.status === 'inbox').length;
-    const processingCount = filteredIdeas.filter(idea => idea.status === 'processing').length;
-    const promotedCount = filteredIdeas.filter(idea => idea.status === 'promoted').length;
-    const archivedCount = filteredIdeas.filter(idea => idea.status === 'archived').length;
 
     return (
         <div>
@@ -46,45 +53,56 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
                 
                 <div>
                     <div>
-                        {inboxCount > 0 && (
+                        {stats.inbox > 0 && (
                             <span>
-                                📥 {inboxCount}
+                                📥 {stats.inbox}
                             </span>
                         )}
-                        {processingCount > 0 && (
+                        {stats.processing > 0 && (
                             <span>
-                                ⚙️ {processingCount}
+                                ⚙️ {stats.processing}
                             </span>
                         )}
-                        {promotedCount > 0 && (
+                        {stats.promoted > 0 && (
                             <span>
-                                🚀 {promotedCount}
+                                🚀 {stats.promoted}
                             </span>
                         )}
-                        {archivedCount > 0 && (
+                        {stats.archived > 0 && (
                             <span>
-                                📦 {archivedCount}
+                                📦 {stats.archived}
                             </span>
                         )}
                     </div>
                     
                     <span>
-                        {filteredIdeas.length}
+                        {stats.total}
                     </span>
                 </div>
             </div>
 
             <QuickIdeaCapture onAddIdea={handleAddIdea} />
 
+            {/* ✅ Usar filtros específicos para proyectos */}
+            <ProjectIdeasFilters
+                filter={filter}
+                setFilter={setFilter}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                stats={stats}
+                filteredCount={filteredCount}
+            />
+
+            {/* ✅ Usar ideas filtradas y ordenadas */}
             <IdeaList 
-                ideas={filteredIdeas}
+                ideas={sortedIdeas}
                 onUpdateIdea={updateIdea}
                 onDeleteIdea={deleteIdea}
                 onPromoteToProject={projectId ? undefined : promoteToProject}
                 showPromoteButton={!projectId}
             />
 
-            {filteredIdeas.length > 0 && (
+            {sortedIdeas.length > 0 && (
                 <div>
                     {projectId ? (
                         <p>

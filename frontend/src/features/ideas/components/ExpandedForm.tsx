@@ -1,5 +1,6 @@
 import { useForm } from '../../../shared/hooks/useForm';
 import type { IdeaFormData } from '../../../shared/types/Idea';
+import { TagInput } from '../../../shared';
 interface ExpandedFormProps {
   title: string;
   onSubmit: (formData: IdeaFormData) => void;
@@ -28,6 +29,14 @@ function ExpandedForm({
     category : 'feature' as const,
     tags : ''
   },validationSchema);
+
+  const tagsArray = values.tags ? values.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+
+  const handleTagsChange = (newTags: string[]) => {
+    const tagsAsString = newTags.join(', ');
+    setFieldValue('tags', tagsAsString);
+  };
+  
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
@@ -81,11 +90,10 @@ function ExpandedForm({
         <label>
           Tags (separados por comas):
         </label>
-        <input
-          type="text"
-          value={values.tags}
-          onChange={(e) => setFieldValue('tags',e.target.value)}
-          placeholder="frontend, ui, mejora, ..."
+        <TagInput
+          value={tagsArray}
+          onChange={handleTagsChange}
+          placeholder='Tags'
         />
       </div>
       <div>

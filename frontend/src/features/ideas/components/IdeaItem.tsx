@@ -28,7 +28,6 @@ function IdeaItem({
 }: IdeaItemProps) {
   const { confirmDelete } = useNotification();
 
-  // 🚀 TOP 1%: Handler con confirmación
   const handleDeleteIdea = async () => {
     try {
       const confirmed = await confirmDelete(
@@ -60,7 +59,21 @@ function IdeaItem({
       console.error('Error promoting idea:', error);
     }
   };
-
+  
+  const handleStatusChange = async (newStatus: Idea['status']) => {
+    if (newStatus === 'promoted' && onPromote && showPromoteButton) {
+      const confirmed = await confirmDelete(
+        `¿Convertir "${idea.title}" en proyecto?`,
+        'Esta acción creará un nuevo proyecto y cambiará el estado de la idea'
+      );
+      
+      if (confirmed) {
+        onPromote(idea);
+      }
+    } else {
+      onStatusChange(newStatus);
+    }
+  };
   return (
     <div>
       <div>
@@ -123,7 +136,7 @@ function IdeaItem({
             </label>
             <select
               value={idea.status}
-              onChange={(e) => onStatusChange(e.target.value as Idea['status'])}
+              onChange={(e) => handleStatusChange(e.target.value as Idea['status'])}
             >
               <option value="inbox">📥 Inbox</option>
               <option value="processing">⚙️ Procesando</option>

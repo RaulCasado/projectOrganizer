@@ -83,7 +83,6 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
 
             <QuickIdeaCapture onAddIdea={handleAddIdea} />
 
-            {/* ✅ Usar filtros específicos para proyectos */}
             <ProjectIdeasFilters
                 filter={filter}
                 setFilter={setFilter}
@@ -93,7 +92,6 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
                 filteredCount={filteredCount}
             />
 
-            {/* ✅ Usar ideas filtradas y ordenadas */}
             <IdeaList 
                 ideas={sortedIdeas}
                 onUpdateIdea={updateIdea}

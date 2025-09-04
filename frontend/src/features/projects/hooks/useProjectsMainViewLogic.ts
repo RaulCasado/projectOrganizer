@@ -1,6 +1,8 @@
 import type { Project } from "../../../shared";
 import { useMemo, useCallback, useState} from 'react'
 import { useNotification } from "../../../shared";
+import { useIdeas } from "../../../contexts";
+
 export const useProjectsMainViewLogic = ({
   projects,
   onDeleteProject,
@@ -10,6 +12,7 @@ export const useProjectsMainViewLogic = ({
 }) => {
   const [selectedTag, setSelectedTag] = useState<string | null>('all');
 
+  const { ideas, deleteIdea } = useIdeas();
   const { confirmDelete } = useNotification();
   const availableTags = useMemo(() => {
     const allTags = projects.flatMap(project => project.tags || []);
@@ -24,11 +27,19 @@ export const useProjectsMainViewLogic = ({
   }, [projects, selectedTag]);
 
   const handleDeleteProject = useCallback(async (projectId: string) => {
-   const result = await confirmDelete('Are you sure you want to delete this project?');
-   if (result) {
-     onDeleteProject(projectId);
-   }
-  }, [onDeleteProject, confirmDelete]);
+    const projectIdeas = ideas.filter(idea => idea.projectId === projectId);
+    
+    const message = projectIdeas.length > 0 
+      ? `¿Eliminar proyecto y sus ${projectIdeas.length} ideas?`
+      : '¿Eliminar este proyecto?';
+    
+    const result = await confirmDelete(message);
+    
+    if (result) {
+      projectIdeas.forEach(idea => deleteIdea(idea.id));
+      onDeleteProject(projectId);
+    }
+  }, [onDeleteProject, confirmDelete, ideas, deleteIdea]);
 
   return {
     selectedTag,

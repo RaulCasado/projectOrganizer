@@ -1,7 +1,5 @@
 import type { Idea } from '../../../shared/types/Idea';
-import QuickIdeaCapture from './QuickIdeaCapture';
-import IdeaList from './IdeaList';
-import ProjectIdeasFilters from './ProjectIdeasFilters';
+import{ QuickIdeaCapture, IdeaList, ProjectIdeasFilters }from './';
 import { useIdeasWithProjects, useIdeasMainViewContext } from '../../../contexts';
 import { useProjectIdeasFilters } from '../hooks/useProjectIdeasFilters';
 

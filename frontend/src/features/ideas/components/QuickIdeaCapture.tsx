@@ -1,5 +1,4 @@
-import QuickInput from './QuickInput';
-import ExpandedForm from './ExpandedForm';
+import {QuickInput, ExpandedForm} from './';
 import { useQuickIdeaCapture } from '../hooks/useQuickIdeaCapture';
 import type { Idea } from '../../../shared/types/Idea';
 

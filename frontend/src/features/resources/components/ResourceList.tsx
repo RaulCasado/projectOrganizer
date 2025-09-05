@@ -1,5 +1,6 @@
 import type { Resource } from '../../../shared/types/Project';
 import { DateUtils, useNotification } from '../../../shared';
+
 interface ResourceListProps {
     resources: Resource[];
     getCategoryIcon: (category: Resource['category']) => string;

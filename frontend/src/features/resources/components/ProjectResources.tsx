@@ -1,7 +1,6 @@
 import type { Resource } from '../../../shared/types/Project';
 import { useProjectDetailContext } from '../../../contexts';
-import { ResourceForm } from './ResourceForm';
-import { ResourceList } from './ResourceList';
+import { ResourceList, ResourceForm } from './';
 import { useState } from 'react';
 
 function ProjectResources() {

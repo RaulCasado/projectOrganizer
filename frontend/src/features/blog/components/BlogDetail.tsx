@@ -1,4 +1,4 @@
-import type { BlogEntry } from '../../../shared/types';
+import type { BlogEntry } from '../../../shared';
 import { DateUtils } from '../../../shared';
 interface BlogDetailProps {
     entry: BlogEntry;

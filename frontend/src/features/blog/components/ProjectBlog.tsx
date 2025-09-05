@@ -1,5 +1,5 @@
 import type { BlogEntry } from '../../../shared';
-import { useProjectBlog } from '../hooks/useProjectBlog';
+import { useProjectBlog } from '../hooks';
 import { BlogForm, BlogList, BlogToolbar, BlogModal } from './';
 
 interface ProjectBlogProps {

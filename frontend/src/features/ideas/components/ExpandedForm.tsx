@@ -1,6 +1,5 @@
-import { useForm } from '../../../shared/hooks/useForm';
 import type { IdeaFormData } from '../../../shared/types/Idea';
-import { TagInput } from '../../../shared';
+import { TagInput, useForm } from '../../../shared';
 interface ExpandedFormProps {
   title: string;
   onSubmit: (formData: IdeaFormData) => void;

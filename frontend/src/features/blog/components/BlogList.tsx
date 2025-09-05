@@ -1,5 +1,6 @@
-import type { BlogEntry } from '../../../shared/types';
+import type { BlogEntry } from '../../../shared';
 import { DateUtils } from '../../../shared';
+
 interface BlogListProps {
     entries: BlogEntry[];
     onViewEntry?: (entry: BlogEntry) => void;

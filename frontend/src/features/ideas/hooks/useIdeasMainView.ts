@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Idea } from '../../../shared/types/Idea';
 import { DateUtils } from '../../../shared';
 
@@ -9,15 +9,30 @@ interface UseIdeasMainViewProps {
 export function useIdeasMainView({ ideas }: UseIdeasMainViewProps) {
   const [filter, setFilter] = useState<'all' | 'inbox' | 'processing' | 'promoted' | 'archived'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'priority' | 'title'>('newest');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const generalIdeas = ideas.filter(idea => !idea.projectId);
 
-  const filteredIdeas = generalIdeas.filter(idea => {
-    if (filter === 'all') return true;
-    return idea.status === filter;
-  });
+  const availableTags = useMemo(() => {
+    const allTags = generalIdeas.flatMap(idea => idea.tags || []);
+    return Array.from(new Set(allTags));
+  }, [generalIdeas]);
 
-  const sortedIdeas = (() => {
+  const filteredIdeas = useMemo(() => {
+    return generalIdeas.filter(idea => {
+      if (filter !== 'all' && idea.status !== filter) {
+        return false;
+      }
+      
+      if (selectedTag && !idea.tags?.includes(selectedTag)) {
+        return false;
+      }
+      
+      return true;
+    });
+  }, [generalIdeas, filter, selectedTag]);
+
+  const sortedIdeas = useMemo(() => {
     const sorted = [...filteredIdeas];
 
     switch (sortBy) {
@@ -34,21 +49,24 @@ export function useIdeasMainView({ ideas }: UseIdeasMainViewProps) {
       default:
         return sorted;
     }
-  })();
+  }, [filteredIdeas, sortBy]);
 
-  const stats = {
+  const stats = useMemo(() => ({
     total: generalIdeas.length,
     inbox: generalIdeas.filter(idea => idea.status === 'inbox').length,
     processing: generalIdeas.filter(idea => idea.status === 'processing').length,
     promoted: generalIdeas.filter(idea => idea.status === 'promoted').length,
     archived: generalIdeas.filter(idea => idea.status === 'archived').length,
-  };
+  }), [generalIdeas]);
 
   return {
     filter,
     setFilter,
     sortBy,
     setSortBy,
+    selectedTag,
+    setSelectedTag,
+    availableTags,
     sortedIdeas,
     stats,
   };

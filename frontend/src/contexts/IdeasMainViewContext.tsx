@@ -8,6 +8,9 @@ interface IdeasMainViewContextType {
   setFilter: (filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived') => void;
   sortBy: 'newest' | 'oldest' | 'priority' | 'title';
   setSortBy: (sortBy: 'newest' | 'oldest' | 'priority' | 'title') => void;
+  selectedTag: string | null;
+  setSelectedTag: (tag: string | null) => void;
+  availableTags: string[];
   sortedIdeas: Idea[];
   stats: {
     total: number;

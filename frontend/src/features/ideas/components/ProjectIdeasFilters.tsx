@@ -3,6 +3,9 @@ interface ProjectIdeasFiltersProps {
   setFilter: (filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived') => void;
   sortBy: 'newest' | 'oldest' | 'priority' | 'title';
   setSortBy: (sortBy: 'newest' | 'oldest' | 'priority' | 'title') => void;
+  selectedTag: string | null;
+  setSelectedTag: (tag: string | null) => void;
+  availableTags: string[];
   stats: {
     total: number;
     inbox: number;
@@ -18,6 +21,9 @@ function ProjectIdeasFilters({
   setFilter,
   sortBy,
   setSortBy,
+  selectedTag,
+  setSelectedTag,
+  availableTags,
   stats,
   filteredCount
 }: ProjectIdeasFiltersProps) {
@@ -49,6 +55,36 @@ function ProjectIdeasFilters({
           <option value="title">🔤 Por título</option>
         </select>
       </div>
+
+      {availableTags.length > 0 && (
+        <div>
+          <label>Filtrar por etiqueta:</label>
+          <select
+            value={selectedTag || 'all'}
+            onChange={(e) => setSelectedTag(e.target.value === 'all' ? null : e.target.value)}
+          >
+            <option value="all">Todas las etiquetas</option>
+            {availableTags.map(tag => (
+              <option key={tag} value={tag}>
+                🏷️ {tag}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {selectedTag && (
+        <div>
+          <span>Mostrando ideas con etiqueta: </span>
+          <strong>{selectedTag}</strong>
+          <button 
+            onClick={() => setSelectedTag(null)}
+            style={{ marginLeft: '8px', cursor: 'pointer' }}
+          >
+            ✕ Limpiar
+          </button>
+        </div>
+      )}
 
       <div>
         Mostrando {filteredCount} de {stats.total} ideas

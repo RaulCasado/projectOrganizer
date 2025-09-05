@@ -2,7 +2,7 @@ import type { Idea } from '../../../shared/types/Idea';
 import QuickIdeaCapture from './QuickIdeaCapture';
 import IdeaList from './IdeaList';
 import ProjectIdeasFilters from './ProjectIdeasFilters';
-import { useIdeasWithProjects } from '../../../contexts';
+import { useIdeasWithProjects, useIdeasMainViewContext } from '../../../contexts';
 import { useProjectIdeasFilters } from '../hooks/useProjectIdeasFilters';
 
 interface IdeaPanelProps {
@@ -19,21 +19,28 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
         ? ideas.filter(idea => idea.projectId === projectId)
         : ideas.filter(idea => !idea.projectId);
 
-    const {
-        filter,
-        setFilter,
-        sortBy,
-        setSortBy,
-        sortedIdeas,
-        stats,
-        filteredCount
-    } = useProjectIdeasFilters({ ideas: projectIdeas });
+    let mainViewContext = null;
+    try {
+        const contextValue = useIdeasMainViewContext();
+        mainViewContext = !projectId ? contextValue : null;
+    } catch {
+        mainViewContext = null;
+    }
+
+    const localFilters = useProjectIdeasFilters({ ideas: projectIdeas });
+
+    // Choose which filters to use
+    const filters = mainViewContext || localFilters;
 
     const handleAddIdea = (ideaData: Omit<Idea, 'id' | 'createdAt' | 'projectId'>) => {
         addIdea({
             ...ideaData,
             projectId,
         });
+    };
+
+    const handleTagClick = (tag: string) => {
+        filters.setSelectedTag(filters.selectedTag === tag ? null : tag);
     };
 
     return (
@@ -53,30 +60,30 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
                 
                 <div>
                     <div>
-                        {stats.inbox > 0 && (
+                        {filters.stats.inbox > 0 && (
                             <span>
-                                📥 {stats.inbox}
+                                📥 {filters.stats.inbox}
                             </span>
                         )}
-                        {stats.processing > 0 && (
+                        {filters.stats.processing > 0 && (
                             <span>
-                                ⚙️ {stats.processing}
+                                ⚙️ {filters.stats.processing}
                             </span>
                         )}
-                        {stats.promoted > 0 && (
+                        {filters.stats.promoted > 0 && (
                             <span>
-                                🚀 {stats.promoted}
+                                🚀 {filters.stats.promoted}
                             </span>
                         )}
-                        {stats.archived > 0 && (
+                        {filters.stats.archived > 0 && (
                             <span>
-                                📦 {stats.archived}
+                                📦 {filters.stats.archived}
                             </span>
                         )}
                     </div>
                     
                     <span>
-                        {stats.total}
+                        {filters.stats.total}
                     </span>
                 </div>
             </div>
@@ -84,23 +91,27 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
             <QuickIdeaCapture onAddIdea={handleAddIdea} />
 
             <ProjectIdeasFilters
-                filter={filter}
-                setFilter={setFilter}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                stats={stats}
-                filteredCount={filteredCount}
+                filter={filters.filter}
+                setFilter={filters.setFilter}
+                sortBy={filters.sortBy}
+                setSortBy={filters.setSortBy}
+                selectedTag={filters.selectedTag}
+                setSelectedTag={filters.setSelectedTag}
+                availableTags={filters.availableTags}
+                stats={filters.stats}
+                filteredCount={filters.filteredCount}
             />
 
             <IdeaList 
-                ideas={sortedIdeas}
+                ideas={filters.sortedIdeas}
                 onUpdateIdea={updateIdea}
                 onDeleteIdea={deleteIdea}
                 onPromoteToProject={projectId ? undefined : promoteToProject}
                 showPromoteButton={!projectId}
+                onTagClick={handleTagClick}
             />
 
-            {sortedIdeas.length > 0 && (
+            {filters.sortedIdeas.length > 0 && (
                 <div>
                     {projectId ? (
                         <p>

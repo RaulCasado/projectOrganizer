@@ -12,6 +12,7 @@ interface IdeaItemProps {
   showPromoteButton: boolean;
   getStatusEmoji: (status: Idea['status']) => string;
   getCategoryEmoji: (category: Idea['category']) => string;
+  onTagClick?: (tag: string) => void;
 }
 
 function IdeaItem({
@@ -25,6 +26,7 @@ function IdeaItem({
   showPromoteButton,
   getStatusEmoji,
   getCategoryEmoji,
+  onTagClick,
 }: IdeaItemProps) {
   const { confirmDelete } = useNotification();
 
@@ -121,9 +123,13 @@ function IdeaItem({
       {idea.tags.length > 0 && (
         <div>
           {idea.tags.map((tag, index) => (
-            <span key={index}>
-              {tag}
-            </span>
+            <button
+              key={index}
+              onClick={() => onTagClick?.(tag)}
+              title={`Filtrar por ${tag}`}
+            >
+              🏷️ {tag}
+            </button>
           ))}
         </div>
       )}

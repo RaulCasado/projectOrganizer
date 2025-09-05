@@ -8,6 +8,7 @@ interface IdeaListProps {
     onDeleteIdea: (ideaId: string) => void;
     onPromoteToProject?: (idea: Idea) => void;
     showPromoteButton: boolean;
+    onTagClick?: (tag: string) => void;
 }
 
 function IdeaList({
@@ -15,7 +16,8 @@ function IdeaList({
     onUpdateIdea,
     onDeleteIdea,
     onPromoteToProject,
-    showPromoteButton
+    showPromoteButton,
+    onTagClick
 }: IdeaListProps) {
   const {
     expandedIdea,
@@ -58,6 +60,7 @@ function IdeaList({
               showPromoteButton={showPromoteButton}
               getStatusEmoji={getStatusEmoji}
               getCategoryEmoji={getCategoryEmoji}
+              onTagClick={onTagClick}
             />
           )}
         </div>

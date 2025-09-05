@@ -9,13 +9,26 @@ interface UseProjectIdeasFiltersProps {
 export function useProjectIdeasFilters({ ideas }: UseProjectIdeasFiltersProps) {
   const [filter, setFilter] = useState<'all' | 'inbox' | 'processing' | 'promoted' | 'archived'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'priority' | 'title'>('newest');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  const availableTags = useMemo(() => {
+    const allTags = ideas.flatMap(idea => idea.tags || []);
+    return Array.from(new Set(allTags));
+  }, [ideas]);
 
   const filteredIdeas = useMemo(() => {
     return ideas.filter(idea => {
-      if (filter === 'all') return true;
-      return idea.status === filter;
+      if (filter !== 'all' && idea.status !== filter) {
+        return false;
+      }
+      
+      if (selectedTag && !idea.tags?.includes(selectedTag)) {
+        return false;
+      }
+      
+      return true;
     });
-  }, [ideas, filter]);
+  }, [ideas, filter, selectedTag]);
 
   const sortedIdeas = useMemo(() => {
     const sorted = [...filteredIdeas];
@@ -49,6 +62,9 @@ export function useProjectIdeasFilters({ ideas }: UseProjectIdeasFiltersProps) {
     setFilter,
     sortBy,
     setSortBy,
+    selectedTag,
+    setSelectedTag,
+    availableTags,
     sortedIdeas,
     stats,
     filteredCount: sortedIdeas.length,

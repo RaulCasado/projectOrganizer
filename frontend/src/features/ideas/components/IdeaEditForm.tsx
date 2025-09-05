@@ -7,23 +7,35 @@ interface IdeaEditFormProps {
   onCancel: () => void;
 }
 
-function IdeaEditForm({ editForm, setEditForm, onSave, onCancel }: IdeaEditFormProps) {
+function IdeaEditForm({
+  editForm,
+  setEditForm,
+  onSave,
+  onCancel,
+}: IdeaEditFormProps) {
   return (
     <div>
       <input
         type="text"
         value={editForm.title || ''}
-        onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+        onChange={e => setEditForm({ ...editForm, title: e.target.value })}
       />
       <textarea
         value={editForm.description || ''}
-        onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+        onChange={e =>
+          setEditForm({ ...editForm, description: e.target.value })
+        }
         rows={3}
       />
       <div>
         <select
           value={editForm.priority || 'medium'}
-          onChange={(e) => setEditForm({ ...editForm, priority: e.target.value as Idea['priority'] })}
+          onChange={e =>
+            setEditForm({
+              ...editForm,
+              priority: e.target.value as Idea['priority'],
+            })
+          }
         >
           <option value="low">🟢 Baja</option>
           <option value="medium">🟡 Media</option>
@@ -31,7 +43,12 @@ function IdeaEditForm({ editForm, setEditForm, onSave, onCancel }: IdeaEditFormP
         </select>
         <select
           value={editForm.category || 'feature'}
-          onChange={(e) => setEditForm({ ...editForm, category: e.target.value as Idea['category'] })}
+          onChange={e =>
+            setEditForm({
+              ...editForm,
+              category: e.target.value as Idea['category'],
+            })
+          }
         >
           <option value="feature">✨ Feature</option>
           <option value="project">🚀 Proyecto</option>
@@ -41,12 +58,8 @@ function IdeaEditForm({ editForm, setEditForm, onSave, onCancel }: IdeaEditFormP
         </select>
       </div>
       <div>
-        <button onClick={onSave}>
-          Guardar
-        </button>
-        <button onClick={onCancel}>
-          Cancelar
-        </button>
+        <button onClick={onSave}>Guardar</button>
+        <button onClick={onCancel}>Cancelar</button>
       </div>
     </div>
   );

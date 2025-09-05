@@ -1,6 +1,8 @@
 interface ProjectIdeasFiltersProps {
   filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived';
-  setFilter: (filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived') => void;
+  setFilter: (
+    filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived'
+  ) => void;
   sortBy: 'newest' | 'oldest' | 'priority' | 'title';
   setSortBy: (sortBy: 'newest' | 'oldest' | 'priority' | 'title') => void;
   selectedTag: string | null;
@@ -25,7 +27,7 @@ function ProjectIdeasFilters({
   setSelectedTag,
   availableTags,
   stats,
-  filteredCount
+  filteredCount,
 }: ProjectIdeasFiltersProps) {
   return (
     <div>
@@ -33,7 +35,16 @@ function ProjectIdeasFilters({
         <label>Filtrar:</label>
         <select
           value={filter}
-          onChange={(e) => setFilter(e.target.value as 'all' | 'inbox' | 'processing' | 'promoted' | 'archived')}
+          onChange={e =>
+            setFilter(
+              e.target.value as
+                | 'all'
+                | 'inbox'
+                | 'processing'
+                | 'promoted'
+                | 'archived'
+            )
+          }
         >
           <option value="all">🔍 Todas ({stats.total})</option>
           <option value="inbox">📥 Inbox ({stats.inbox})</option>
@@ -47,7 +58,11 @@ function ProjectIdeasFilters({
         <label>Ordenar:</label>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'priority' | 'title')}
+          onChange={e =>
+            setSortBy(
+              e.target.value as 'newest' | 'oldest' | 'priority' | 'title'
+            )
+          }
         >
           <option value="newest">📅 Más recientes</option>
           <option value="oldest">🕰️ Más antiguas</option>
@@ -61,7 +76,9 @@ function ProjectIdeasFilters({
           <label>Filtrar por etiqueta:</label>
           <select
             value={selectedTag || 'all'}
-            onChange={(e) => setSelectedTag(e.target.value === 'all' ? null : e.target.value)}
+            onChange={e =>
+              setSelectedTag(e.target.value === 'all' ? null : e.target.value)
+            }
           >
             <option value="all">Todas las etiquetas</option>
             {availableTags.map(tag => (
@@ -77,7 +94,7 @@ function ProjectIdeasFilters({
         <div>
           <span>Mostrando ideas con etiqueta: </span>
           <strong>{selectedTag}</strong>
-          <button 
+          <button
             onClick={() => setSelectedTag(null)}
             style={{ marginLeft: '8px', cursor: 'pointer' }}
           >

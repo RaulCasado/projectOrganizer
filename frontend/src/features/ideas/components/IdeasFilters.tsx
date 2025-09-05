@@ -1,27 +1,34 @@
 import { useIdeasMainViewContext } from '../../../contexts/IdeasMainViewContext';
 
 function IdeasFilters() {
-  const { 
-    filter, 
-    setFilter, 
-    sortBy, 
-    setSortBy, 
+  const {
+    filter,
+    setFilter,
+    sortBy,
+    setSortBy,
     selectedTag,
     setSelectedTag,
     availableTags,
-    stats, 
-    filteredCount 
+    stats,
+    filteredCount,
   } = useIdeasMainViewContext();
 
   return (
     <div>
       <div>
-        <label>
-          Filtrar:
-        </label>
+        <label>Filtrar:</label>
         <select
           value={filter}
-          onChange={(e) => setFilter(e.target.value as 'all' | 'inbox' | 'processing' | 'promoted' | 'archived')}
+          onChange={e =>
+            setFilter(
+              e.target.value as
+                | 'all'
+                | 'inbox'
+                | 'processing'
+                | 'promoted'
+                | 'archived'
+            )
+          }
         >
           <option value="all">🔍 Todas ({stats.total})</option>
           <option value="inbox">📥 Inbox ({stats.inbox})</option>
@@ -32,12 +39,14 @@ function IdeasFilters() {
       </div>
 
       <div>
-        <label>
-          Ordenar:
-        </label>
+        <label>Ordenar:</label>
         <select
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as 'newest' | 'oldest' | 'priority' | 'title')}
+          onChange={e =>
+            setSortBy(
+              e.target.value as 'newest' | 'oldest' | 'priority' | 'title'
+            )
+          }
         >
           <option value="newest">📅 Más recientes</option>
           <option value="oldest">🕰️ Más antiguas</option>
@@ -48,12 +57,12 @@ function IdeasFilters() {
 
       {availableTags.length > 0 && (
         <div>
-          <label>
-            Filtrar por etiqueta:
-          </label>
+          <label>Filtrar por etiqueta:</label>
           <select
             value={selectedTag || 'all'}
-            onChange={(e) => setSelectedTag(e.target.value === 'all' ? null : e.target.value)}
+            onChange={e =>
+              setSelectedTag(e.target.value === 'all' ? null : e.target.value)
+            }
           >
             <option value="all">Todas las etiquetas</option>
             {availableTags.map(tag => (
@@ -69,7 +78,7 @@ function IdeasFilters() {
         <div>
           <span>Mostrando ideas con etiqueta: </span>
           <strong>{selectedTag}</strong>
-          <button 
+          <button
             onClick={() => setSelectedTag(null)}
             style={{ marginLeft: '8px', cursor: 'pointer' }}
           >

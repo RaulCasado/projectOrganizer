@@ -26,44 +26,59 @@ interface ProjectsProviderProps {
 
 export function ProjectsProvider({ children }: ProjectsProviderProps) {
   const [projects, setProjects] = useLocalStorage<Project[]>('projects', []);
-  
+
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
-  const addProject = useCallback((projectData: Omit<Project, 'id'>) => {
-    const newProject: Project = {
-      id: crypto.randomUUID(),
-      lastActivityDate: DateUtils.timestampNow(),
-      ...projectData
-    };
-    setProjects(prev => [...prev, newProject]);
-  }, [setProjects]);
+  const addProject = useCallback(
+    (projectData: Omit<Project, 'id'>) => {
+      const newProject: Project = {
+        id: crypto.randomUUID(),
+        lastActivityDate: DateUtils.timestampNow(),
+        ...projectData,
+      };
+      setProjects(prev => [...prev, newProject]);
+    },
+    [setProjects]
+  );
 
-  const updateProject = useCallback((updatedProject: Project) => {
-    setProjects(prev => 
-      prev.map(project => 
-        project.id === updatedProject.id ? updatedProject : project
-      )
-    );
-  }, [setProjects]);
+  const updateProject = useCallback(
+    (updatedProject: Project) => {
+      setProjects(prev =>
+        prev.map(project =>
+          project.id === updatedProject.id ? updatedProject : project
+        )
+      );
+    },
+    [setProjects]
+  );
 
-  const deleteProject = useCallback((projectId: string) => {
-    setProjects(prev => prev.filter(project => project.id !== projectId));
-  }, [setProjects]);
+  const deleteProject = useCallback(
+    (projectId: string) => {
+      setProjects(prev => prev.filter(project => project.id !== projectId));
+    },
+    [setProjects]
+  );
 
-  const getProject = useCallback((projectId: string) => {
-    return projects.find(project => project.id === projectId);
-  }, [projects]);
+  const getProject = useCallback(
+    (projectId: string) => {
+      return projects.find(project => project.id === projectId);
+    },
+    [projects]
+  );
 
-  const projectForm = useForm<ProjectFormData>({
-    name: '',
-    stack: [],
-    requirements: [],
-    dependencies: [],
-    tags: []
-  }, {
-    name: (value: string) =>
-      !value.trim() ? 'El nombre del proyecto es obligatorio' : undefined,
-  });
+  const projectForm = useForm<ProjectFormData>(
+    {
+      name: '',
+      stack: [],
+      requirements: [],
+      dependencies: [],
+      tags: [],
+    },
+    {
+      name: (value: string) =>
+        !value.trim() ? 'El nombre del proyecto es obligatorio' : undefined,
+    }
+  );
 
   const projectFormRef = useRef(projectForm);
   projectFormRef.current = projectForm;
@@ -83,24 +98,27 @@ export function ProjectsProvider({ children }: ProjectsProviderProps) {
         stack: [],
         requirements: [],
         dependencies: [],
-        tags: []
+        tags: [],
       });
     }
   }, [editingProject]);
 
-  const handleSaveProject = useCallback(async (projectData: ProjectFormData) => {
-    if (editingProject) {
-      updateProject({
-        ...editingProject,
-        ...projectData,
-        lastActivityDate: DateUtils.timestampNow(),
-      });
-    } else {
-      addProject(projectData);
-      projectFormRef.current.resetForm();
-    }
-    setEditingProject(null);
-  }, [editingProject, updateProject, addProject]);
+  const handleSaveProject = useCallback(
+    async (projectData: ProjectFormData) => {
+      if (editingProject) {
+        updateProject({
+          ...editingProject,
+          ...projectData,
+          lastActivityDate: DateUtils.timestampNow(),
+        });
+      } else {
+        addProject(projectData);
+        projectFormRef.current.resetForm();
+      }
+      setEditingProject(null);
+    },
+    [editingProject, updateProject, addProject]
+  );
 
   const value: ProjectsContextType = {
     projects,

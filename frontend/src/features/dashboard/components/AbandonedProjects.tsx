@@ -15,11 +15,10 @@ function AbandonedProjects({ abandonedProjects }: AbandonedProjectsProps) {
       {abandonedProjects.map(project => (
         <div key={project.id}>
           <div>
-            <Link to={`/project/${project.id}`}>
-              💔 {project.name}
-            </Link>
+            <Link to={`/project/${project.id}`}>💔 {project.name}</Link>
             <div>
-              Sin actividad hace {DateUtils.daysSince(project.lastActivityDate!)} días
+              Sin actividad hace{' '}
+              {DateUtils.daysSince(project.lastActivityDate!)} días
             </div>
           </div>
         </div>

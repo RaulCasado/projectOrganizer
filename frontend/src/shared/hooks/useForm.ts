@@ -13,18 +13,21 @@ export function useForm<T extends Record<string, any>>(
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
 
-  const setFieldValue = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
-    setValues(prev => ({ ...prev, [field]: value }));
-    setIsDirty(true);
-    
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
-  }, [errors]);
+  const setFieldValue = useCallback(
+    <K extends keyof T>(field: K, value: T[K]) => {
+      setValues(prev => ({ ...prev, [field]: value }));
+      setIsDirty(true);
+
+      if (errors[field]) {
+        setErrors(prev => ({ ...prev, [field]: undefined }));
+      }
+    },
+    [errors]
+  );
 
   const validate = useCallback((): boolean => {
     if (!validationSchema) return true;
-    
+
     const newErrors: Partial<Record<keyof T, string>> = {};
     let isValid = true;
 
@@ -42,39 +45,46 @@ export function useForm<T extends Record<string, any>>(
     return isValid;
   }, [values, validationSchema]);
 
-  const validateField = useCallback(<K extends keyof T>(field: K): boolean => {
-    if (!validationSchema?.[field]) return true;
-    
-    const validator = validationSchema[field];
-    const error = validator!(values[field]);
-    
-    setErrors(prev => ({ ...prev, [field]: error }));
-    return !error;
-  }, [values, validationSchema]);
+  const validateField = useCallback(
+    <K extends keyof T>(field: K): boolean => {
+      if (!validationSchema?.[field]) return true;
 
-  const handleSubmit = useCallback(async (
-    onSubmit: (values: T) => Promise<void> | void
-  ) => {
-    if (!validate()) return false;
+      const validator = validationSchema[field];
+      const error = validator!(values[field]);
 
-    setIsSubmitting(true);
-    try {
-      await onSubmit(values);
-      return true;
-    } catch (error) {
-      console.error('Error en submit:', error);
-      return false;
-    } finally {
+      setErrors(prev => ({ ...prev, [field]: error }));
+      return !error;
+    },
+    [values, validationSchema]
+  );
+
+  const handleSubmit = useCallback(
+    async (onSubmit: (values: T) => Promise<void> | void) => {
+      if (!validate()) return false;
+
+      setIsSubmitting(true);
+      try {
+        await onSubmit(values);
+        return true;
+      } catch (error) {
+        console.error('Error en submit:', error);
+        return false;
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [values, validate]
+  );
+
+  const resetForm = useCallback(
+    (newValues?: Partial<T>) => {
+      setValues(newValues ? { ...initialValues, ...newValues } : initialValues);
+      setErrors({});
       setIsSubmitting(false);
-    }
-  }, [values, validate]);
-
-  const resetForm = useCallback((newValues?: Partial<T>) => {
-    setValues(newValues ? { ...initialValues, ...newValues } : initialValues);
-    setErrors({});
-    setIsSubmitting(false);
-    setIsDirty(false);
-  }, [initialValues]);
+      setIsDirty(false);
+    },
+    [initialValues]
+  );
 
   const hasErrors = Object.keys(errors).length > 0;
   const isValid = !hasErrors;
@@ -86,12 +96,12 @@ export function useForm<T extends Record<string, any>>(
     isDirty,
     hasErrors,
     isValid,
-    
+
     setFieldValue,
     setValues,
     validate,
     validateField,
     handleSubmit,
-    resetForm
+    resetForm,
   };
 }

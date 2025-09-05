@@ -1,0 +1,31 @@
+{
+  "name": "project-organizer",
+  "private": true,
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "lint": "cd frontend && npm run lint",
+    "lint:fix": "cd frontend && npm run lint:fix",
+    "preview": "cd frontend && npm run preview",
+    "prepare": "husky",
+    "format": "prettier --write \"frontend/src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"frontend/src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "install:frontend": "cd frontend && npm install"
+  },
+  "lint-staged": {
+    "frontend/src/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "cd frontend && npm run lint:fix"
+    ],
+    "frontend/src/**/*.{json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1"
+  }
+}

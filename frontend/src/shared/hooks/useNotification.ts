@@ -18,17 +18,23 @@ export function useNotification() {
     return SwalService.confirm(message, title);
   }, []);
 
-  const confirmDelete = useCallback(async (itemType?: string, itemName?: string) => {
-    return SwalService.confirmDelete(itemType, itemName);
-  }, []);
+  const confirmDelete = useCallback(
+    async (itemType?: string, itemName?: string) => {
+      return SwalService.confirmDelete(itemType, itemName);
+    },
+    []
+  );
 
-  const showPreview = useCallback(async (markdown: string, opts?: { title?: string; text?: string }) => {
-    await SwalService.successWithPreview({
-      title: opts?.title,
-      text: opts?.text,
-      markdown,
-    });
-  }, []);
+  const showPreview = useCallback(
+    async (markdown: string, opts?: { title?: string; text?: string }) => {
+      await SwalService.successWithPreview({
+        title: opts?.title,
+        text: opts?.text,
+        markdown,
+      });
+    },
+    []
+  );
 
   return {
     notifySuccess,

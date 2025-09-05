@@ -2,10 +2,11 @@ import React, { createContext, useContext } from 'react';
 import type { Idea } from '../shared';
 import { useIdeasMainView } from '../features/ideas/hooks/useIdeasMainView';
 
-
 interface IdeasMainViewContextType {
   filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived';
-  setFilter: (filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived') => void;
+  setFilter: (
+    filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived'
+  ) => void;
   sortBy: 'newest' | 'oldest' | 'priority' | 'title';
   setSortBy: (sortBy: 'newest' | 'oldest' | 'priority' | 'title') => void;
   selectedTag: string | null;
@@ -22,17 +23,19 @@ interface IdeasMainViewContextType {
   filteredCount: number;
 }
 
-const IdeasMainViewContext = createContext<IdeasMainViewContextType | null>(null);
+const IdeasMainViewContext = createContext<IdeasMainViewContextType | null>(
+  null
+);
 
-export function IdeasMainViewProvider({ 
-  children, 
-  ideas 
-}: { 
-  children: React.ReactNode; 
+export function IdeasMainViewProvider({
+  children,
+  ideas,
+}: {
+  children: React.ReactNode;
   ideas: Idea[];
 }) {
   const ideasLogic = useIdeasMainView({ ideas });
-  
+
   const value = {
     ...ideasLogic,
     filteredCount: ideasLogic.sortedIdeas.length,
@@ -48,7 +51,9 @@ export function IdeasMainViewProvider({
 export function useIdeasMainViewContext() {
   const context = useContext(IdeasMainViewContext);
   if (!context) {
-    throw new Error('useIdeasMainViewContext must be used within IdeasMainViewProvider');
+    throw new Error(
+      'useIdeasMainViewContext must be used within IdeasMainViewProvider'
+    );
   }
   return context;
 }

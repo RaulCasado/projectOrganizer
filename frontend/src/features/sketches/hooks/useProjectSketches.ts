@@ -33,10 +33,13 @@ export function useProjectSketches(projectId: string) {
     setShowSketchModal(true);
   }, []);
 
-  const handleDeleteSketch = useCallback((sketchId: string) => {
-    SketchStorageService.deleteSketch(sketchId);
-    refreshSketches();
-  }, [refreshSketches]);
+  const handleDeleteSketch = useCallback(
+    (sketchId: string) => {
+      SketchStorageService.deleteSketch(sketchId);
+      refreshSketches();
+    },
+    [refreshSketches]
+  );
 
   return {
     sketches,

@@ -8,7 +8,9 @@ interface UseDashboardLogicProps {
 export function useDashboardLogic({ projects }: UseDashboardLogicProps) {
   const getTotalStats = () => {
     const totalTasks = projects.flatMap(p => p.tasks || []).length;
-    const completedTasks = projects.flatMap(p => p.tasks || []).filter(t => t.completed).length;
+    const completedTasks = projects
+      .flatMap(p => p.tasks || [])
+      .filter(t => t.completed).length;
     const totalBlogEntries = projects.flatMap(p => p.blogEntries || []).length;
     const totalResources = projects.flatMap(p => p.resources || []).length;
 
@@ -23,7 +25,7 @@ export function useDashboardLogic({ projects }: UseDashboardLogicProps) {
       totalBlogEntries,
       totalResources,
       totalMinutes,
-      totalHours: Math.round(totalMinutes / 60 * 10) / 10
+      totalHours: Math.round((totalMinutes / 60) * 10) / 10,
     };
   };
 
@@ -37,8 +39,14 @@ export function useDashboardLogic({ projects }: UseDashboardLogicProps) {
 
   const getAbandonedProjects = () => {
     return projects
-      .filter(p => p.lastActivityDate && DateUtils.isOlderThan(p.lastActivityDate, 7))
-      .sort((a, b) => DateUtils.daysSince(a.lastActivityDate!) - DateUtils.daysSince(b.lastActivityDate!))
+      .filter(
+        p => p.lastActivityDate && DateUtils.isOlderThan(p.lastActivityDate, 7)
+      )
+      .sort(
+        (a, b) =>
+          DateUtils.daysSince(a.lastActivityDate!) -
+          DateUtils.daysSince(b.lastActivityDate!)
+      )
       .slice(0, 3);
   };
 
@@ -54,7 +62,7 @@ export function useDashboardLogic({ projects }: UseDashboardLogicProps) {
     });
 
     return Object.entries(tagCounts)
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 8);
   };
 
@@ -63,16 +71,19 @@ export function useDashboardLogic({ projects }: UseDashboardLogicProps) {
       (project.blogEntries || []).map(entry => ({
         ...entry,
         projectName: project.name,
-        projectId: project.id
+        projectId: project.id,
       }))
     );
 
     const entriesWithDates = allEntries.map(entry => ({
-        ...entry,
-        sortDate: entry.date || entry.createdAt
-      }));
+      ...entry,
+      sortDate: entry.date || entry.createdAt,
+    }));
 
-      return DateUtils.sortByDate(entriesWithDates, 'sortDate', 'desc').slice(0, 5);
+    return DateUtils.sortByDate(entriesWithDates, 'sortDate', 'desc').slice(
+      0,
+      5
+    );
   };
 
   const getProjectsWithoutMVP = () => {

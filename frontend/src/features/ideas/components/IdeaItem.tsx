@@ -36,7 +36,7 @@ function IdeaItem({
         `¿Eliminar la idea "${idea.title}"?`,
         'Esta acción no se puede deshacer'
       );
-      
+
       if (confirmed) {
         onDelete();
       }
@@ -44,16 +44,16 @@ function IdeaItem({
       console.error('Error deleting idea:', error);
     }
   };
-  
+
   const handlePromoteIdea = async () => {
     if (!onPromote) return;
-    
+
     try {
       const confirmed = await confirmDelete(
         `¿Convertir "${idea.title}" en proyecto?`,
         'Esta acción creará un nuevo proyecto y cambiará el estado de la idea'
       );
-      
+
       if (confirmed) {
         onPromote(idea);
       }
@@ -61,14 +61,14 @@ function IdeaItem({
       console.error('Error promoting idea:', error);
     }
   };
-  
+
   const handleStatusChange = async (newStatus: Idea['status']) => {
     if (newStatus === 'promoted' && onPromote && showPromoteButton) {
       const confirmed = await confirmDelete(
         `¿Convertir "${idea.title}" en proyecto?`,
         'Esta acción creará un nuevo proyecto y cambiará el estado de la idea'
       );
-      
+
       if (confirmed) {
         onPromote(idea);
       }
@@ -85,27 +85,18 @@ function IdeaItem({
             {idea.title}
           </h4>
           <div>
+            <span>{idea.priority.toUpperCase()}</span>
             <span>
-              {idea.priority.toUpperCase()}
+              {getStatusEmoji(idea.status)} {idea.status}
             </span>
-            <span>{getStatusEmoji(idea.status)} {idea.status}</span>
-            <span>
-              {DateUtils.formatShort(idea.createdAt)}
-            </span>
+            <span>{DateUtils.formatShort(idea.createdAt)}</span>
           </div>
         </div>
 
         <div>
-          <button onClick={onToggleExpand}>
-            {isExpanded ? '▲' : '▼'}
-          </button>
-          <button onClick={onEditStart}>
-            ✏️
-          </button>
-          <button 
-            onClick={handleDeleteIdea}
-            title="Eliminar idea"
-          >
+          <button onClick={onToggleExpand}>{isExpanded ? '▲' : '▼'}</button>
+          <button onClick={onEditStart}>✏️</button>
+          <button onClick={handleDeleteIdea} title="Eliminar idea">
             🗑️
           </button>
         </div>
@@ -115,8 +106,7 @@ function IdeaItem({
         <p>
           {isExpanded
             ? idea.description
-            : `${idea.description.substring(0, 100)}${idea.description.length > 100 ? '...' : ''}`
-          }
+            : `${idea.description.substring(0, 100)}${idea.description.length > 100 ? '...' : ''}`}
         </p>
       )}
 
@@ -137,12 +127,12 @@ function IdeaItem({
       {isExpanded && (
         <div>
           <div>
-            <label>
-              Estado:
-            </label>
+            <label>Estado:</label>
             <select
               value={idea.status}
-              onChange={(e) => handleStatusChange(e.target.value as Idea['status'])}
+              onChange={e =>
+                handleStatusChange(e.target.value as Idea['status'])
+              }
             >
               <option value="inbox">📥 Inbox</option>
               <option value="processing">⚙️ Procesando</option>
@@ -158,9 +148,7 @@ function IdeaItem({
           )}
 
           {idea.status === 'promoted' && idea.promotedToProjectId && (
-            <div>
-              🚀 Esta idea fue convertida en proyecto
-            </div>
+            <div>🚀 Esta idea fue convertida en proyecto</div>
           )}
         </div>
       )}

@@ -34,22 +34,33 @@ export function useIdeaList({ onUpdateIdea }: UseIdeaListProps) {
 
   const getStatusEmoji = (status: Idea['status']) => {
     switch (status) {
-      case 'inbox': return '📥';
-      case 'processing': return '⚙️';
-      case 'promoted': return '🚀';
-      case 'archived': return '📦';
-      default: return '📝';
+      case 'inbox':
+        return '📥';
+      case 'processing':
+        return '⚙️';
+      case 'promoted':
+        return '🚀';
+      case 'archived':
+        return '📦';
+      default:
+        return '📝';
     }
   };
 
   const getCategoryEmoji = (category: Idea['category']) => {
     switch (category) {
-      case 'feature': return '✨';
-      case 'project': return '🚀';
-      case 'improvement': return '⚡';
-      case 'research': return '🔍';
-      case 'other': return '📝';
-      default: return '💡';
+      case 'feature':
+        return '✨';
+      case 'project':
+        return '🚀';
+      case 'improvement':
+        return '⚡';
+      case 'research':
+        return '🔍';
+      case 'other':
+        return '📝';
+      default:
+        return '💡';
     }
   };
 

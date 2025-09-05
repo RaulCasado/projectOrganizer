@@ -15,9 +15,7 @@ function StatsCards({ stats }: StatsCardsProps) {
     <div>
       <div>
         <h3>📂 Proyectos</h3>
-        <div>
-          {stats.totalProjects}
-        </div>
+        <div>{stats.totalProjects}</div>
       </div>
 
       <div>
@@ -26,26 +24,23 @@ function StatsCards({ stats }: StatsCardsProps) {
           {stats.completedTasks}/{stats.totalTasks}
         </div>
         <div>
-          {stats.totalTasks > 0 ? Math.round((stats.completedTasks / stats.totalTasks) * 100) : 0}% completado
+          {stats.totalTasks > 0
+            ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
+            : 0}
+          % completado
         </div>
       </div>
 
       <div>
         <h3>📝 Blog</h3>
-        <div>
-          {stats.totalBlogEntries}
-        </div>
+        <div>{stats.totalBlogEntries}</div>
         <div>entradas</div>
       </div>
 
       <div>
         <h3>⏱️ Tiempo</h3>
-        <div>
-          {stats.totalHours}h
-        </div>
-        <div>
-          {stats.totalMinutes} minutos
-        </div>
+        <div>{stats.totalHours}h</div>
+        <div>{stats.totalMinutes} minutos</div>
       </div>
     </div>
   );

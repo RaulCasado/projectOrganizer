@@ -8,10 +8,10 @@ interface UseSketchCanvasProps {
   onSave?: (canvas: HTMLCanvasElement) => void;
 }
 
-export const useSketchCanvas = ({ 
-  width = SKETCH_CONFIG.canvas.defaultWidth, 
-  height = SKETCH_CONFIG.canvas.defaultHeight, 
-  onSave 
+export const useSketchCanvas = ({
+  width = SKETCH_CONFIG.canvas.defaultWidth,
+  height = SKETCH_CONFIG.canvas.defaultHeight,
+  onSave,
 }: UseSketchCanvasProps = {}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -23,37 +23,48 @@ export const useSketchCanvas = ({
 
   const MAX_HISTORY = 20;
 
-  const withCtx = useCallback((fn: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void) => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (canvas && ctx) {
-      fn(ctx, canvas);
-    }
-  }, []);
+  const withCtx = useCallback(
+    (
+      fn: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void
+    ) => {
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext('2d');
+      if (canvas && ctx) {
+        fn(ctx, canvas);
+      }
+    },
+    []
+  );
 
-  const loadImageFromData = useCallback(async (imageData: string) => {
-    try {
-      const response = await fetch(imageData);
-      const blob = await response.blob();
-      const imageBitmap = await createImageBitmap(blob);
-      
-      withCtx((ctx, canvas) => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(imageBitmap, 0, 0);
-        imageBitmap.close();
-      });
-    } catch (error) {
-      console.error('Error loading image with ImageBitmap, falling back to Image:', error);
-      const img = new Image();
-      img.onload = () => {
+  const loadImageFromData = useCallback(
+    async (imageData: string) => {
+      try {
+        const response = await fetch(imageData);
+        const blob = await response.blob();
+        const imageBitmap = await createImageBitmap(blob);
+
         withCtx((ctx, canvas) => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0);
+          ctx.drawImage(imageBitmap, 0, 0);
+          imageBitmap.close();
         });
-      };
-      img.src = imageData;
-    }
-  }, [withCtx]);
+      } catch (error) {
+        console.error(
+          'Error loading image with ImageBitmap, falling back to Image:',
+          error
+        );
+        const img = new Image();
+        img.onload = () => {
+          withCtx((ctx, canvas) => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+          });
+        };
+        img.src = imageData;
+      }
+    },
+    [withCtx]
+  );
 
   const saveToHistory = useCallback(() => {
     withCtx((_, canvas) => {
@@ -61,13 +72,18 @@ export const useSketchCanvas = ({
 
       setCanvasHistory(prev => {
         const newHistory = prev.slice(0, historyIndex + 1);
-        if (newHistory.length > 0 && newHistory[newHistory.length - 1] === imageData) {
+        if (
+          newHistory.length > 0 &&
+          newHistory[newHistory.length - 1] === imageData
+        ) {
           return prev;
         }
-        
+
         let updatedHistory = [...newHistory, imageData];
         if (updatedHistory.length > MAX_HISTORY) {
-          updatedHistory = updatedHistory.slice(updatedHistory.length - MAX_HISTORY);
+          updatedHistory = updatedHistory.slice(
+            updatedHistory.length - MAX_HISTORY
+          );
         }
         return updatedHistory;
       });
@@ -95,7 +111,7 @@ export const useSketchCanvas = ({
       const currentData = canvas.toDataURL();
       canvas.width = width;
       canvas.height = height;
-      
+
       if (currentData && canvasHistory.length > 0) {
         loadImageFromData(currentData);
       } else {
@@ -106,58 +122,81 @@ export const useSketchCanvas = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, height]);
 
-  const getEventPos = useCallback((e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
+  const getEventPos = useCallback(
+    (
+      e:
+        | React.MouseEvent<HTMLCanvasElement>
+        | React.TouchEvent<HTMLCanvasElement>
+    ) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return { x: 0, y: 0 };
 
-    const rect = canvas.getBoundingClientRect();
-    
-    let clientX: number, clientY: number;
-    
-    if ('touches' in e) {
-      const touch = e.touches[0] || e.changedTouches?.[0];
-      if (!touch) return { x: 0, y: 0 };
-      
-      clientX = touch.clientX;
-      clientY = touch.clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
+      const rect = canvas.getBoundingClientRect();
 
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  }, []);
+      let clientX: number, clientY: number;
 
-  const startDrawing = useCallback((e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    withCtx((ctx) => {
-      setIsDrawing(true);
-      const { x, y } = getEventPos(e);
+      if ('touches' in e) {
+        const touch = e.touches[0] || e.changedTouches?.[0];
+        if (!touch) return { x: 0, y: 0 };
 
-      ctx.globalCompositeOperation = currentTool === 'eraser' ? 'destination-out' : 'source-over';
-      ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = currentTool === 'eraser' ? strokeWidth * 2 : strokeWidth;
+        clientX = touch.clientX;
+        clientY = touch.clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
 
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    });
-  }, [withCtx, getEventPos, currentTool, strokeColor, strokeWidth]);
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top,
+      };
+    },
+    []
+  );
 
-  const draw = useCallback((e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-    withCtx((ctx) => {
-      const { x, y } = getEventPos(e);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    });
-  }, [isDrawing, withCtx, getEventPos]);
+  const startDrawing = useCallback(
+    (
+      e:
+        | React.MouseEvent<HTMLCanvasElement>
+        | React.TouchEvent<HTMLCanvasElement>
+    ) => {
+      withCtx(ctx => {
+        setIsDrawing(true);
+        const { x, y } = getEventPos(e);
+
+        ctx.globalCompositeOperation =
+          currentTool === 'eraser' ? 'destination-out' : 'source-over';
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth =
+          currentTool === 'eraser' ? strokeWidth * 2 : strokeWidth;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      });
+    },
+    [withCtx, getEventPos, currentTool, strokeColor, strokeWidth]
+  );
+
+  const draw = useCallback(
+    (
+      e:
+        | React.MouseEvent<HTMLCanvasElement>
+        | React.TouchEvent<HTMLCanvasElement>
+    ) => {
+      if (!isDrawing) return;
+      withCtx(ctx => {
+        const { x, y } = getEventPos(e);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      });
+    },
+    [isDrawing, withCtx, getEventPos]
+  );
 
   const stopDrawing = useCallback(() => {
     if (isDrawing) {
       setIsDrawing(false);
-      withCtx((ctx) => {
+      withCtx(ctx => {
         ctx.beginPath();
         saveToHistory();
       });
@@ -206,11 +245,14 @@ export const useSketchCanvas = ({
     });
   }, [withCtx, onSave]);
 
-  const loadImage = useCallback((imageData: string) => {
-    loadImageFromData(imageData).then(() => {
-      saveToHistory();
-    });
-  }, [loadImageFromData, saveToHistory]);
+  const loadImage = useCallback(
+    (imageData: string) => {
+      loadImageFromData(imageData).then(() => {
+        saveToHistory();
+      });
+    },
+    [loadImageFromData, saveToHistory]
+  );
 
   return {
     canvasRef,
@@ -233,6 +275,6 @@ export const useSketchCanvas = ({
     canRedo: historyIndex < canvasHistory.length - 1,
     historySize: canvasHistory.length,
     maxHistory: MAX_HISTORY,
-    memoryUsage: canvasHistory.reduce((total, data) => total + data.length, 0)
+    memoryUsage: canvasHistory.reduce((total, data) => total + data.length, 0),
   };
 };

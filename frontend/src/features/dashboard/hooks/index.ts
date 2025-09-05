@@ -1,1 +1,1 @@
-export {useDashboardLogic} from './useDashboardLogic';
+export { useDashboardLogic } from './useDashboardLogic';

@@ -1,4 +1,4 @@
-import {SketchesGrid} from '../../sketches/components/SketchesGrid';
+import { SketchesGrid } from '../../sketches/components/SketchesGrid';
 import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
 
 function SketchesSection() {
@@ -10,12 +10,14 @@ function SketchesSection() {
     isAtLimit,
     handleEditSketch,
     handleDeleteSketch,
-    handleOpenSketchModal
+    handleOpenSketchModal,
   } = useProjectDetailContext();
   return (
     <section className="project-sketches">
       <div className="section-header">
-        <h3>📐 Quick Sketches ({sketchCount}/{maxSketches})</h3>
+        <h3>
+          📐 Quick Sketches ({sketchCount}/{maxSketches})
+        </h3>
       </div>
 
       <SketchesGrid

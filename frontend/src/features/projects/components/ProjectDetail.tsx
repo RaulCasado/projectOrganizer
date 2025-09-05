@@ -1,6 +1,9 @@
 import type { Project } from '../../../shared';
 import { SketchCanvas } from '../../../features';
-import { ProjectDetailProvider, useProjectDetailContext } from '../../../contexts';
+import {
+  ProjectDetailProvider,
+  useProjectDetailContext,
+} from '../../../contexts';
 import {
   ProjectOverview,
   TasksSection,
@@ -8,7 +11,7 @@ import {
   ResourcesSection,
   SketchesSection,
   BlogSection,
-  MVPSection
+  MVPSection,
 } from './';
 
 interface ProjectDetailProps {
@@ -16,12 +19,8 @@ interface ProjectDetailProps {
 }
 
 function ProjectDetailContent() {
-  const { 
-    project, 
-    showSketchModal, 
-    handleCloseSketchModal, 
-    editingSketch 
-  } = useProjectDetailContext();
+  const { project, showSketchModal, handleCloseSketchModal, editingSketch } =
+    useProjectDetailContext();
 
   return (
     <div>
@@ -32,15 +31,19 @@ function ProjectDetailContent() {
       <SketchesSection />
       <TasksSection />
       <IdeasSection />
-      <SketchCanvas 
+      <SketchCanvas
         isOpen={showSketchModal}
         onClose={handleCloseSketchModal}
         projectId={project.id}
-        editingSketch={editingSketch ? {
-          id: editingSketch.id,
-          name: editingSketch.name,
-          imageData: editingSketch.imageData
-        } : undefined}
+        editingSketch={
+          editingSketch
+            ? {
+                id: editingSketch.id,
+                name: editingSketch.name,
+                imageData: editingSketch.imageData,
+              }
+            : undefined
+        }
       />
     </div>
   );

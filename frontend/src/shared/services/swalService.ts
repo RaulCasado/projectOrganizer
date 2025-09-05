@@ -29,7 +29,10 @@ export class SwalService {
     });
   }
 
-  static async confirm(message: string, title = '¿Estás seguro?'): Promise<boolean> {
+  static async confirm(
+    message: string,
+    title = '¿Estás seguro?'
+  ): Promise<boolean> {
     const result = await Swal.fire({
       title,
       text: message,
@@ -42,8 +45,13 @@ export class SwalService {
     return !!result.isConfirmed;
   }
 
-  static async confirmDelete(itemType = 'elemento', itemName?: string): Promise<boolean> {
-    const title = itemName ? `¿Eliminar ${itemType} "${itemName}"?` : `¿Eliminar ${itemType}?`;
+  static async confirmDelete(
+    itemType = 'elemento',
+    itemName?: string
+  ): Promise<boolean> {
+    const title = itemName
+      ? `¿Eliminar ${itemType} "${itemName}"?`
+      : `¿Eliminar ${itemType}?`;
     const result = await Swal.fire({
       title,
       text: 'Esta acción no se puede deshacer',
@@ -65,7 +73,13 @@ export class SwalService {
     confirmText?: string;
     cancelText?: string;
   }): Promise<void> {
-    const { title = '📤 ¡Exportado!', text = 'El resumen semanal se ha copiado al portapapeles', markdown, confirmText = 'Ver preview', cancelText = 'Cerrar' } = opts;
+    const {
+      title = '📤 ¡Exportado!',
+      text = 'El resumen semanal se ha copiado al portapapeles',
+      markdown,
+      confirmText = 'Ver preview',
+      cancelText = 'Cerrar',
+    } = opts;
 
     const result = await Swal.fire({
       title,
@@ -82,7 +96,7 @@ export class SwalService {
         title: 'Preview del Markdown',
         html: `<pre style="text-align: left; max-height: 400px; overflow-y: auto;">${markdown}</pre>`,
         width: '80%',
-        confirmButtonText: 'Cerrar'
+        confirmButtonText: 'Cerrar',
       });
     }
   }

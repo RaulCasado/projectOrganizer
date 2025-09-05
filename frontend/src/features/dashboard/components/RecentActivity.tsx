@@ -27,9 +27,7 @@ function RecentActivity({ recentActivity }: RecentActivityProps) {
                 {entry.projectName}
               </Link>
             </div>
-            <div>
-              "{entry.title}"
-            </div>
+            <div>"{entry.title}"</div>
             <div>
               {DateUtils.formatShort(entry.date || entry.createdAt)}
               {entry.timeSpent && entry.timeSpent > 0 && (

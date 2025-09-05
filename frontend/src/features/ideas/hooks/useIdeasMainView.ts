@@ -7,8 +7,12 @@ interface UseIdeasMainViewProps {
 }
 
 export function useIdeasMainView({ ideas }: UseIdeasMainViewProps) {
-  const [filter, setFilter] = useState<'all' | 'inbox' | 'processing' | 'promoted' | 'archived'>('all');
-  const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'priority' | 'title'>('newest');
+  const [filter, setFilter] = useState<
+    'all' | 'inbox' | 'processing' | 'promoted' | 'archived'
+  >('all');
+  const [sortBy, setSortBy] = useState<
+    'newest' | 'oldest' | 'priority' | 'title'
+  >('newest');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const generalIdeas = ideas.filter(idea => !idea.projectId);
@@ -23,11 +27,11 @@ export function useIdeasMainView({ ideas }: UseIdeasMainViewProps) {
       if (filter !== 'all' && idea.status !== filter) {
         return false;
       }
-      
+
       if (selectedTag && !idea.tags?.includes(selectedTag)) {
         return false;
       }
-      
+
       return true;
     });
   }, [generalIdeas, filter, selectedTag]);
@@ -42,7 +46,9 @@ export function useIdeasMainView({ ideas }: UseIdeasMainViewProps) {
         return DateUtils.sortByDate(sorted, 'createdAt', 'asc');
       case 'priority': {
         const priorityOrder = { high: 3, medium: 2, low: 1 };
-        return sorted.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]);
+        return sorted.sort(
+          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]
+        );
       }
       case 'title':
         return sorted.sort((a, b) => a.title.localeCompare(b.title));
@@ -51,13 +57,17 @@ export function useIdeasMainView({ ideas }: UseIdeasMainViewProps) {
     }
   }, [filteredIdeas, sortBy]);
 
-  const stats = useMemo(() => ({
-    total: generalIdeas.length,
-    inbox: generalIdeas.filter(idea => idea.status === 'inbox').length,
-    processing: generalIdeas.filter(idea => idea.status === 'processing').length,
-    promoted: generalIdeas.filter(idea => idea.status === 'promoted').length,
-    archived: generalIdeas.filter(idea => idea.status === 'archived').length,
-  }), [generalIdeas]);
+  const stats = useMemo(
+    () => ({
+      total: generalIdeas.length,
+      inbox: generalIdeas.filter(idea => idea.status === 'inbox').length,
+      processing: generalIdeas.filter(idea => idea.status === 'processing')
+        .length,
+      promoted: generalIdeas.filter(idea => idea.status === 'promoted').length,
+      archived: generalIdeas.filter(idea => idea.status === 'archived').length,
+    }),
+    [generalIdeas]
+  );
 
   return {
     filter,

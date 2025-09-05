@@ -9,7 +9,12 @@ interface BlogModalProps {
   onDelete: (entryId: string) => void;
 }
 
-function BlogModal({ selectedEntry, onClose, onEdit, onDelete }: BlogModalProps) {
+function BlogModal({
+  selectedEntry,
+  onClose,
+  onEdit,
+  onDelete,
+}: BlogModalProps) {
   return (
     <Modal
       isOpen={selectedEntry !== null}

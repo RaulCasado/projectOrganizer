@@ -9,17 +9,22 @@ export function useQuickIdeaCapture({ onAddIdea }: UseQuickIdeaCaptureProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
-  const [category, setCategory] = useState<'feature' | 'project' | 'improvement' | 'research' | 'other'>('feature');
+  const [category, setCategory] = useState<
+    'feature' | 'project' | 'improvement' | 'research' | 'other'
+  >('feature');
   const [tags, setTags] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleSubmit = (formData : IdeaFormData) => {
+  const handleSubmit = (formData: IdeaFormData) => {
     const newIdea = {
       title: formData.title,
       description: formData.description,
       priority: formData.priority,
       category: formData.category,
-      tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      tags: formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag),
       status: 'inbox' as const,
     };
     onAddIdea(newIdea);

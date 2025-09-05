@@ -1,4 +1,4 @@
-import type { Task } from "./Task";
+import type { Task } from './Task';
 
 export type BlogEntry = {
   id: string;
@@ -25,7 +25,7 @@ export type Project = {
   stack?: string[];
   requirements?: string[];
   dependencies?: string[];
-  tasks? : Task[];
+  tasks?: Task[];
   tags?: string[];
   resources?: Resource[];
   mvp?: string;
@@ -34,16 +34,16 @@ export type Project = {
 };
 
 export type ProjectFormData = {
-  name : string;
-  stack : string [];
-  requirements : string [];
-  dependencies : string [];
-  tags : string[];
-}
+  name: string;
+  stack: string[];
+  requirements: string[];
+  dependencies: string[];
+  tags: string[];
+};
 
 export type ResourceFormData = {
   title: string;
   url: string;
   description: string;
   category: Resource['category'];
-}
+};

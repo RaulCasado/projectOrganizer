@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState } from 'react';
 import type { BlogEntry } from '../../../shared/types';
 import { useNotification } from '../../../shared';
-import { DateUtils } from "../../../shared";
+import { DateUtils } from '../../../shared';
 
 interface UseProjectBlogProps {
   blogEntries: BlogEntry[];
@@ -9,11 +9,16 @@ interface UseProjectBlogProps {
   project?: { name: string };
 }
 
-export function useProjectBlog({ blogEntries, onUpdateBlogEntries, project }: UseProjectBlogProps) {
+export function useProjectBlog({
+  blogEntries,
+  onUpdateBlogEntries,
+  project,
+}: UseProjectBlogProps) {
   const [isWriting, setIsWriting] = useState(false);
   const [selectedEntry, setSelectedEntry] = useState<BlogEntry | null>(null);
   const [editingEntry, setEditingEntry] = useState<BlogEntry | null>(null);
-  const { showPreview, notifySuccess, confirmDelete, notifyError } = useNotification();
+  const { showPreview, notifySuccess, confirmDelete, notifyError } =
+    useNotification();
 
   const handleSaveEntry = (entryData: Omit<BlogEntry, 'id' | 'createdAt'>) => {
     if (editingEntry) {
@@ -39,7 +44,11 @@ export function useProjectBlog({ blogEntries, onUpdateBlogEntries, project }: Us
 
   const handleExportWeek = () => {
     const getLastWeekEntries = () => {
-      const lastWeekEntries = DateUtils.filterRecentDays(blogEntries, 7, 'date');
+      const lastWeekEntries = DateUtils.filterRecentDays(
+        blogEntries,
+        7,
+        'date'
+      );
       return DateUtils.sortByDate(lastWeekEntries, 'date', 'asc');
     };
 
@@ -53,7 +62,10 @@ export function useProjectBlog({ blogEntries, onUpdateBlogEntries, project }: Us
 
       const weekRange = DateUtils.getWeekRange();
 
-      const totalTime = weekEntries.reduce((sum, entry) => sum + (entry.timeSpent || 0), 0);
+      const totalTime = weekEntries.reduce(
+        (sum, entry) => sum + (entry.timeSpent || 0),
+        0
+      );
       const allTags = weekEntries.flatMap(entry => entry.tags || []);
       const uniqueTags = [...new Set(allTags)];
 
@@ -62,7 +74,7 @@ export function useProjectBlog({ blogEntries, onUpdateBlogEntries, project }: Us
 
       markdown += `## 📊 Resumen\n`;
       markdown += `- Total de entradas: ${weekEntries.length}\n`;
-      markdown += `- Tiempo invertido: ${totalTime} minutos (${Math.round(totalTime / 60 * 10) / 10} horas)\n`;
+      markdown += `- Tiempo invertido: ${totalTime} minutos (${Math.round((totalTime / 60) * 10) / 10} horas)\n`;
       if (uniqueTags.length > 0) {
         markdown += `- Tags utilizados: ${uniqueTags.join(', ')}\n`;
       }
@@ -95,11 +107,14 @@ export function useProjectBlog({ blogEntries, onUpdateBlogEntries, project }: Us
     const markdown = generateMarkdown();
     if (!markdown) return;
 
-    navigator.clipboard.writeText(markdown).then(() => {
-      showPreview(markdown);
-    }).catch(() => {
-      showPreview(markdown);
-    });
+    navigator.clipboard
+      .writeText(markdown)
+      .then(() => {
+        showPreview(markdown);
+      })
+      .catch(() => {
+        showPreview(markdown);
+      });
   };
 
   const handleViewEntry = (entry: BlogEntry) => {

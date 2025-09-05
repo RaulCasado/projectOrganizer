@@ -3,12 +3,16 @@ import { useProjectBlog } from '../hooks';
 import { BlogForm, BlogList, BlogToolbar, BlogModal } from './';
 
 interface ProjectBlogProps {
-    blogEntries?: BlogEntry[];
-    onUpdateBlogEntries: (entries: BlogEntry[]) => void;
-    project?: { name: string };
+  blogEntries?: BlogEntry[];
+  onUpdateBlogEntries: (entries: BlogEntry[]) => void;
+  project?: { name: string };
 }
 
-function ProjectBlog({ blogEntries = [], onUpdateBlogEntries, project }: ProjectBlogProps) {
+function ProjectBlog({
+  blogEntries = [],
+  onUpdateBlogEntries,
+  project,
+}: ProjectBlogProps) {
   const {
     isWriting,
     selectedEntry,

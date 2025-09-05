@@ -16,20 +16,14 @@ function ProjectsMainView() {
     onDeleteProject: deleteProject,
   });
 
-
   return (
     <div>
       <div>
-        <Link to="/dashboard">
-          📊 Dashboard
-        </Link>
-        <Link to="/ideas">
-          💡 Ideas
-        </Link>
+        <Link to="/dashboard">📊 Dashboard</Link>
+        <Link to="/ideas">💡 Ideas</Link>
       </div>
 
-      <ProjectForm
-      />
+      <ProjectForm />
 
       <ProjectFilters
         selectedTag={selectedTag}

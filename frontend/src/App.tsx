@@ -1,26 +1,32 @@
 import { Routes, Route, useParams } from 'react-router-dom';
-import { ProjectsMainView, ProjectDetail, TaskDetail, Dashboard, IdeasMainView } from './features';
+import {
+  ProjectsMainView,
+  ProjectDetail,
+  TaskDetail,
+  Dashboard,
+  IdeasMainView,
+} from './features';
 import { ProjectsProvider, IdeasProvider, useProjects } from './contexts';
 import { useNotifications } from './shared';
-import type { Task } from './shared';  
+import type { Task } from './shared';
 
 function ProjectDetailWrapper() {
   const { id } = useParams<{ id: string }>();
   const { getProject } = useProjects();
-  
+
   const project = getProject(id!);
-  
+
   if (!project) {
     return <div>Proyecto no encontrado</div>;
   }
-  
+
   return <ProjectDetail project={project} />;
 }
 
 function TaskDetailWrapper() {
   const { taskId } = useParams<{ taskId: string }>();
   const { projects } = useProjects();
-  
+
   let foundTask: Task | undefined;
 
   for (const project of projects) {
@@ -30,17 +36,17 @@ function TaskDetailWrapper() {
       break;
     }
   }
-  
+
   if (!foundTask) {
     return <div>Tarea no encontrada</div>;
   }
-  
+
   return <TaskDetail task={foundTask} />;
 }
 
 function AppRoutes() {
   const { projects } = useProjects();
-  
+
   useNotifications(projects);
 
   return (

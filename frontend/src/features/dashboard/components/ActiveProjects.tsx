@@ -15,12 +15,8 @@ function ActiveProjects({ activeProjects }: ActiveProjectsProps) {
       ) : (
         activeProjects.map(project => (
           <div key={project.id}>
-            <Link to={`/project/${project.id}`}>
-              📂 {project.name}
-            </Link>
-            <span>
-              {DateUtils.getRelativeLabel(project.lastActivityDate!)}
-            </span>
+            <Link to={`/project/${project.id}`}>📂 {project.name}</Link>
+            <span>{DateUtils.getRelativeLabel(project.lastActivityDate!)}</span>
           </div>
         ))
       )}

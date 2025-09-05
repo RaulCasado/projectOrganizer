@@ -5,23 +5,22 @@ interface BlogToolbarProps {
   onNewEntry: () => void;
 }
 
-function BlogToolbar({ blogEntriesLength, isWriting, onExportWeek, onNewEntry }: BlogToolbarProps) {
+function BlogToolbar({
+  blogEntriesLength,
+  isWriting,
+  onExportWeek,
+  onNewEntry,
+}: BlogToolbarProps) {
   return (
     <div>
       <h3>📝 Diario del Proyecto</h3>
 
       <div>
         {blogEntriesLength > 0 && (
-          <button onClick={onExportWeek}>
-            📤 Exportar semana
-          </button>
+          <button onClick={onExportWeek}>📤 Exportar semana</button>
         )}
 
-        {!isWriting && (
-          <button onClick={onNewEntry}>
-            ➕ Nueva Entrada
-          </button>
-        )}
+        {!isWriting && <button onClick={onNewEntry}>➕ Nueva Entrada</button>}
       </div>
     </div>
   );

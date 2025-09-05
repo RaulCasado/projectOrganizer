@@ -10,17 +10,17 @@ export const useProjectsMainViewLogic = ({
   projects: Project[];
   onDeleteProject: (projectId: string) => void;
 }) => {
-  const [selectedTag, setSelectedTag] = useState<string | null>('all');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const { ideas, deleteIdea } = useIdeas();
   const { confirmDelete } = useNotification();
   const availableTags = useMemo(() => {
     const allTags = projects.flatMap(project => project.tags || []);
-    return ['all', ...Array.from(new Set(allTags))];
+    return Array.from(new Set(allTags));
   }, [projects]);
 
   const filteredProjects = useMemo(() => {
-    if (!selectedTag || selectedTag === 'all') return projects;
+    if (!selectedTag) return projects;
     return projects.filter(project => 
       project.tags?.includes(selectedTag)
     );

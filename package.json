@@ -1,6 +1,4 @@
 {
-  "name": "project-organizer",
-  "private": true,
   "scripts": {
     "dev": "cd frontend && npm run dev",
     "build": "cd frontend && npm run build",
@@ -15,7 +13,7 @@
   "lint-staged": {
     "frontend/src/**/*.{ts,tsx,js,jsx}": [
       "prettier --write",
-      "cd frontend && npm run lint:fix"
+      "npm run lint:fix"
     ],
     "frontend/src/**/*.{json,css,md}": [
       "prettier --write"

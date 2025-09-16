@@ -1,5 +1,6 @@
 import type { Idea } from '../../../shared/types/Idea';
 import { DateUtils, useNotification } from '../../../shared';
+import styles from './ideas.module.css';
 
 interface IdeaItemProps {
   idea: Idea;
@@ -77,33 +78,45 @@ function IdeaItem({
     }
   };
   return (
-    <div>
-      <div>
+    <div className={styles.ideaItem}>
+      <div className={styles.ideaHeader}>
         <div>
-          <h4>
+          <h4 className={styles.ideaTitle}>
             {getCategoryEmoji(idea.category)}
             {idea.title}
           </h4>
-          <div>
-            <span>{idea.priority.toUpperCase()}</span>
-            <span>
+          <div className={styles.ideaMeta}>
+            <span className={styles.ideaMetaItem}>
+              {idea.priority.toUpperCase()}
+            </span>
+            <span className={styles.ideaMetaItem}>
               {getStatusEmoji(idea.status)} {idea.status}
             </span>
-            <span>{DateUtils.formatShort(idea.createdAt)}</span>
+            <span className={styles.ideaMetaItem}>
+              {DateUtils.formatShort(idea.createdAt)}
+            </span>
           </div>
         </div>
 
-        <div>
-          <button onClick={onToggleExpand}>{isExpanded ? '▲' : '▼'}</button>
-          <button onClick={onEditStart}>✏️</button>
-          <button onClick={handleDeleteIdea} title="Eliminar idea">
+        <div className={styles.ideaActions}>
+          <button className={styles.actionButton} onClick={onToggleExpand}>
+            {isExpanded ? '▲' : '▼'}
+          </button>
+          <button className={styles.actionButton} onClick={onEditStart}>
+            ✏️
+          </button>
+          <button
+            className={`${styles.actionButton} ${styles.deleteButton}`}
+            onClick={handleDeleteIdea}
+            title="Eliminar idea"
+          >
             🗑️
           </button>
         </div>
       </div>
 
       {idea.description && (
-        <p>
+        <p className={styles.ideaDescription}>
           {isExpanded
             ? idea.description
             : `${idea.description.substring(0, 100)}${idea.description.length > 100 ? '...' : ''}`}
@@ -111,10 +124,11 @@ function IdeaItem({
       )}
 
       {idea.tags.length > 0 && (
-        <div>
+        <div className={styles.ideaTags}>
           {idea.tags.map((tag, index) => (
             <button
               key={index}
+              className={styles.tagButton}
               onClick={() => onTagClick?.(tag)}
               title={`Filtrar por ${tag}`}
             >
@@ -125,10 +139,11 @@ function IdeaItem({
       )}
 
       {isExpanded && (
-        <div>
-          <div>
-            <label>Estado:</label>
+        <div className={styles.expandedControls}>
+          <div className={styles.controlGroup}>
+            <label className={styles.controlLabel}>Estado:</label>
             <select
+              className={styles.statusSelect}
               value={idea.status}
               onChange={e =>
                 handleStatusChange(e.target.value as Idea['status'])
@@ -142,13 +157,18 @@ function IdeaItem({
           </div>
 
           {showPromoteButton && onPromote && idea.status !== 'promoted' && (
-            <button onClick={handlePromoteIdea}>
+            <button
+              className={styles.promoteButton}
+              onClick={handlePromoteIdea}
+            >
               🚀 Convertir en Proyecto
             </button>
           )}
 
           {idea.status === 'promoted' && idea.promotedToProjectId && (
-            <div>🚀 Esta idea fue convertida en proyecto</div>
+            <div className={styles.promotedNotice}>
+              🚀 Esta idea fue convertida en proyecto
+            </div>
           )}
         </div>
       )}

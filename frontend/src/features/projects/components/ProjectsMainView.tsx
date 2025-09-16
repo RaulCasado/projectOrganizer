@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useProjectsMainViewLogic } from '../hooks/useProjectsMainViewLogic';
 import { useProjects } from '../../../contexts';
 import { ProjectFilters, ProjectForm, ProjectList } from './';
+import styles from './projects.module.css';
 
 function ProjectsMainView() {
   const { projects, deleteProject, setEditingProject } = useProjects();
@@ -17,10 +18,14 @@ function ProjectsMainView() {
   });
 
   return (
-    <div>
-      <div>
-        <Link to="/dashboard">📊 Dashboard</Link>
-        <Link to="/ideas">💡 Ideas</Link>
+    <div className={styles.container}>
+      <div className={styles.navigation}>
+        <Link to="/dashboard" className={styles.navLink}>
+          📊 Dashboard
+        </Link>
+        <Link to="/ideas" className={styles.navLink}>
+          💡 Ideas
+        </Link>
       </div>
 
       <ProjectForm />

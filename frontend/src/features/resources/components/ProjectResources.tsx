@@ -2,6 +2,7 @@ import type { Resource } from '../../../shared/types/Project';
 import { useProjectDetailContext } from '../../../contexts';
 import { ResourceList, ResourceForm } from './';
 import { useState } from 'react';
+import styles from './resources.module.css';
 
 function ProjectResources() {
   const {
@@ -37,17 +38,22 @@ function ProjectResources() {
   const showForm = isAdding || !!editingResource;
 
   return (
-    <div>
-      <div>
-        <h3>🔗 Recursos del Proyecto</h3>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>🔗 Recursos del Proyecto</h3>
         {!showForm && (
-          <button onClick={() => setIsAdding(true)}>➕ Añadir Recurso</button>
+          <button
+            className={styles.addButton}
+            onClick={() => setIsAdding(true)}
+          >
+            ➕ Añadir Recurso
+          </button>
         )}
       </div>
 
       <ResourceForm isVisible={showForm} onCancel={handleCancel} />
 
-      <div>
+      <div className={styles.listContainer}>
         <ResourceList
           resources={resources}
           getCategoryIcon={getCategoryIcon}

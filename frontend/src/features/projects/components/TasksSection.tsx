@@ -1,5 +1,6 @@
 import { TaskForm, TaskFilters, TaskList } from '../../tasks/components/';
 import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
+import styles from './TasksSection.module.css';
 
 export function TasksSection() {
   const {
@@ -16,7 +17,7 @@ export function TasksSection() {
   } = useProjectDetailContext();
 
   return (
-    <>
+    <div className={styles.container}>
       <TaskForm />
       <TaskFilters
         statusFilter={statusFilter}
@@ -32,6 +33,6 @@ export function TasksSection() {
         onDeleteTask={handleDeleteTask}
         onEditTask={setEditingTask}
       />
-    </>
+    </div>
   );
 }

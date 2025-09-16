@@ -1,17 +1,19 @@
-.container {
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
+.section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  padding: 1.5rem;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.container:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateY(-1px);
+.section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.1);
 }
 
-.sectionHeader {
+.header {
   margin-bottom: 1.5rem;
 }
 
@@ -38,13 +40,13 @@
 }
 
 @media (prefers-color-scheme: light) {
-  .container {
-    background: rgba(0, 0, 0, 0.01);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+  .section {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .container:hover {
-    background: rgba(0, 0, 0, 0.03);
+  .section:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .title {

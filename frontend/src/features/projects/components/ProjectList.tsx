@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Project } from '../../../shared/types';
 import { DateUtils } from '../../../shared';
+import styles from './projects.module.css';
 
 interface ProjectListProps {
   projects: Project[];
@@ -18,23 +19,29 @@ function ProjectList({
   setSelectedTag,
 }: ProjectListProps) {
   return (
-    <div>
+    <div className={styles.projectsGrid}>
       {projects.length === 0 ? (
-        <p>No projects found.</p>
+        <div className={styles.emptyState}>
+          <p>No projects found.</p>
+        </div>
       ) : (
         projects.map(project => (
-          <div key={project.id}>
-            <div>
-              <div>
-                <Link to={`/project/${project.id}`}>
+          <div key={project.id} className={styles.projectCard}>
+            <div className={styles.cardHeader}>
+              <div className={styles.projectContent}>
+                <Link
+                  to={`/project/${project.id}`}
+                  className={styles.projectTitle}
+                >
                   <h2>📂 {project.name}</h2>
                 </Link>
 
                 {project.tags && project.tags.length > 0 && (
-                  <div>
+                  <div className={styles.tagsContainer}>
                     {project.tags.map((tag, index) => (
                       <button
                         key={index}
+                        className={`${styles.tagButton} ${selectedTag === tag ? styles.selected : ''}`}
                         onClick={e => {
                           e.preventDefault();
                           setSelectedTag(selectedTag === tag ? null : tag);
@@ -52,22 +59,30 @@ function ProjectList({
                 )}
 
                 {project.stack && project.stack.length > 0 && (
-                  <div>🛠️ Stack: {project.stack.join(', ')}</div>
+                  <div className={styles.stackInfo}>
+                    🛠️ Stack: {project.stack.join(', ')}
+                  </div>
                 )}
 
                 {project.lastActivityDate && (
-                  <div>
+                  <div className={styles.lastActivity}>
                     📅 Última actividad:{' '}
                     {DateUtils.formatShort(project.lastActivityDate)}
                   </div>
                 )}
               </div>
 
-              <div>
-                <button onClick={() => onEditProject(project)}>
+              <div className={styles.cardActions}>
+                <button
+                  className={`${styles.actionButton} ${styles.editButton}`}
+                  onClick={() => onEditProject(project)}
+                >
                   ✏️ Editar
                 </button>
-                <button onClick={() => onDeleteProject(project.id)}>
+                <button
+                  className={`${styles.actionButton} ${styles.deleteButton}`}
+                  onClick={() => onDeleteProject(project.id)}
+                >
                   🗑️ Eliminar
                 </button>
               </div>

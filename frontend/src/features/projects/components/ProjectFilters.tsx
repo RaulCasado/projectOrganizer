@@ -1,3 +1,5 @@
+import styles from './ProjectFilters.module.css';
+
 interface ProjectFiltersProps {
   selectedTag: string | null;
   onTagFilterChange: (tag: string | null) => void;
@@ -10,12 +12,13 @@ function ProjectFilters({
   availableTags,
 }: ProjectFiltersProps) {
   return (
-    <div>
-      <h3>Filtros</h3>
-      <div>
-        <label>
+    <div className={styles.container}>
+      <h3 className={styles.title}>Filtros</h3>
+      <div className={styles.filterGroup}>
+        <label className={styles.label}>
           Filtrar por etiqueta:
           <select
+            className={styles.select}
             value={selectedTag || ''}
             onChange={e => onTagFilterChange(e.target.value || null)}
           >
@@ -29,10 +32,17 @@ function ProjectFilters({
         </label>
       </div>
       {selectedTag && (
-        <div>
-          <span>Mostrando proyectos con tag: </span>
-          <strong>{selectedTag}</strong>
-          <button onClick={() => onTagFilterChange(null)}>✕ Limpiar</button>
+        <div className={styles.activeFilter}>
+          <span className={styles.activeFilterText}>
+            Mostrando proyectos con tag:{' '}
+          </span>
+          <span className={styles.activeFilterTag}>{selectedTag}</span>
+          <button
+            className={styles.clearButton}
+            onClick={() => onTagFilterChange(null)}
+          >
+            ✕ Limpiar
+          </button>
         </div>
       )}
     </div>

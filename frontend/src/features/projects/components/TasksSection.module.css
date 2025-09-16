@@ -1,25 +1,37 @@
-.section {
+.container {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   border: 1px solid rgba(100, 108, 255, 0.2);
+  padding: 1.5rem;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: none;
 }
 
-.section:hover {
+.container:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(100, 108, 255, 0.1);
 }
 
 @media (prefers-color-scheme: light) {
-  .section {
+  .container {
     background: rgba(0, 0, 0, 0.02);
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .section:hover {
+  .container:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    gap: 1rem;
   }
 }

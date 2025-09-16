@@ -1,3 +1,5 @@
+import styles from './ideas.module.css';
+
 interface ProjectIdeasFiltersProps {
   filter: 'all' | 'inbox' | 'processing' | 'promoted' | 'archived';
   setFilter: (
@@ -30,81 +32,91 @@ function ProjectIdeasFilters({
   filteredCount,
 }: ProjectIdeasFiltersProps) {
   return (
-    <div>
-      <div>
-        <label>Filtrar:</label>
-        <select
-          value={filter}
-          onChange={e =>
-            setFilter(
-              e.target.value as
-                | 'all'
-                | 'inbox'
-                | 'processing'
-                | 'promoted'
-                | 'archived'
-            )
-          }
-        >
-          <option value="all">🔍 Todas ({stats.total})</option>
-          <option value="inbox">📥 Inbox ({stats.inbox})</option>
-          <option value="processing">⚙️ Procesando ({stats.processing})</option>
-          <option value="promoted">🚀 Promovidas ({stats.promoted})</option>
-          <option value="archived">📦 Archivadas ({stats.archived})</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Ordenar:</label>
-        <select
-          value={sortBy}
-          onChange={e =>
-            setSortBy(
-              e.target.value as 'newest' | 'oldest' | 'priority' | 'title'
-            )
-          }
-        >
-          <option value="newest">📅 Más recientes</option>
-          <option value="oldest">🕰️ Más antiguas</option>
-          <option value="priority">🔥 Por prioridad</option>
-          <option value="title">🔤 Por título</option>
-        </select>
-      </div>
-
-      {availableTags.length > 0 && (
-        <div>
-          <label>Filtrar por etiqueta:</label>
+    <div className={styles.projectFiltersContainer}>
+      <div className={styles.projectFiltersGrid}>
+        <div className={styles.projectFilterGroup}>
+          <label className={styles.projectFilterLabel}>Filtrar:</label>
           <select
-            value={selectedTag || 'all'}
+            className={styles.projectFilterSelect}
+            value={filter}
             onChange={e =>
-              setSelectedTag(e.target.value === 'all' ? null : e.target.value)
+              setFilter(
+                e.target.value as
+                  | 'all'
+                  | 'inbox'
+                  | 'processing'
+                  | 'promoted'
+                  | 'archived'
+              )
             }
           >
-            <option value="all">Todas las etiquetas</option>
-            {availableTags.map(tag => (
-              <option key={tag} value={tag}>
-                🏷️ {tag}
-              </option>
-            ))}
+            <option value="all">🔍 Todas ({stats.total})</option>
+            <option value="inbox">📥 Inbox ({stats.inbox})</option>
+            <option value="processing">
+              ⚙️ Procesando ({stats.processing})
+            </option>
+            <option value="promoted">🚀 Promovidas ({stats.promoted})</option>
+            <option value="archived">📦 Archivadas ({stats.archived})</option>
           </select>
         </div>
-      )}
 
-      {selectedTag && (
-        <div>
-          <span>Mostrando ideas con etiqueta: </span>
-          <strong>{selectedTag}</strong>
-          <button
-            onClick={() => setSelectedTag(null)}
-            style={{ marginLeft: '8px', cursor: 'pointer' }}
+        <div className={styles.projectFilterGroup}>
+          <label className={styles.projectFilterLabel}>Ordenar:</label>
+          <select
+            className={styles.projectFilterSelect}
+            value={sortBy}
+            onChange={e =>
+              setSortBy(
+                e.target.value as 'newest' | 'oldest' | 'priority' | 'title'
+              )
+            }
           >
-            ✕ Limpiar
-          </button>
+            <option value="newest">📅 Más recientes</option>
+            <option value="oldest">🕰️ Más antiguas</option>
+            <option value="priority">🔥 Por prioridad</option>
+            <option value="title">🔤 Por título</option>
+          </select>
         </div>
-      )}
 
-      <div>
-        Mostrando {filteredCount} de {stats.total} ideas
+        {availableTags.length > 0 && (
+          <div className={styles.projectFilterGroup}>
+            <label className={styles.projectFilterLabel}>
+              Filtrar por etiqueta:
+            </label>
+            <select
+              className={styles.projectFilterSelect}
+              value={selectedTag || 'all'}
+              onChange={e =>
+                setSelectedTag(e.target.value === 'all' ? null : e.target.value)
+              }
+            >
+              <option value="all">Todas las etiquetas</option>
+              {availableTags.map(tag => (
+                <option key={tag} value={tag}>
+                  🏷️ {tag}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {selectedTag && (
+          <div className={styles.projectFilterGroup}>
+            <span>
+              Etiqueta: <strong>{selectedTag}</strong>
+            </span>
+            <button
+              className={styles.projectFilterButton}
+              onClick={() => setSelectedTag(null)}
+            >
+              ✕ Limpiar
+            </button>
+          </div>
+        )}
+
+        <div className={styles.projectFilterCount}>
+          Mostrando {filteredCount} de {stats.total} ideas
+        </div>
       </div>
     </div>
   );

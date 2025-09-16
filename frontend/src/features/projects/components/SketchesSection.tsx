@@ -1,5 +1,6 @@
 import { SketchesGrid } from '../../sketches/components/SketchesGrid';
 import { useProjectDetailContext } from '../../../contexts/useProjectDetailContext';
+import styles from './SketchesSection.module.css';
 
 function SketchesSection() {
   const {
@@ -13,9 +14,9 @@ function SketchesSection() {
     handleOpenSketchModal,
   } = useProjectDetailContext();
   return (
-    <section className="project-sketches">
-      <div className="section-header">
-        <h3>
+    <section className={styles.section}>
+      <div className={styles.header}>
+        <h3 className={styles.title}>
           📐 Quick Sketches ({sketchCount}/{maxSketches})
         </h3>
       </div>
@@ -32,7 +33,7 @@ function SketchesSection() {
       />
 
       {isAtLimit && (
-        <div className="limit-warning">
+        <div className={styles.limitWarning}>
           ⚠️ Has alcanzado el límite de {maxSketches} sketches por proyecto.
           Elimina algunos para crear nuevos.
         </div>

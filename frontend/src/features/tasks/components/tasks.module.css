@@ -1,0 +1,574 @@
+/* Tasks Components Styles */
+
+/* TaskForm Styles */
+.formContainer {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: none;
+}
+
+.formTitle {
+  font-size: 1.25rem;
+  color: #646cff;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 80px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
+}
+
+.textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
+}
+
+.select option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #646cff 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancelButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.cancelButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* TaskFilters Styles */
+.filtersContainer {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(100, 108, 255, 0.15);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtersTitle {
+  font-size: 1.1rem;
+  color: #646cff;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.filtersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filterLabel {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.filterSelect {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
+}
+
+.filterSelect option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.filterInput {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.filterInput:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.1);
+}
+
+.filterInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* TaskList Styles */
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(100, 108, 255, 0.15);
+}
+
+.emptyMessage {
+  font-size: 1.1rem;
+  color: #646cff;
+  margin: 0;
+}
+
+.taskList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.taskItem {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(100, 108, 255, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.taskItem:hover {
+  transform: translateY(-1px);
+  border-color: rgba(100, 108, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.1);
+}
+
+.taskItem.completed {
+  opacity: 0.7;
+  background: rgba(34, 197, 94, 0.05);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.taskCheckbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: #646cff;
+  cursor: pointer;
+}
+
+.taskContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.taskTitle {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.taskTitle.completed {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.taskMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+}
+
+.taskPriority {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.taskPriority.low {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.taskPriority.medium {
+  background: rgba(234, 179, 8, 0.1);
+  color: #eab308;
+  border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.taskPriority.high {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.taskActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.actionButton {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 0.5rem;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.editButton:hover {
+  border-color: #646cff;
+  color: #646cff;
+}
+
+.deleteButton:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+.viewButton:hover {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.taskLink {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Light mode support */
+@media (prefers-color-scheme: light) {
+  .formContainer {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .label {
+    color: #213547;
+  }
+
+  .input,
+  .textarea,
+  .select {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #213547;
+  }
+
+  .input::placeholder,
+  .textarea::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .select option {
+    background: #fff;
+    color: #213547;
+  }
+
+  .cancelButton {
+    background: rgba(0, 0, 0, 0.05);
+    color: #213547;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .cancelButton:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .filtersContainer {
+    background: rgba(0, 0, 0, 0.01);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .filterLabel {
+    color: #213547;
+  }
+
+  .filterSelect,
+  .filterInput {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #213547;
+  }
+
+  .filterSelect option {
+    background: #fff;
+    color: #213547;
+  }
+
+  .filterInput::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .emptyState {
+    color: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.01);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .taskItem {
+    background: rgba(0, 0, 0, 0.01);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .taskItem:hover {
+    border-color: rgba(100, 108, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .taskItem.completed {
+    background: rgba(34, 197, 94, 0.03);
+    border-color: rgba(34, 197, 94, 0.1);
+  }
+
+  .taskTitle {
+    color: #213547;
+  }
+
+  .taskTitle.completed {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  .actionButton {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #213547;
+  }
+
+  .actionButton:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .formContainer {
+    padding: 1rem;
+  }
+
+  .filtersContainer {
+    padding: 1rem;
+  }
+
+  .filtersGrid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .taskItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .taskMeta {
+    flex-wrap: wrap;
+  }
+
+  .taskActions {
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .formContainer,
+  .filtersContainer {
+    padding: 0.75rem;
+  }
+
+  .taskItem {
+    padding: 0.75rem;
+  }
+
+  .submitButton,
+  .cancelButton {
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .actionButton {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+  }
+}

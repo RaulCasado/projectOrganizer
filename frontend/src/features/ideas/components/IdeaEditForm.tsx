@@ -1,4 +1,5 @@
 import type { Idea } from '../../../shared/types/Idea';
+import styles from './ideas.module.css';
 
 interface IdeaEditFormProps {
   editForm: Partial<Idea>;
@@ -14,21 +15,26 @@ function IdeaEditForm({
   onCancel,
 }: IdeaEditFormProps) {
   return (
-    <div>
+    <div className={styles.editForm}>
       <input
         type="text"
+        className={styles.editFormInput}
         value={editForm.title || ''}
         onChange={e => setEditForm({ ...editForm, title: e.target.value })}
+        placeholder="Título de la idea"
       />
       <textarea
+        className={styles.editFormTextarea}
         value={editForm.description || ''}
         onChange={e =>
           setEditForm({ ...editForm, description: e.target.value })
         }
         rows={3}
+        placeholder="Descripción de la idea"
       />
-      <div>
+      <div className={styles.editFormSelectRow}>
         <select
+          className={styles.editFormSelect}
           value={editForm.priority || 'medium'}
           onChange={e =>
             setEditForm({
@@ -42,6 +48,7 @@ function IdeaEditForm({
           <option value="high">🔴 Alta</option>
         </select>
         <select
+          className={styles.editFormSelect}
           value={editForm.category || 'feature'}
           onChange={e =>
             setEditForm({
@@ -57,9 +64,16 @@ function IdeaEditForm({
           <option value="other">📝 Otro</option>
         </select>
       </div>
-      <div>
-        <button onClick={onSave}>Guardar</button>
-        <button onClick={onCancel}>Cancelar</button>
+      <div className={styles.editFormActions}>
+        <button className={styles.formButton} onClick={onCancel}>
+          Cancelar
+        </button>
+        <button
+          className={`${styles.formButton} ${styles.formButtonPrimary}`}
+          onClick={onSave}
+        >
+          Guardar
+        </button>
       </div>
     </div>
   );

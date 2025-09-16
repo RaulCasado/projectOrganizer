@@ -1,9 +1,10 @@
 import { useIdeasWithProjects, IdeasMainViewProvider } from '../../../contexts';
 import { IdeaPanel, IdeasHeader, IdeasStats, IdeasFilters } from './';
+import styles from './ideas.module.css';
 
 function IdeasMainViewContent() {
   return (
-    <div>
+    <div className={styles.container}>
       <IdeasHeader />
       <IdeasStats />
       <IdeasFilters />

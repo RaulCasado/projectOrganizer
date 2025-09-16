@@ -1,3 +1,5 @@
+import styles from './blog.module.css';
+
 interface BlogToolbarProps {
   blogEntriesLength: number;
   isWriting: boolean;
@@ -12,15 +14,24 @@ function BlogToolbar({
   onNewEntry,
 }: BlogToolbarProps) {
   return (
-    <div>
-      <h3>📝 Diario del Proyecto</h3>
+    <div className={styles.toolbar}>
+      <h3 className={styles.toolbarTitle}>📝 Diario del Proyecto</h3>
 
-      <div>
+      <div className={styles.toolbarActions}>
         {blogEntriesLength > 0 && (
-          <button onClick={onExportWeek}>📤 Exportar semana</button>
+          <button className={styles.toolbarButton} onClick={onExportWeek}>
+            📤 Exportar semana
+          </button>
         )}
 
-        {!isWriting && <button onClick={onNewEntry}>➕ Nueva Entrada</button>}
+        {!isWriting && (
+          <button
+            className={`${styles.toolbarButton} ${styles.toolbarButtonPrimary}`}
+            onClick={onNewEntry}
+          >
+            ➕ Nueva Entrada
+          </button>
+        )}
       </div>
     </div>
   );

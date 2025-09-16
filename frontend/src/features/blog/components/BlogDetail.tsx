@@ -1,5 +1,6 @@
 import type { BlogEntry } from '../../../shared';
 import { DateUtils } from '../../../shared';
+import styles from './blog.module.css';
 interface BlogDetailProps {
   entry: BlogEntry;
   onEdit: () => void;
@@ -8,35 +9,44 @@ interface BlogDetailProps {
 
 function BlogDetail({ entry, onEdit, onDelete }: BlogDetailProps) {
   return (
-    <div className="blog-detail">
-      <div className="blog-detail-header">
-        <h2 className="blog-detail-title">{entry.title}</h2>
-        <div className="blog-detail-meta">
-          <span>📅 {DateUtils.formatLong(entry.date)}</span>
+    <div className={styles.blogDetail}>
+      <div className={styles.blogDetailHeader}>
+        <h2 className={styles.blogDetailTitle}>{entry.title}</h2>
+        <div className={styles.blogDetailMeta}>
+          <div className={styles.blogDetailMetaItem}>
+            📅 {DateUtils.formatLong(entry.date)}
+          </div>
           {entry.timeSpent && entry.timeSpent > 0 && (
-            <span>⏱️ {entry.timeSpent} minutos</span>
+            <div className={styles.blogDetailMetaItem}>
+              ⏱️ {entry.timeSpent} minutos
+            </div>
           )}
-          <span>🕒 {DateUtils.formatTime(entry.createdAt)}</span>
+          <div className={styles.blogDetailMetaItem}>
+            🕒 {DateUtils.formatTime(entry.createdAt)}
+          </div>
         </div>
         {entry.tags && entry.tags.length > 0 && (
-          <div className="blog-detail-tags">
+          <div className={styles.blogDetailTags}>
             {entry.tags.map(tag => (
-              <span className="blog-detail-tag" key={tag}>
+              <span className={styles.blogDetailTag} key={tag}>
                 🏷️ {tag}
               </span>
             ))}
           </div>
         )}
-        <div className="blog-detail-actions">
-          <button className="blog-detail-edit" onClick={onEdit}>
+        <div className={styles.blogDetailActions}>
+          <button className={styles.blogDetailButton} onClick={onEdit}>
             ✏️ Editar
           </button>
-          <button className="blog-detail-delete" onClick={onDelete}>
+          <button
+            className={`${styles.blogDetailButton} ${styles.blogDetailButtonDelete}`}
+            onClick={onDelete}
+          >
             🗑️ Eliminar
           </button>
         </div>
       </div>
-      <div className="blog-detail-content">{entry.content}</div>
+      <div className={styles.blogDetailContent}>{entry.content}</div>
     </div>
   );
 }

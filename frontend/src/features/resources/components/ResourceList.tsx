@@ -1,5 +1,6 @@
 import type { Resource } from '../../../shared/types/Project';
 import { DateUtils, useNotification } from '../../../shared';
+import styles from './resources.module.css';
 
 interface ResourceListProps {
   resources: Resource[];
@@ -33,9 +34,9 @@ export function ResourceList({
 
   if (resources.length === 0) {
     return (
-      <div>
-        <h4>📎 Sin recursos aún</h4>
-        <p>
+      <div className={styles.emptyState}>
+        <h4 className={styles.emptyTitle}>📎 Sin recursos aún</h4>
+        <p className={styles.emptyDescription}>
           Añade enlaces útiles, documentación o tutoriales para este proyecto
         </p>
       </div>
@@ -43,16 +44,17 @@ export function ResourceList({
   }
 
   return (
-    <div>
+    <div className={styles.listContainer}>
       {resources.map(resource => (
-        <div key={resource.id}>
-          <div>
-            <div>
-              <h4>
+        <div key={resource.id} className={styles.resourceCard}>
+          <div className={styles.resourceContent}>
+            <div className={styles.resourceInfo}>
+              <h4 className={styles.resourceTitle}>
                 {getCategoryIcon(resource.category)} {resource.title}
               </h4>
-              <div>
+              <div className={styles.resourceUrl}>
                 <a
+                  className={styles.resourceLink}
                   href={resource.url}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -60,17 +62,25 @@ export function ResourceList({
                   🔗 {resource.url}
                 </a>
               </div>
-              {resource.description && <p>{resource.description}</p>}
-              <div>Añadido: {DateUtils.formatShort(resource.createdAt)}</div>
+              {resource.description && (
+                <p className={styles.resourceDescription}>
+                  {resource.description}
+                </p>
+              )}
+              <div className={styles.resourceDate}>
+                Añadido: {DateUtils.formatShort(resource.createdAt)}
+              </div>
             </div>
-            <div>
+            <div className={styles.resourceActions}>
               <button
+                className={`${styles.actionButton} ${styles.editButton}`}
                 onClick={() => onEditResource(resource)}
                 title="Editar recurso"
               >
                 ✏️
               </button>
               <button
+                className={`${styles.actionButton} ${styles.deleteButton}`}
                 onClick={() => handleDeleteResource(resource)}
                 title="Eliminar recurso"
               >

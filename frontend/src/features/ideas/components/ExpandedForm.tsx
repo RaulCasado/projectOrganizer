@@ -1,5 +1,6 @@
 import type { IdeaFormData } from '../../../shared/types/Idea';
 import { TagInput, useForm } from '../../../shared';
+import styles from './ideas.module.css';
 interface ExpandedFormProps {
   title: string;
   onSubmit: (formData: IdeaFormData) => void;
@@ -38,15 +39,17 @@ function ExpandedForm({ title, onSubmit, onCancel }: ExpandedFormProps) {
 
   return (
     <form
+      className={styles.expandedForm}
       onSubmit={e => {
         e.preventDefault();
         handleSubmit(() => onSubmit({ title, ...values }));
       }}
     >
-      <div>
-        <div>
-          <label>Prioridad:</label>
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Prioridad:</label>
           <select
+            className={styles.formSelect}
             value={values.priority}
             onChange={e => setFieldValue('priority', e.target.value as any)}
           >
@@ -56,9 +59,10 @@ function ExpandedForm({ title, onSubmit, onCancel }: ExpandedFormProps) {
           </select>
         </div>
 
-        <div>
-          <label>Categoría:</label>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Categoría:</label>
           <select
+            className={styles.formSelect}
             value={values.category}
             onChange={e => setFieldValue('category', e.target.value as any)}
           >
@@ -71,9 +75,10 @@ function ExpandedForm({ title, onSubmit, onCancel }: ExpandedFormProps) {
         </div>
       </div>
 
-      <div>
-        <label>Descripción:</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Descripción:</label>
         <textarea
+          className={styles.formTextarea}
           value={values.description}
           onChange={e => setFieldValue('description', e.target.value)}
           placeholder="Describe tu idea con más detalle..."
@@ -81,24 +86,28 @@ function ExpandedForm({ title, onSubmit, onCancel }: ExpandedFormProps) {
         />
       </div>
 
-      <div>
-        <label>Tags (separados por comas):</label>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Tags (separados por comas):</label>
         <TagInput
           value={tagsArray}
           onChange={handleTagsChange}
           placeholder="Tags"
         />
       </div>
-      <div>
-        {errors.description && (
-          <span className="error">{errors.description}</span>
-        )}
-      </div>
-      <div>
-        <button type="button" onClick={onCancel}>
+
+      {errors.description && (
+        <div className={styles.formError}>{errors.description}</div>
+      )}
+
+      <div className={styles.formActions}>
+        <button type="button" className={styles.formButton} onClick={onCancel}>
           Cancelar
         </button>
-        <button type="submit" disabled={isSubmitting}>
+        <button
+          type="submit"
+          className={`${styles.formButton} ${styles.formButtonPrimary}`}
+          disabled={isSubmitting}
+        >
           {isSubmitting ? 'Creando...' : 'Crear Idea'}
         </button>
       </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNotification, TagInput, DateUtils } from '../../../shared';
 import type { BlogEntry } from '../../../shared';
+import styles from './blog.module.css';
 
 interface BlogFormProps {
   onSave: (entry: Omit<BlogEntry, 'id' | 'createdAt'>) => void;
@@ -71,57 +72,77 @@ function BlogForm({ onSave, onCancel, editingEntry }: BlogFormProps) {
   };
 
   return (
-    <div>
-      <h4>
+    <div className={styles.form}>
+      <h4 className={styles.formTitle}>
         {isEditing ? 'Editar' : 'Nueva'} entrada -{' '}
         {DateUtils.formatShort(DateUtils.timestampNow())}
       </h4>
-      <div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Título</label>
         <input
           type="text"
+          className={styles.formInput}
           placeholder="Título de la entrada"
           value={formData.title}
           onChange={e => setFormData({ ...formData, title: e.target.value })}
         />
       </div>
-      <div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Fecha</label>
         <input
           type="date"
+          className={styles.formInput}
           value={formData.date}
           onChange={e => setFormData({ ...formData, date: e.target.value })}
         />
       </div>
-      <div>
+
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>Contenido</label>
         <textarea
+          className={styles.formTextarea}
           placeholder="Contenido (soporta Markdown)"
           value={formData.content}
           onChange={e => setFormData({ ...formData, content: e.target.value })}
         />
       </div>
 
-      <div>
-        <input
-          type="number"
-          placeholder="Tiempo invertido (minutos)"
-          value={formData.timeSpent}
-          onChange={e =>
-            setFormData({ ...formData, timeSpent: Number(e.target.value) })
-          }
-        />
+      <div className={styles.formRow}>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Tiempo invertido (minutos)</label>
+          <input
+            type="number"
+            className={styles.formInput}
+            placeholder="Tiempo invertido (minutos)"
+            value={formData.timeSpent}
+            onChange={e =>
+              setFormData({ ...formData, timeSpent: Number(e.target.value) })
+            }
+          />
+        </div>
 
-        <TagInput
-          value={formData.tags}
-          onChange={tags => setFormData({ ...formData, tags })}
-          placeholder="Tags: bug-fix, feature, learning"
-        />
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Tags</label>
+          <TagInput
+            value={formData.tags}
+            onChange={tags => setFormData({ ...formData, tags })}
+            placeholder="Tags: bug-fix, feature, learning"
+          />
+        </div>
       </div>
 
-      <div>
-        <button onClick={handleSave}>
+      <div className={styles.formActions}>
+        <button className={styles.formButton} onClick={onCancel}>
+          Cancelar
+        </button>
+        <button
+          className={`${styles.formButton} ${styles.formButtonPrimary}`}
+          onClick={handleSave}
+        >
           {isEditing ? 'Actualizar entrada' : 'Guardar entrada'}
         </button>
-
-        <button onClick={onCancel}>Cancelar</button>
       </div>
     </div>
   );

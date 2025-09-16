@@ -1,5 +1,6 @@
 import type { BlogEntry } from '../../../shared';
 import { DateUtils } from '../../../shared';
+import styles from './blog.module.css';
 
 interface BlogListProps {
   entries: BlogEntry[];
@@ -16,9 +17,10 @@ function BlogList({
 }: BlogListProps) {
   if (entries.length === 0) {
     return (
-      <div>
-        <h4>Aún no hay entradas</h4>
-        <p>
+      <div className={styles.emptyState}>
+        <div className={styles.emptyIcon}>📝</div>
+        <h4 className={styles.emptyTitle}>Aún no hay entradas</h4>
+        <p className={styles.emptyMessage}>
           Empieza a documentar tu progreso diario. Es muy útil para reflexionar
           sobre tu trabajo.
         </p>
@@ -28,24 +30,33 @@ function BlogList({
   const sortedEntries = DateUtils.sortByDate(entries, 'createdAt', 'desc');
 
   return (
-    <div>
+    <div className={styles.blogList}>
       {sortedEntries.map(entry => (
-        <div key={entry.id}>
-          <div>
-            <h4>{entry.title}</h4>
-            <div>
+        <div key={entry.id} className={styles.blogEntry}>
+          <div className={styles.blogEntryHeader}>
+            <h4 className={styles.blogEntryTitle}>{entry.title}</h4>
+            <div className={styles.blogEntryActions}>
               {onViewEntry && (
-                <button onClick={() => onViewEntry(entry)} title="Ver completo">
+                <button
+                  className={styles.blogEntryButton}
+                  onClick={() => onViewEntry(entry)}
+                  title="Ver completo"
+                >
                   Ver
                 </button>
               )}
               {onEditEntry && (
-                <button onClick={() => onEditEntry(entry)} title="Editar">
+                <button
+                  className={styles.blogEntryButton}
+                  onClick={() => onEditEntry(entry)}
+                  title="Editar"
+                >
                   Editar
                 </button>
               )}
               {onDeleteEntry && (
                 <button
+                  className={`${styles.blogEntryButton} ${styles.blogEntryButtonDelete}`}
                   onClick={() => onDeleteEntry(entry.id)}
                   title="Eliminar"
                 >
@@ -54,22 +65,35 @@ function BlogList({
               )}
             </div>
           </div>
-          <div>
-            Fecha: {DateUtils.formatShort(entry.date)}
-            {entry.timeSpent &&
-              entry.timeSpent > 0 &&
-              ` | Tiempo invertido: ${entry.timeSpent} min`}
-            {entry.tags &&
-              entry.tags.length > 0 &&
-              ` | Etiquetas: ${entry.tags.join(', ')}`}
+
+          <div className={styles.blogEntryMeta}>
+            <div className={styles.blogEntryMetaItem}>
+              📅 {DateUtils.formatShort(entry.date)}
+            </div>
+            {entry.timeSpent && entry.timeSpent > 0 && (
+              <div className={styles.blogEntryMetaItem}>
+                ⏱️ {entry.timeSpent} min
+              </div>
+            )}
+            {entry.tags && entry.tags.length > 0 && (
+              <div className={styles.blogEntryMetaItem}>
+                🏷️ {entry.tags.join(', ')}
+              </div>
+            )}
           </div>
-          <div>
+
+          <div className={styles.blogEntryContent}>
             {entry.content.substring(0, 200)}
             {entry.content.length > 200 && '...'}
+            {entry.content.length > 200 && onViewEntry && (
+              <button
+                className={styles.blogEntryReadMore}
+                onClick={() => onViewEntry(entry)}
+              >
+                Ver completo...
+              </button>
+            )}
           </div>
-          {entry.content.length > 200 && onViewEntry && (
-            <button onClick={() => onViewEntry(entry)}>Ver completo...</button>
-          )}
         </div>
       ))}
     </div>

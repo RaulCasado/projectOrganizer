@@ -1,3 +1,5 @@
+import styles from './ideas.module.css';
+
 interface QuickInputProps {
   title: string;
   setTitle: (title: string) => void;
@@ -14,9 +16,10 @@ function QuickInput({
   onToggleExpanded,
 }: QuickInputProps) {
   return (
-    <div>
+    <div className={styles.quickInputContainer}>
       <input
         type="text"
+        className={styles.quickInputField}
         placeholder="💡 Captura rápida de idea..."
         value={title}
         onChange={e => setTitle(e.target.value)}
@@ -26,10 +29,21 @@ function QuickInput({
           }
         }}
       />
-      <button type="button" onClick={onQuickAdd} disabled={!title.trim()}>
+      <button
+        type="button"
+        className={styles.quickInputButton}
+        onClick={onQuickAdd}
+        disabled={!title.trim()}
+        title="Añadir idea rápida"
+      >
         ➕
       </button>
-      <button type="button" onClick={onToggleExpanded}>
+      <button
+        type="button"
+        className={styles.quickInputButton}
+        onClick={onToggleExpanded}
+        title={isExpanded ? 'Formulario simple' : 'Formulario completo'}
+      >
         {isExpanded ? '📝' : '⚙️'}
       </button>
     </div>

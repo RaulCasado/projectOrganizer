@@ -1,6 +1,7 @@
 import { QuickInput, ExpandedForm } from './';
 import { useQuickIdeaCapture } from '../hooks/useQuickIdeaCapture';
 import type { Idea } from '../../../shared/types/Idea';
+import styles from './ideas.module.css';
 
 interface QuickIdeaCaptureProps {
   onAddIdea: (idea: Omit<Idea, 'id' | 'createdAt' | 'projectId'>) => void;
@@ -17,7 +18,7 @@ function QuickIdeaCapture({ onAddIdea }: QuickIdeaCaptureProps) {
   } = useQuickIdeaCapture({ onAddIdea });
 
   return (
-    <div>
+    <div className={styles.quickCaptureContainer}>
       <QuickInput
         title={title}
         setTitle={setTitle}

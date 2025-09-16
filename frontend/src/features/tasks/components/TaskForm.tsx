@@ -1,5 +1,6 @@
 import { useProjectDetailContext } from '../../../contexts';
 import type { TaskFormData } from '../../../shared';
+import styles from './tasks.module.css';
 
 interface TaskFormProps {
   onCancel?: () => void;
@@ -47,18 +48,24 @@ export function TaskForm({ onCancel }: TaskFormProps) {
   };
 
   return (
-    <div>
-      <h3>{isEditing ? 'Editar Tarea' : 'Añadir Nueva Tarea'}</h3>
+    <div className={styles.formContainer}>
+      <h3 className={styles.formTitle}>
+        {isEditing ? 'Editar Tarea' : 'Añadir Nueva Tarea'}
+      </h3>
 
       <form
+        className={styles.form}
         onSubmit={e => {
           e.preventDefault();
           taskForm.handleSubmit(onSubmitHandler);
         }}
       >
-        <div>
-          <label htmlFor="task-title">Título de la tarea *</label>
+        <div className={styles.fieldGroup}>
+          <label className={styles.label} htmlFor="task-title">
+            Título de la tarea *
+          </label>
           <input
+            className={styles.input}
             id="task-title"
             type="text"
             placeholder="Ej: Implementar login, Revisar diseño..."
@@ -67,13 +74,16 @@ export function TaskForm({ onCancel }: TaskFormProps) {
             disabled={taskForm.isSubmitting}
           />
           {taskForm.errors.title && (
-            <span className="error">{taskForm.errors.title}</span>
+            <span className={styles.error}>{taskForm.errors.title}</span>
           )}
         </div>
 
-        <div>
-          <label htmlFor="task-priority">Prioridad</label>
+        <div className={styles.fieldGroup}>
+          <label className={styles.label} htmlFor="task-priority">
+            Prioridad
+          </label>
           <select
+            className={styles.select}
             id="task-priority"
             value={taskForm.values.priority}
             onChange={e =>
@@ -92,9 +102,12 @@ export function TaskForm({ onCancel }: TaskFormProps) {
           </select>
         </div>
 
-        <div>
-          <label htmlFor="task-description">Descripción (opcional)</label>
+        <div className={styles.fieldGroup}>
+          <label className={styles.label} htmlFor="task-description">
+            Descripción (opcional)
+          </label>
           <textarea
+            className={styles.textarea}
             id="task-description"
             placeholder="Detalles adicionales sobre la tarea..."
             value={taskForm.values.description}
@@ -105,12 +118,13 @@ export function TaskForm({ onCancel }: TaskFormProps) {
             disabled={taskForm.isSubmitting}
           />
           {taskForm.errors.description && (
-            <span className="error">{taskForm.errors.description}</span>
+            <span className={styles.error}>{taskForm.errors.description}</span>
           )}
         </div>
 
-        <div>
+        <div className={styles.buttonGroup}>
           <button
+            className={styles.submitButton}
             type="submit"
             disabled={taskForm.isSubmitting || !taskForm.values.title.trim()}
           >
@@ -125,6 +139,7 @@ export function TaskForm({ onCancel }: TaskFormProps) {
 
           {isEditing && (
             <button
+              className={styles.cancelButton}
               type="button"
               onClick={handleCancel}
               disabled={taskForm.isSubmitting}

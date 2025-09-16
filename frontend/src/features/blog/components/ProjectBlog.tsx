@@ -1,6 +1,7 @@
 import type { BlogEntry } from '../../../shared';
 import { useProjectBlog } from '../hooks';
 import { BlogForm, BlogList, BlogToolbar, BlogModal } from './';
+import styles from './blog.module.css';
 
 interface ProjectBlogProps {
   blogEntries?: BlogEntry[];
@@ -28,7 +29,7 @@ function ProjectBlog({
   } = useProjectBlog({ blogEntries, onUpdateBlogEntries, project });
 
   return (
-    <div>
+    <div className={styles.container}>
       <BlogToolbar
         blogEntriesLength={blogEntries.length}
         isWriting={isWriting}

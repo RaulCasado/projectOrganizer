@@ -1,6 +1,7 @@
 import type { Idea } from '../../../shared';
 import { EmptyIdeas, IdeaItem, IdeaEditForm } from './';
 import { useIdeaList } from '../hooks/useIdeaList';
+import styles from './ideas.module.css';
 
 interface IdeaListProps {
   ideas: Idea[];
@@ -38,9 +39,9 @@ function IdeaList({
   }
 
   return (
-    <div>
+    <div className={styles.ideaList}>
       {ideas.map(idea => (
-        <div key={idea.id}>
+        <div key={idea.id} className={styles.ideaItemWrapper}>
           {editingIdea === idea.id ? (
             <IdeaEditForm
               editForm={editForm}

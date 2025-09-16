@@ -5,6 +5,7 @@ import {
   useIdeasMainViewContext,
 } from '../../../contexts';
 import { useProjectIdeasFilters } from '../hooks/useProjectIdeasFilters';
+import styles from './ideas.module.css';
 
 interface IdeaPanelProps {
   projectId?: string;
@@ -54,31 +55,43 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
 
   return (
     <div>
-      <div>
+      <div className={styles.ideaPanelHeader}>
         <div>
-          <h3>{projectId ? '💡 Ideas del Proyecto' : '🧠 Lluvia de Ideas'}</h3>
-          <p>
+          <h3 className={styles.ideaPanelTitle}>
+            {projectId ? '💡 Ideas del Proyecto' : '🧠 Lluvia de Ideas'}
+          </h3>
+          <p className={styles.ideaPanelSubtitle}>
             {projectId
               ? 'Ideas específicas para este proyecto'
               : 'Captura y organiza todas tus ideas'}
           </p>
         </div>
 
-        <div>
-          <div>
-            {filters.stats.inbox > 0 && <span>📥 {filters.stats.inbox}</span>}
+        <div className={styles.ideaPanelStats}>
+          <div className={styles.ideaPanelStatsRow}>
+            {filters.stats.inbox > 0 && (
+              <span className={styles.ideaPanelStatsItem}>
+                📥 {filters.stats.inbox}
+              </span>
+            )}
             {filters.stats.processing > 0 && (
-              <span>⚙️ {filters.stats.processing}</span>
+              <span className={styles.ideaPanelStatsItem}>
+                ⚙️ {filters.stats.processing}
+              </span>
             )}
             {filters.stats.promoted > 0 && (
-              <span>🚀 {filters.stats.promoted}</span>
+              <span className={styles.ideaPanelStatsItem}>
+                🚀 {filters.stats.promoted}
+              </span>
             )}
             {filters.stats.archived > 0 && (
-              <span>📦 {filters.stats.archived}</span>
+              <span className={styles.ideaPanelStatsItem}>
+                📦 {filters.stats.archived}
+              </span>
             )}
           </div>
 
-          <span>{filters.stats.total}</span>
+          <span className={styles.ideaPanelTotal}>{filters.stats.total}</span>
         </div>
       </div>
 
@@ -106,7 +119,7 @@ function IdeaPanel({ projectId, ideas: ideasProp }: IdeaPanelProps) {
       />
 
       {filters.sortedIdeas.length > 0 && (
-        <div>
+        <div className={styles.ideaPanelTip}>
           {projectId ? (
             <p>
               💡 <strong>Tip:</strong> Estas ideas te ayudarán a refinar y

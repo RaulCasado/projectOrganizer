@@ -29,10 +29,8 @@
 }
 
 .button {
-  background: linear-gradient(135deg, #646cff, #535bf2);
-  color: white;
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   font-size: 0.9rem;
   cursor: pointer;
@@ -40,11 +38,28 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-weight: 500;
 }
 
-.button:hover {
+.primaryButton {
+  background: linear-gradient(135deg, #646cff, #535bf2);
+  color: white;
+}
+
+.primaryButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(100, 108, 255, 0.3);
+}
+
+.secondaryButton {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .editingContainer {
@@ -79,10 +94,44 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.buttonGroup {
+.actions {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+}
+
+.editForm {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.editForm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(100, 108, 255, 0.15);
+  border-color: rgba(100, 108, 255, 0.3);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #888;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.emptyMessage {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-style: italic;
 }
 
 .saveButton {

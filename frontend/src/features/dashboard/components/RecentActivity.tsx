@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { DateUtils } from '../../../shared';
+import styles from './RecentActivity.module.css';
 
 interface RecentActivityProps {
   recentActivity: Array<{
@@ -15,23 +16,26 @@ interface RecentActivityProps {
 
 function RecentActivity({ recentActivity }: RecentActivityProps) {
   return (
-    <div>
-      <h3>📝 Actividad reciente</h3>
+    <div className={styles.container}>
+      <h3 className={styles.title}>📝 Actividad reciente</h3>
       {recentActivity.length === 0 ? (
-        <p>No hay actividad reciente</p>
+        <p className={styles.emptyState}>No hay actividad reciente</p>
       ) : (
         recentActivity.map(entry => (
-          <div key={entry.id}>
-            <div>
-              <Link to={`/project/${entry.projectId}`}>
+          <div key={entry.id} className={styles.activityItem}>
+            <div className={styles.projectSection}>
+              <Link
+                to={`/project/${entry.projectId}`}
+                className={styles.projectLink}
+              >
                 {entry.projectName}
               </Link>
             </div>
-            <div>"{entry.title}"</div>
-            <div>
+            <div className={styles.activityTitle}>"{entry.title}"</div>
+            <div className={styles.activityMeta}>
               {DateUtils.formatShort(entry.date || entry.createdAt)}
               {entry.timeSpent && entry.timeSpent > 0 && (
-                <span> • {entry.timeSpent} min</span>
+                <span className={styles.timeSpent}>{entry.timeSpent} min</span>
               )}
             </div>
           </div>

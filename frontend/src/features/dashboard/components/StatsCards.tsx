@@ -1,3 +1,5 @@
+import styles from './StatsCards.module.css';
+
 interface StatsCardsProps {
   stats: {
     totalProjects: number;
@@ -11,36 +13,44 @@ interface StatsCardsProps {
 }
 
 function StatsCards({ stats }: StatsCardsProps) {
+  const completionPercentage =
+    stats.totalTasks > 0
+      ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
+      : 0;
+
   return (
-    <div>
-      <div>
-        <h3>📂 Proyectos</h3>
-        <div>{stats.totalProjects}</div>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h3 className={styles.cardTitle}>📂 Proyectos</h3>
+        <div className={styles.cardValue}>{stats.totalProjects}</div>
       </div>
 
-      <div>
-        <h3>✅ Tareas</h3>
-        <div>
+      <div className={`${styles.card} ${styles.progressCard}`}>
+        <h3 className={styles.cardTitle}>✅ Tareas</h3>
+        <div className={styles.cardValue}>
           {stats.completedTasks}/{stats.totalTasks}
         </div>
-        <div>
-          {stats.totalTasks > 0
-            ? Math.round((stats.completedTasks / stats.totalTasks) * 100)
-            : 0}
-          % completado
+        <div className={styles.progressBar}>
+          <div
+            className={styles.progressFill}
+            style={{ width: `${completionPercentage}%` }}
+          />
+        </div>
+        <div className={styles.cardSubtext}>
+          {completionPercentage}% completado
         </div>
       </div>
 
-      <div>
-        <h3>📝 Blog</h3>
-        <div>{stats.totalBlogEntries}</div>
-        <div>entradas</div>
+      <div className={styles.card}>
+        <h3 className={styles.cardTitle}>📝 Blog</h3>
+        <div className={styles.cardValue}>{stats.totalBlogEntries}</div>
+        <div className={styles.cardSubtext}>entradas</div>
       </div>
 
-      <div>
-        <h3>⏱️ Tiempo</h3>
-        <div>{stats.totalHours}h</div>
-        <div>{stats.totalMinutes} minutos</div>
+      <div className={styles.card}>
+        <h3 className={styles.cardTitle}>⏱️ Tiempo</h3>
+        <div className={styles.cardValue}>{stats.totalHours}h</div>
+        <div className={styles.cardSubtext}>{stats.totalMinutes} minutos</div>
       </div>
     </div>
   );

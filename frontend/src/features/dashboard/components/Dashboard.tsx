@@ -8,6 +8,7 @@ import {
   RecentActivity,
   QuickActions,
 } from './';
+import styles from './Dashboard.module.css';
 
 function Dashboard() {
   const { projects } = useProjects();
@@ -21,18 +22,18 @@ function Dashboard() {
   } = useDashboardLogic({ projects });
 
   return (
-    <div>
-      <h1>📊 Dashboard General</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>📊 Dashboard General</h1>
 
       <StatsCards stats={stats} />
 
-      <div>
-        <div>
+      <div className={styles.grid}>
+        <div className={styles.gridItem}>
           <ActiveProjects activeProjects={activeProjects} />
           <PopularTags popularTags={popularTags} />
         </div>
 
-        <div>
+        <div className={styles.gridItem}>
           <AbandonedProjects abandonedProjects={abandonedProjects} />
           <RecentActivity recentActivity={recentActivity} />
         </div>

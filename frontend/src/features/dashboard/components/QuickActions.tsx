@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Project } from '../../../shared/types';
+import styles from './QuickActions.module.css';
 
 interface QuickActionsProps {
   projectsWithoutMVP: Project[];
@@ -11,16 +12,28 @@ function QuickActions({
   totalResources,
 }: QuickActionsProps) {
   return (
-    <div>
-      <h3>🚀 Acciones rápidas</h3>
-      <div>
-        <Link to="/">➕ Nuevo Proyecto</Link>
+    <div className={styles.container}>
+      <h3 className={styles.title}>🚀 Acciones rápidas</h3>
+      <div className={styles.actionsContainer}>
+        <div className={styles.actionItem}>
+          <Link to="/" className={styles.actionLink}>
+            ➕ Nuevo Proyecto
+          </Link>
+        </div>
 
         {projectsWithoutMVP.length > 0 && (
-          <span>🎯 {projectsWithoutMVP.length} proyectos sin MVP</span>
+          <div className={`${styles.actionItem} ${styles.warning}`}>
+            <span className={styles.actionText}>
+              🎯 {projectsWithoutMVP.length} proyectos sin MVP
+            </span>
+          </div>
         )}
 
-        <span>📊 {totalResources} recursos guardados</span>
+        <div className={`${styles.actionItem} ${styles.info}`}>
+          <span className={styles.actionText}>
+            📊 {totalResources} recursos guardados
+          </span>
+        </div>
       </div>
     </div>
   );

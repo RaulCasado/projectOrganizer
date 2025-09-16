@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Project } from '../../../shared/types';
 import { DateUtils } from '../../../shared';
+import styles from './ActiveProjects.module.css';
 
 interface ActiveProjectsProps {
   activeProjects: Project[];
@@ -8,15 +9,19 @@ interface ActiveProjectsProps {
 
 function ActiveProjects({ activeProjects }: ActiveProjectsProps) {
   return (
-    <div>
-      <h3>🔥 Proyectos más activos</h3>
+    <div className={styles.container}>
+      <h3 className={styles.title}>🔥 Proyectos más activos</h3>
       {activeProjects.length === 0 ? (
-        <p>No hay actividad reciente</p>
+        <p className={styles.emptyState}>No hay actividad reciente</p>
       ) : (
         activeProjects.map(project => (
-          <div key={project.id}>
-            <Link to={`/project/${project.id}`}>📂 {project.name}</Link>
-            <span>{DateUtils.getRelativeLabel(project.lastActivityDate!)}</span>
+          <div key={project.id} className={styles.projectItem}>
+            <Link to={`/project/${project.id}`} className={styles.projectLink}>
+              📂 {project.name}
+            </Link>
+            <span className={styles.timestamp}>
+              {DateUtils.getRelativeLabel(project.lastActivityDate!)}
+            </span>
           </div>
         ))
       )}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Project } from '../../../shared/types';
 import { DateUtils } from '../../../shared';
+import styles from './AbandonedProjects.module.css';
 
 interface AbandonedProjectsProps {
   abandonedProjects: Project[];
@@ -10,15 +11,20 @@ function AbandonedProjects({ abandonedProjects }: AbandonedProjectsProps) {
   if (abandonedProjects.length === 0) return null;
 
   return (
-    <div>
-      <h3>⚠️ Proyectos que necesitan atención</h3>
+    <div className={styles.container}>
+      <h3 className={styles.title}>⚠️ Proyectos que necesitan atención</h3>
       {abandonedProjects.map(project => (
-        <div key={project.id}>
-          <div>
-            <Link to={`/project/${project.id}`}>💔 {project.name}</Link>
-            <div>
+        <div key={project.id} className={styles.projectItem}>
+          <div className={styles.projectContent}>
+            <Link to={`/project/${project.id}`} className={styles.projectLink}>
+              💔 {project.name}
+            </Link>
+            <div className={styles.warningText}>
               Sin actividad hace{' '}
-              {DateUtils.daysSince(project.lastActivityDate!)} días
+              <span className={styles.daysCount}>
+                {DateUtils.daysSince(project.lastActivityDate!)}
+              </span>{' '}
+              días
             </div>
           </div>
         </div>

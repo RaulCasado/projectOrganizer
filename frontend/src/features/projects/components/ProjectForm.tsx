@@ -61,7 +61,7 @@ function ProjectForm() {
         <TagInput
           value={values.requirements}
           onChange={tags => setFieldValue('requirements', tags)}
-          placeholder="Pagos..."
+          placeholder="Pagos, login con Google..."
           disabled={isSubmitting}
         />
       </div>

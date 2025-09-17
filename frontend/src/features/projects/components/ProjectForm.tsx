@@ -31,14 +31,14 @@ function ProjectForm() {
           htmlFor="project-name"
           className={`${styles.label} ${styles.required}`}
         >
-          Project Name
+          Nombre del Proyecto
         </label>
         <input
           id="project-name"
           type="text"
           className={styles.input}
           value={values.name}
-          placeholder="Project Name"
+          placeholder="Nombre del proyecto"
           onChange={e => setFieldValue('name', e.target.value)}
           disabled={isSubmitting}
           required
@@ -57,17 +57,17 @@ function ProjectForm() {
       </div>
 
       <div className={styles.fieldGroup}>
-        <label className={styles.label}>Requirements</label>
+        <label className={styles.label}>Requisitos</label>
         <TagInput
           value={values.requirements}
           onChange={tags => setFieldValue('requirements', tags)}
-          placeholder="User authentication, Payment system..."
+          placeholder="Pagos..."
           disabled={isSubmitting}
         />
       </div>
 
       <div className={styles.fieldGroup}>
-        <label className={styles.label}>Dependencies</label>
+        <label className={styles.label}>Dependencias</label>
         <TagInput
           value={values.dependencies}
           onChange={tags => setFieldValue('dependencies', tags)}

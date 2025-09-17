@@ -1,4 +1,5 @@
 import type { QuickSketch } from '../../../shared/types/QuickSketch';
+import styles from './SketchesGrid.module.css';
 
 interface SketchesGridProps {
   sketches: QuickSketch[];
@@ -23,39 +24,70 @@ export function SketchesGrid({
   onDeleteSketch,
   onOpenSketchModal,
 }: SketchesGridProps) {
-  if (loading) return <div>Cargando sketches...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading)
+    return <div className={styles.loading}>Cargando sketches...</div>;
+  if (error) return <div className={styles.error}>Error: {error}</div>;
 
   return (
-    <div>
-      <div>
-        <button onClick={onOpenSketchModal} disabled={isAtLimit}>
-          Añadir Sketch
+    <div className={styles.sketchesContainer}>
+      <div className={styles.sketchesHeader}>
+        <button
+          className={`${styles.addSketchBtn} ${isAtLimit ? styles.disabled : ''}`}
+          onClick={onOpenSketchModal}
+          disabled={isAtLimit}
+        >
+          + Añadir Sketch
         </button>
-        <span>
+        <span className={styles.sketchCount}>
           {sketchCount} / {maxSketches}
         </span>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
-        {sketches.map(sketch => (
-          <div
-            key={sketch.id}
-            style={{ border: '1px solid #ccc', padding: '8px' }}
-          >
-            <img
-              src={sketch.imageData}
-              alt={sketch.name || 'Sketch'}
-              style={{ width: 100, height: 100, objectFit: 'cover' }}
-            />
-            <div>
-              <button onClick={() => onEditSketch(sketch)}>Editar</button>
-              <button onClick={() => onDeleteSketch(sketch.id)}>
-                Eliminar
-              </button>
+
+      {sketches.length === 0 ? (
+        <div className={styles.emptyState}>
+          <p>No hay sketches aún. ¡Crea el primero!</p>
+        </div>
+      ) : (
+        <div className={styles.sketchesGrid}>
+          {sketches.map(sketch => (
+            <div key={sketch.id} className={styles.sketchCard}>
+              <div className={styles.sketchImageContainer}>
+                <img
+                  src={sketch.imageData}
+                  alt={sketch.name || 'Sketch'}
+                  className={styles.sketchImage}
+                />
+              </div>
+              <div className={styles.sketchInfo}>
+                <h4 className={styles.sketchTitle}>
+                  {sketch.name || 'Sin título'}
+                </h4>
+                {sketch.description && (
+                  <p className={styles.sketchDescription}>
+                    {sketch.description}
+                  </p>
+                )}
+                <div className={styles.sketchActions}>
+                  <button
+                    className={styles.editBtn}
+                    onClick={() => onEditSketch(sketch)}
+                    title="Editar sketch"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => onDeleteSketch(sketch.id)}
+                    title="Eliminar sketch"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

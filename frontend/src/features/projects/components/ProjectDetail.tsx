@@ -21,8 +21,13 @@ interface ProjectDetailProps {
 }
 
 function ProjectDetailContent() {
-  const { project, showSketchModal, handleCloseSketchModal, editingSketch } =
-    useProjectDetailContext();
+  const {
+    project,
+    showSketchModal,
+    handleCloseSketchModal,
+    editingSketch,
+    refreshSketches,
+  } = useProjectDetailContext();
 
   const { activeTab, setActiveTab, tabs, getActiveTabComponent } =
     useProjectTabs();
@@ -72,6 +77,7 @@ function ProjectDetailContent() {
               }
             : undefined
         }
+        onSketchSaved={refreshSketches}
       />
     </div>
   );

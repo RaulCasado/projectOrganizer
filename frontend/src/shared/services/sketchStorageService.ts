@@ -16,25 +16,35 @@ class SketchStorageService {
       | 'updatedAt'
       | 'lastAccessed'
       | 'metadata'
-    >
+    >,
+    existingSketchId?: string
   ): QuickSketch | null {
     try {
-      if (metadata.projectId) {
-        const projectSketches = this.getSketchesByProject(metadata.projectId);
-        if (projectSketches.length >= this.config.maxSketchesPerProject) {
+      // If updating an existing sketch, get it first
+      let existingSketch: QuickSketch | null = null;
+      if (existingSketchId) {
+        existingSketch = this.getSketch(existingSketchId);
+      }
+
+      // Only check limits for new sketches, not updates
+      if (!existingSketch) {
+        if (metadata.projectId) {
+          const projectSketches = this.getSketchesByProject(metadata.projectId);
+          if (projectSketches.length >= this.config.maxSketchesPerProject) {
+            throw new Error(
+              `Máximo ${this.config.maxSketchesPerProject} sketches por proyecto`
+            );
+          }
+        }
+        const freeSketches = this.getFreeSketches();
+        if (
+          !metadata.projectId &&
+          freeSketches.length >= this.config.maxFreeSketches
+        ) {
           throw new Error(
-            `Máximo ${this.config.maxSketchesPerProject} sketches por proyecto`
+            `Máximo ${this.config.maxFreeSketches} sketches libres permitidos`
           );
         }
-      }
-      const freeSketches = this.getFreeSketches();
-      if (
-        !metadata.projectId &&
-        freeSketches.length >= this.config.maxFreeSketches
-      ) {
-        throw new Error(
-          `Máximo ${this.config.maxFreeSketches} sketches libres permitidos`
-        );
       }
 
       const imageData = canvas.toDataURL(
@@ -45,9 +55,9 @@ class SketchStorageService {
 
       const now = DateUtils.timestampNow();
       const sketch: QuickSketch = {
-        id: crypto.randomUUID(),
+        id: existingSketch?.id || crypto.randomUUID(),
         imageData,
-        createdAt: now,
+        createdAt: existingSketch?.createdAt || now,
         updatedAt: now,
         lastAccessed: now,
         metadata: {

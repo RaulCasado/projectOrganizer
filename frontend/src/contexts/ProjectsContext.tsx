@@ -3,6 +3,7 @@ import type { Project, ProjectFormData } from '../shared/types/Project';
 import { useLocalStorage } from '../shared/hooks/useLocalStorage';
 import { DateUtils } from '../shared/utils/dateUtils';
 import { useForm } from '../shared';
+import sketchStorageService from '../shared/services/sketchStorageService';
 
 interface ProjectsContextType {
   projects: Project[];
@@ -54,6 +55,14 @@ export function ProjectsProvider({ children }: ProjectsProviderProps) {
 
   const deleteProject = useCallback(
     (projectId: string) => {
+      // Delete associated sketches first
+      const projectSketches =
+        sketchStorageService.getSketchesByProject(projectId);
+      projectSketches.forEach(sketch => {
+        sketchStorageService.deleteSketch(sketch.id);
+      });
+
+      // Then delete the project
       setProjects(prev => prev.filter(project => project.id !== projectId));
     },
     [setProjects]

@@ -12,6 +12,7 @@ interface SketchCanvasProps {
     name: string;
     imageData: string;
   };
+  onSketchSaved?: () => void;
 }
 
 export function SketchCanvas({
@@ -19,6 +20,7 @@ export function SketchCanvas({
   onClose,
   projectId,
   editingSketch,
+  onSketchSaved,
 }: SketchCanvasProps) {
   const [sketchName, setSketchName] = useState(editingSketch?.name || '');
   const [description, setDescription] = useState('');
@@ -74,10 +76,11 @@ export function SketchCanvas({
         projectId,
       };
 
-      await createSketch(canvas, metadata);
+      await createSketch(canvas, metadata, editingSketch?.id);
 
       setSketchName('');
       setDescription('');
+      onSketchSaved?.(); // Trigger parent refresh
       onClose();
     } catch (error) {
       console.error('Error saving sketch:', error);

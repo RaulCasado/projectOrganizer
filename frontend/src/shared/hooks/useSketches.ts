@@ -53,7 +53,8 @@ export const useSketches = (options: UseSketchesOptions = {}) => {
           linkedIdeas?: string[];
           mentionedInBlog?: string[];
         };
-      }
+      },
+      existingSketchId?: string
     ) => {
       try {
         setError(null);
@@ -71,7 +72,8 @@ export const useSketches = (options: UseSketchesOptions = {}) => {
 
         const newSketch = sketchStorageService.saveSketch(
           canvas,
-          completeMetadata
+          completeMetadata,
+          existingSketchId
         );
 
         if (newSketch) {

@@ -10,7 +10,9 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .container:hover {
@@ -33,5 +35,6 @@
   .container {
     padding: 1rem;
     gap: 1rem;
+    max-width: calc(100vw - 2rem);
   }
 }

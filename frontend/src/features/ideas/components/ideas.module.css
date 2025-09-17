@@ -772,6 +772,18 @@
   justify-content: flex-end;
 }
 
+.editFormGroup {
+  margin-bottom: 1rem;
+}
+
+.editFormLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 /* Project Ideas Filters */
 .projectFiltersContainer {
   background: rgba(255, 255, 255, 0.05);
@@ -847,6 +859,7 @@
 
   .ideaPanelSubtitle,
   .formLabel,
+  .editFormLabel,
   .projectFilterLabel {
     color: #666;
   }

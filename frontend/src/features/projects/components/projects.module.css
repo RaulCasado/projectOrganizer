@@ -4,6 +4,8 @@
   width: 100%;
   margin: 0 auto;
   padding: 2rem 3rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .navigation {
@@ -113,6 +115,10 @@
 .tabContent {
   min-height: 400px;
   animation: fadeIn 0.2s ease-in-out;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 @keyframes fadeIn {
@@ -173,6 +179,7 @@
   .container {
     padding: 1rem 1.5rem;
     max-width: 98vw;
+    overflow-x: hidden;
   }
 
   .projectTitle {
@@ -193,6 +200,10 @@
     gap: 0.5rem;
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .tabContent {
+    overflow-x: hidden;
   }
 }
 

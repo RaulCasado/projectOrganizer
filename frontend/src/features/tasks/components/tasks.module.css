@@ -8,7 +8,9 @@
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   width: 100%;
-  max-width: none;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .formTitle {
@@ -123,6 +125,7 @@
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .submitButton {
@@ -188,6 +191,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .filterGroup {
@@ -519,10 +525,13 @@
 @media (max-width: 768px) {
   .formContainer {
     padding: 1rem;
+    max-width: calc(100vw - 2rem);
   }
 
   .filtersContainer {
     padding: 1rem;
+    max-width: calc(100vw - 2rem);
+    box-sizing: border-box;
   }
 
   .filtersGrid {
@@ -533,12 +542,20 @@
   .buttonGroup {
     flex-direction: column;
     gap: 0.5rem;
+    width: 100%;
+  }
+
+  .submitButton,
+  .cancelButton {
+    width: 100%;
   }
 
   .taskItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .taskMeta {

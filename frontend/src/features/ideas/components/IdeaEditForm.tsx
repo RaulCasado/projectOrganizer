@@ -1,4 +1,5 @@
 import type { Idea } from '../../../shared/types/Idea';
+import { TagInput } from '../../../shared';
 import styles from './ideas.module.css';
 
 interface IdeaEditFormProps {
@@ -32,6 +33,16 @@ function IdeaEditForm({
         rows={3}
         placeholder="Descripción de la idea"
       />
+      <div className={styles.editFormGroup}>
+        <label className={styles.editFormLabel}>Tags:</label>
+        <TagInput
+          value={editForm.tags || []}
+          onChange={(newTags: string[]) =>
+            setEditForm({ ...editForm, tags: newTags })
+          }
+          placeholder="Añadir tags..."
+        />
+      </div>
       <div className={styles.editFormSelectRow}>
         <select
           className={styles.editFormSelect}

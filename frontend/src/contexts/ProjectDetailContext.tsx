@@ -92,6 +92,8 @@ interface ProjectDetailContextType {
   handleUpdateResources: (resources: Resource[]) => void;
   handleUpdateBlogEntries: (blogEntries: BlogEntry[]) => void;
   handleUpdateMVP: (mvp: string) => void;
+
+  refreshSketches: () => void;
 }
 
 const ProjectDetailContext = createContext<ProjectDetailContextType | null>(
